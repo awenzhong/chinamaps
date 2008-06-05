@@ -4,7 +4,7 @@
   <msg name="goals_for_abbr">GF</msg>
   <msg name="iw_sta_zrh">这个场馆特别为2008欧洲杯而建，只花了12个月的时间，打破以往记录。并于2007年9月7日，由世界级的顶尖好手为列兹格隆特球场 (Letzigrund Stadium) 与每年一度的国际田联黄金联赛苏黎世站举行揭幕礼。</msg>
   <msg name="defenders">后卫</msg>
-  <msg name="iw_sta_sal">这个2008年欧洲杯的场馆于2001年10月10日开始动工，并于2003年3月8日落成。落成初期有18，000个座位。至2005年夏天，被红牛集团收购，经国际级全新打造，成为萨尔斯堡红牛队的主场体育场。在2006年的扩展工程后，座位增至30,000个。&lt;br /&gt;2007年7月25日红牛队在这个全新的欧洲杯球场的首场对手是阿仙奴，当时吸引了超过31,000名观众到场观看，结果红牛队以1:0赢得比赛。</msg>
+  <msg name="iw_sta_sal">这个2008年欧洲杯的场馆于2001年10月10日开始动工，并于2003年3月8日落成。落成初期有18，000个座位。至2005年夏天，被红牛集团收购，经国际级全新打造，成为萨尔斯堡红牛队的主场体育场。在2006年的扩展工程后，座位增至30,000个。2007年7月25日红牛队在这个全新的欧洲杯球场的首场对手是阿仙奴，当时吸引了超过31,000名观众到场观看，结果红牛队以1:0赢得比赛。</msg>
   <msg name="filter_news">筛选</msg>
   <msg name="coach">教练</msg>
   <msg name="new_comment">发表新评论</msg>
@@ -33,6 +33,7 @@
   <msg name="sta_gen">日内瓦球场</msg>
   <msg name="teams">球队</msg>
   <msg name="midfield">中场</msg>
+  <msg name="iw_sta_bas">耗资两千六百万欧元兴建的圣雅各公园球场(St. Jakob Park)，由知名的建筑师设计，只用了26个月完成。最特别的设计就是场馆天顶装有太阳能接收器。这个多用途的体育馆设有超过2,000个停车位、购物中心和餐馆等。场馆除了可用作运动比赛外，还可以用做其他活动，例如演唱会及歌剧等。为配合2008欧洲杯，场内的座位已由32,000增至42,200个，是现在瑞士最大的足球场馆，并获得欧洲足球联合会(UEFA)授予四星级的足球场。</msg>
   <msg name="points_won">得分</msg>
   <msg name="bars">酒吧</msg>
   <msg name="match_schedule">赛程</msg>
@@ -40,6 +41,7 @@
   <msg name="current_club">所属球队</msg>
   <msg name="matches_drawn">和</msg>
   <msg name="hc_sal">萨尔斯堡</msg>
+  <msg name="iw_sta_inn">新迪禾利球场 (Tivoli Stadium) 可以说是帶起奧地利足球狂热的风潮。1999 年恩斯布鲁克 (Innsbruck) 城市作出重要的一步，落实兴建现代新颖的新迪禾利球场，进一步把2008欧洲杯推向国际。工程只用了 18 个月完成，并以其所处的位置而命名。</msg>
   <msg name="sta_sal">萨尔斯堡球场</msg>
   <msg name="defence">后卫</msg>
   <msg name="capacity">球场容量</msg>
@@ -85,6 +87,7 @@
   <msg name="copyright_stadiums2">版权归 Langenscheidt 所有</msg>
   <msg name="quarter_finals">四强</msg>
   <msg name="goals_against">失球</msg>
+  <msg name="iw_sta_kla">位于克拉根福 (Klagenfurt) 的禾法斯球场 (The W?rthersee Stadium) 是特別为2008欧洲杯而建造。球场的屋顶，选用透明材料取代传统屋顶。设计师的理念是把球场与周边风境融合在一起。整个球场能容纳约32,000 名观众。</msg>
   <msg name="striker">前锋</msg>
   <msg name="team_spa">西班牙</msg>
   <msg name="photos">照片</msg>
@@ -92,14 +95,16 @@
   <msg name="matches_lost_abbr">L</msg>
   <msg name="goals_against_abbr">GA</msg>
   <msg name="cat_title_webcams">网络摄影机</msg>
+  <msg name="iw_sta_gen">日内瓦球场 (Stade de Geneve) 设有30,000个座位。2003年4月正式开幕，由瑞士对意大利的国际劲旅作为开幕赛。它位于日内瓦市中心南面，毗邻购物中心、酒店、餐厅、酒吧及艺术中心，交通方便。除举办球赛外，它还可用作为多用途的活动场馆，例如演唱会及其他大型活动。</msg>
   <msg name="date_format">%DD/%MM/%YY</msg>
   <msg name="hc_zrh">苏黎世</msg>
   <msg name="hc_kla">克拉根福</msg>
   <msg name="clubs">会所</msg>
   <msg name="matches_won_abbr">W</msg>
-  <msg name="panoramio_photos">全景照片</msg>
+  <msg name="panoramio_photos">Panoramio版权所有照片</msg>
+  <msg name="iw_sta_ber">自 2005 年 8 年起，瑞士首都云克多夫球場 (Stade de Suisse Wankdorf) 就在为人熟悉的云克多夫球場 (Wankdorf Stadium) 旧址上出现，成为全新的伯恩地标。它能容纳 32,000 名球迷。现代化的设计让每个观众都能从座位上，以最佳角度观看整场精彩的赛事。</msg>
   <msg name="cat_title_bars_clubs">酒吧/会所</msg>
-  <msg name="cat_title_panoramio">全景照片</msg>
+  <msg name="cat_title_panoramio">Panoramio版权所有照片</msg>
   <msg name="sta_inn">新迪禾利球场</msg>
   <msg name="team_rom">罗马尼亚</msg>
   <msg name="display_on_the_map">在地图上显示</msg>
@@ -118,7 +123,7 @@
   <msg name="description">用以下类别来检索地图。</msg>
   <msg name="information">信息</msg>
   <msg name="football">足球</msg>
-  <msg name="iw_sta_vie">安斯夏普球場（Ernst-Happel-Stadion）以奧地利有史以來最成功的一位足球運動員 Ernst-Happel 來命名。它不僅會上演 7 場歐洲國家盃賽事，其中包括 6 月 29 日的決賽賽事，更是歷史動盪的是證明。&lt;br /&gt;</msg>
+  <msg name="iw_sta_vie">安斯夏普球場 (Ernst Happel Stadium) 以奧地利有史以來最成功的一位足球运动员 Ernst Happel 来命名。它不仅上演了 7 场欧洲杯赛事，其中包括 6 月 29 日的决赛，更是历史变迁的见证。</msg>
   <msg name="time_format">%HH:%MM</msg>
   <msg name="team_ger">德国</msg>
   <msg name="date">日期</msg>
