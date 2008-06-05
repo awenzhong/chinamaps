@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="获得外部数据" height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<script>
+  var map = new GMap2();
+  map.setCenter(new GLatLng(39.917, 116.397), 13);
+  var points = [];
+  var bounds = new GLatLngBounds();
+  var url = "http://chinamaps.googlecode.com/svn/mapplets/gddcodelab/points.xml";
+  _IG_FetchXmlContent(url, function(response) {
+    var markers = response.getElementsByTagName("marker");
+    for (var i = 0; i < markers.length; i++) {
+      var point = markers.item(i);
+      var lat = point.getAttribute("lat");
+      var lng = point.getAttribute("lng");
+      var latlng = new GLatLng(lat, lng);
+      points.push(latlng);
+      bounds.extend(latlng);
+    }
+    map.addOverlay(new GPolyline(points, "#ff0000", 3, 1));
+    map.setCenter(bounds.getCenter(), 12);
+  });
+
+</script>
+
+]]></Content>
+</Module>

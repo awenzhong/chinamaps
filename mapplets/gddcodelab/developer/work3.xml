@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="各大城市天气情况"
+             description="显示各大城市天气情况"
+             author="Google, Inc"
+             author_email="your-email@gmail.com"
+             height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<h2>各大城市天气情况</h2>
+<div id="result"></div>
+<script>
+var images = [
+"http://ditu.google.com/intl/zh-CN_cn/images/qing.png",
+"http://ditu.google.com/intl/zh-CN_cn/images/yin.png",
+"http://ditu.google.com/intl/zh-CN_cn/images/daxue.png",
+"http://ditu.google.com/intl/zh-CN_cn/images/xiaoyu.png"
+];
+var descriptions = ["晴", "阴", "大雪", "小雨"];
+var url = "http://chinamaps.googlecode.com/svn/mapplets/gddcodelab/weather.xml";
+var map = new GMap2();
+var geocoder = new GClientGeocoder();
+map.setCenter(new GLatLng(39.92, 116.46), 6);
+_IG_FetchXmlContent(url, function(response) {
+  var cities = response.getElementsByTagName("city");
+  var html = "";
+  for (var i = 0; i < cities.length; i++) {
+    var city = cities.item(i);
+    var name = city.getAttribute("name");
+    var weather = parseInt(city.getAttribute("weather"));
+    html += name + ":" + descriptions[weather] + "<br>";
+    addWeather(name, images[weather]);
+  }
+  _gel("result").innerHTML = html;
+});
+
+function addWeather(address, image) {
+  geocoder.getLatLngAsync(address, function(latlng) {
+    if (latlng) {
+      addMarker(latlng, image);
+    }
+  });
+}
+
+function addMarker(point, image) {
+  var myIcon = new GIcon(G_DEFAULT_ICON, image);
+  myIcon.iconSize = new GSize(32, 32);
+  myIcon.iconAnchor = new GPoint(4, 20);
+  var marker = new GMarker(point, { icon: myIcon });
+  map.addOverlay(marker);
+}
+
+</script>
+]]></Content>
+</Module>

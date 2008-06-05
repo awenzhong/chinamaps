@@ -1,0 +1,8 @@
+var images = [
+"http://ditu.google.com/intl/zh-CN_cn/images/qing.png",
+"http://ditu.google.com/intl/zh-CN_cn/images/yin.png",
+"http://ditu.google.com/intl/zh-CN_cn/images/daxue.png",
+"http://ditu.google.com/intl/zh-CN_cn/images/xiaoyu.png"
+];
+var descriptions = ["晴", "阴", "大雪", "小雨"];
+
