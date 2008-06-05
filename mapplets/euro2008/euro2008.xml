@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs
+   title="__MSG_title__"
+   author="Layers team"
+   author_email="maps-devtools+categories@google.com"
+   height="200">
+   <Require feature="sharedmap"/>
+   <Require feature="dynamic-height"/>
+   <Locale messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_ALL_ALL.xml" />
+   <Locale lang="de" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_de_ALL.xml" />
+   <Locale lang="it" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_it_ALL.xml" />
+   <Locale lang="fr" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_fr_ALL.xml" />
+   <Locale lang="nl" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_nl_ALL.xml" />
+   <Locale lang="ru" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_ru_ALL.xml" />
+   <Locale lang="sv" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_sv_ALL.xml" />
+   <Locale lang="pl" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_pl_ALL.xml" />
+   <Locale lang="es" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_es_ALL.xml" />
+   <Locale lang="cs" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_cs_ALL.xml" />
+   <Locale lang="zh" messages="http://http://chinamaps.googlecode.com/svn/mapplets/euro2008/euro08_cn_ALL.xml" />
+ </ModulePrefs>
+ <Content type="html"><![CDATA[
+   <script type="text/javascript">
+     var MSG_matches_won = '__MSG_matches_won__';
+     var MSG_hc_ber = '__MSG_hc_ber__';
+     var MSG_goals_for_abbr = '__MSG_goals_for_abbr__';
+     var MSG_iw_sta_zrh = '__MSG_iw_sta_zrh__';
+     var MSG_defenders = '__MSG_defenders__';
+     var MSG_iw_sta_sal = '__MSG_iw_sta_sal__';
+     var MSG_filter_news = '__MSG_filter_news__';
+     var MSG_coach = '__MSG_coach__';
+     var MSG_new_comment = '__MSG_new_comment__';
+     var MSG_defender = '__MSG_defender__';
+     var MSG_hc_inn = '__MSG_hc_inn__';
+     var MSG_staff = '__MSG_staff__';
+     var MSG_loading = '__MSG_loading__';
+     var MSG_group = '__MSG_group__';
+     var MSG_team_ita = '__MSG_team_ita__';
+     var MSG_title = '__MSG_title__';
+     var MSG_matches_lost = '__MSG_matches_lost__';
+     var MSG_team_gre = '__MSG_team_gre__';
+     var MSG_hc_gen = '__MSG_hc_gen__';
+     var MSG_team_tur = '__MSG_team_tur__';
+     var MSG_location = '__MSG_location__';
+     var MSG_soccer = '__MSG_soccer__';
+     var MSG_goalie = '__MSG_goalie__';
+     var MSG_team_cro = '__MSG_team_cro__';
+     var MSG_matches = '__MSG_matches__';
+     var MSG_group_stage = '__MSG_group_stage__';
+     var MSG_group_standings = '__MSG_group_standings__';
+     var MSG_team_cze = '__MSG_team_cze__';
+     var MSG_covered_seats = '__MSG_covered_seats__';
+     var MSG_categories = '__MSG_categories__';
+     var MSG_team_sui = '__MSG_team_sui__';
+     var MSG_sta_gen = '__MSG_sta_gen__';
+     var MSG_teams = '__MSG_teams__';
+     var MSG_midfield = '__MSG_midfield__';
+     var MSG_iw_sta_bas = '__MSG_iw_sta_bas__';
+     var MSG_points_won = '__MSG_points_won__';
+     var MSG_bars = '__MSG_bars__';
+     var MSG_match_schedule = '__MSG_match_schedule__';
+     var MSG_points_won_abbr = '__MSG_points_won_abbr__';
+     var MSG_current_club = '__MSG_current_club__';
+     var MSG_matches_drawn = '__MSG_matches_drawn__';
+     var MSG_hc_sal = '__MSG_hc_sal__';
+     var MSG_iw_sta_inn = '__MSG_iw_sta_inn__';
+     var MSG_sta_sal = '__MSG_sta_sal__';
+     var MSG_defence = '__MSG_defence__';
+     var MSG_capacity = '__MSG_capacity__';
+     var MSG_wikipedia = '__MSG_wikipedia__';
+     var MSG_comments = '__MSG_comments__';
+     var MSG_squad_list = '__MSG_squad_list__';
+     var MSG_score = '__MSG_score__';
+     var MSG_sta_kla = '__MSG_sta_kla__';
+     var MSG_select_one = '__MSG_select_one__';
+     var MSG_groups = '__MSG_groups__';
+     var MSG_news = '__MSG_news__';
+     var MSG_description_new = '__MSG_description_new__';
+     var MSG_european_championship = '__MSG_european_championship__';
+     var MSG_matches_played = '__MSG_matches_played__';
+     var MSG_zoom_into_location = '__MSG_zoom_into_location__';
+     var MSG_sta_zrh = '__MSG_sta_zrh__';
+     var MSG_mymaps = '__MSG_mymaps__';
+     var MSG_copyright = '__MSG_copyright__';
+     var MSG_country = '__MSG_country__';
+     var MSG_matches_drawn_abbr = '__MSG_matches_drawn_abbr__';
+     var MSG_qualification = '__MSG_qualification__';
+     var MSG_team_aut = '__MSG_team_aut__';
+     var MSG_semi_finals = '__MSG_semi_finals__';
+     var MSG_player_position = '__MSG_player_position__';
+     var MSG_european_championships = '__MSG_european_championships__';
+     var MSG_jump_to = '__MSG_jump_to__';
+     var MSG_standings = '__MSG_standings__';
+     var MSG_team_rus = '__MSG_team_rus__';
+     var MSG_forwards = '__MSG_forwards__';
+     var MSG_midfielders = '__MSG_midfielders__';
+     var MSG_copyright_by = '__MSG_copyright_by__';
+     var MSG_sta_vie = '__MSG_sta_vie__';
+     var MSG_all_comments = '__MSG_all_comments__';
+     var MSG_team_swe = '__MSG_team_swe__';
+     var MSG_midfielder = '__MSG_midfielder__';
+     var MSG_hc_bas = '__MSG_hc_bas__';
+     var MSG_team_fra = '__MSG_team_fra__';
+     var MSG_qualifying = '__MSG_qualifying__';
+     var MSG_no_comments = '__MSG_no_comments__';
+     var MSG_sta_bas = '__MSG_sta_bas__';
+     var MSG_stadium = '__MSG_stadium__';
+     var MSG_forward = '__MSG_forward__';
+     var MSG_copyright_stadiums2 = '__MSG_copyright_stadiums2__';
+     var MSG_quarter_finals = '__MSG_quarter_finals__';
+     var MSG_goals_against = '__MSG_goals_against__';
+     var MSG_iw_sta_kla = '__MSG_iw_sta_kla__';
+     var MSG_striker = '__MSG_striker__';
+     var MSG_team_spa = '__MSG_team_spa__';
+     var MSG_photos = '__MSG_photos__';
+     var MSG_cat_title_teams = '__MSG_cat_title_teams__';
+     var MSG_matches_lost_abbr = '__MSG_matches_lost_abbr__';
+     var MSG_goals_against_abbr = '__MSG_goals_against_abbr__';
+     var MSG_cat_title_webcams = '__MSG_cat_title_webcams__';
+     var MSG_iw_sta_gen = '__MSG_iw_sta_gen__';
+     var MSG_date_format = '__MSG_date_format__';
+     var MSG_hc_zrh = '__MSG_hc_zrh__';
+     var MSG_hc_kla = '__MSG_hc_kla__';
+     var MSG_clubs = '__MSG_clubs__';
+     var MSG_matches_won_abbr = '__MSG_matches_won_abbr__';
+     var MSG_panoramio_photos = '__MSG_panoramio_photos__';
+     var MSG_match_officials = '__MSG_match_officials__';
+     var MSG_iw_sta_ber = '__MSG_iw_sta_ber__';
+     var MSG_cat_title_bars_clubs = '__MSG_cat_title_bars_clubs__';
+     var MSG_cat_title_panoramio = '__MSG_cat_title_panoramio__';
+     var MSG_sta_inn = '__MSG_sta_inn__';
+     var MSG_team_rom = '__MSG_team_rom__';
+     var MSG_display_on_the_map = '__MSG_display_on_the_map__';
+     var MSG_select_location = '__MSG_select_location__';
+     var MSG_team_por = '__MSG_team_por__';
+     var MSG_grp = '__MSG_grp__';
+     var MSG_view_3d_stadium = '__MSG_view_3d_stadium__';
+     var MSG_copyright_kicker = '__MSG_copyright_kicker__';
+     var MSG_group_C = '__MSG_group_C__';
+     var MSG_group_B = '__MSG_group_B__';
+     var MSG_group_A = '__MSG_group_A__';
+     var MSG_group_D = '__MSG_group_D__';
+     var MSG_matches_played_abbr = '__MSG_matches_played_abbr__';
+     var MSG_copyright_photos = '__MSG_copyright_photos__';
+     var MSG_team_pol = '__MSG_team_pol__';
+     var MSG_description = '__MSG_description__';
+     var MSG_information = '__MSG_information__';
+     var MSG_football = '__MSG_football__';
+     var MSG_iw_sta_vie = '__MSG_iw_sta_vie__';
+     var MSG_time_format = '__MSG_time_format__';
+     var MSG_team_ger = '__MSG_team_ger__';
+     var MSG_date = '__MSG_date__';
+     var MSG_copyright_stadiums1 = '__MSG_copyright_stadiums1__';
+     var MSG_finals = '__MSG_finals__';
+     var MSG_team_ned = '__MSG_team_ned__';
+     var MSG_lang = '__MSG_lang__';
+     var MSG_cat_title_stadiums = '__MSG_cat_title_stadiums__';
+     var MSG_sta_ber = '__MSG_sta_ber__';
+     var MSG_hc_vie = '__MSG_hc_vie__';
+     var MSG_goals_for = '__MSG_goals_for__';
+     var MSG_time = '__MSG_time__';
+     var MSG_goalkeepers = '__MSG_goalkeepers__';
+     var MSG_legend = '__MSG_legend__';
+
+     var d = new Date();
+   </script>
+   <script type="text/javascript"
+     src="http://chinamaps.googlecode.com/svn/mapplets/euro2008/euro08_comp.js"></script>
+   <script type="text/javascript">
+     window.onload = _init;
+   </script>
+
+   <div style="width:280px;font-family:arial; font-size:13px">
+     <div id="controls"></div>
+     <div id="news_div"></div>
+   </div>
+ ]]></Content>
+ </Module>
+
+
