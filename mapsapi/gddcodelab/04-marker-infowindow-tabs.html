@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>我的足迹</title>
+    <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+		map.addControl(new GLargeMapControl ());
+        map.addControl(new GScaleControl());
+        // 允许使用鼠标滚轮缩放
+        map.enableScrollWheelZoom();
+        var point = new GLatLng(39.917, 116.397);
+        map.setCenter(point, 11);
+        // 在地图中心添加一个标记
+        var marker = new GMarker(point);
+        map.addOverlay(marker);
+
+        var tabs = [];
+        // 添加介绍文本tab，第一个参数是tab页标题，第二个为具体内容
+        var intro_tab = new GInfoWindowTab("简介", '<h3>北京</h3><p>2002年10月，第一次来到北京。</p>');
+	    tabs.push(intro_tab);
+        // 添加照片tab
+		var pic_tab = new GInfoWindowTab("照片", '<img src="http://mw2.google.com/mw-panoramio/photos/medium/436377.jpg" style="width:300px; height:300px">');
+	    tabs.push(pic_tab);
+		// 添加视频tab
+        var video_html = '<embed src="http://player.youku.com/player.php/sid/XMjg2MjUwNTI=/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>';
+		var video_tab = new GInfoWindowTab("视频", video_html);
+	    tabs.push(video_tab);
+        // 添加到Marker中， 设置窗口的最大宽度，默认页
+        marker.openInfoWindowTabsHtml(tabs, { maxWidth : 550 , selectedTab : 0});
+      }
+    }
+
+    </script>
+  </head>
+  <body onload="initialize()" onunload="GUnload()">
+    <div id="map_canvas" style="width: 900px; height: 700px"></div>
+  </body>
+</html>
