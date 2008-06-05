@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+  <name>travel</name>
+  <description><![CDATA[]]></description>
+  <Style id="style2">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.google.com/mapfiles/ms/micons/tree.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="style3">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.google.com/mapfiles/ms/micons/water.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="style1">
+    <IconStyle>
+      <Icon>
+        <href>http://maps.google.com/mapfiles/ms/micons/tree.png</href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Placemark>
+    <name>长沙</name>
+    <description><![CDATA[<div dir="ltr">2007年，岳麓书院</div>]]></description>
+    <styleUrl>#style2</styleUrl>
+    <Point>
+      <coordinates>112.944,28.188,0.000000</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>武汉</name>
+    <description><![CDATA[<div dir="ltr">2003年，东湖</div>]]></description>
+    <styleUrl>#style3</styleUrl>
+    <Point>
+      <coordinates>114.405,30.546,0.000000</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>西安</name>
+    <description><![CDATA[<div dir="ltr">2007年，咸阳古道音程绝</div>]]></description>
+    <styleUrl>#style1</styleUrl>
+    <Point>
+      <coordinates>108.943,34.260,0.000000</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>
