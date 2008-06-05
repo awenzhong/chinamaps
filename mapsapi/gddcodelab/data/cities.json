@@ -1,0 +1,12 @@
+﻿[{ address: '北京',
+  point: { lat: 39.917, lng: 116.397},
+  tabs: [{title: '简介', details: '<h3>北京</h3>2002年10月第一次到北京'},
+         {title: '照片', details: '<img src="http://mw2.google.com/mw-panoramio/photos/medium/436377.jpg" style="width:300px; height:300px">'}]},
+{ address: '上海',
+  point: { lat: 31.224, lng: 121.475},
+  tabs: [{title: '简介', details: '<h3>上海</h3>2007年5月第一次到上海'},
+         {title: '照片', details: '<img src="http://mw2.google.com/mw-panoramio/photos/medium/33763.jpg" style="width:300px; height:300px">'}]},
+{ address: '广州',
+  point: { lat: 23.134, lng: 113.322},
+  tabs: [{title: '简介', details: '<h3>广州</h3>2008年5月第一次到广州'},
+ {title: '照片', details: '<img src="http://mw2.google.com/mw-panoramio/photos/medium/1107611.jpg" style="width:300px; height:300px">'}]} ]
