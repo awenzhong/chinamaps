@@ -1,0 +1,14 @@
+var data = [
+  { "name" : "国家体育场（鸟巢）", "link" :
+  "http://2008.sina.com.cn/venues/nst/", "description" : "田径，男子足球", "image" : "http://i0.sinaimg.cn/2008/venues/nst/U1860P461T66D2F1719DT20080427215152.jpg", "lat": 39.9944, "lng" : 116.3994},
+  { "name" : "国家游泳中心（水立方）", "link" :
+  "http://2008.sina.com.cn/venues/nac/", "description" : "游泳，跳水，花样游泳", "image" : "http://i1.sinaimg.cn/2008/venues/nac/U347P461T66D3F1733DT20080428211654.jpg", "lat": 39.9946, "lng" : 116.3913},
+  { "name" : "北京大学体育馆", "link" : "http://2008.sina.com.cn/venues/pkg/",
+  "description" : "乒乓球", "image" : "http://i1.sinaimg.cn/2008/venues/pkg/U347P461T66D28F1719DT20080427151033.jpg", "lat": 39.9916, "lng" : 116.3104},
+  { "name" : "老山自行车馆", "link" : "http://2008.sina.com.cn/venues/lsv/",
+  "description" : "场地自行车", "image" : "http://i0.sinaimg.cn/2008/venues/lsv/U1860P461T66D6F1719DT20080428113145.jpg", "lat": 39.9149, "lng" : 116.2063},
+  { "name" : "北京射击馆", "link" : "http://2008.sina.com.cn/venues/bsh/",
+  "description" : "射击", "image" : "http://i2.sinaimg.cn/2008/venues/bsh/U347P461T66D1F1719DT20080428213540.jpg", "lat": 39.9469, "lng" : 116.2060},
+];
+
+

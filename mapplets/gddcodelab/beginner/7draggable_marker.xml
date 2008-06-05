@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="可拖动的marker" height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<script>
+  var map = new GMap2();
+  var point = new GLatLng(39.917, 116.397);
+  map.setCenter(point, 5);
+  var marker = new GMarker(point, {draggable: true, bouncy:true});
+  map.addOverlay(marker);
+  GEvent.addListener(marker, "dragstart", function() {
+    marker.openInfoWindowHtml("开始拖动...");
+  });
+  GEvent.addListener(marker, "dragend", function() {
+    marker.openInfoWindowHtml("正在弹跳...");
+  });
+
+</script>
+
+]]></Content>
+</Module>

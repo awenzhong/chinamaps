@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="事件处理2" height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<script>
+  var map = new GMap2();
+  var point = new GLatLng(39.917, 116.397);
+  map.setCenter(point, 5);
+  var marker = new GMarker(point);
+  map.addOverlay(marker);
+  var count = 0;
+  var listener1 = GEvent.addListener(map, "movestart", function() {
+    count++;
+  });
+  var listener2 = GEvent.addListener(map, "moveend", function() {
+    marker.openInfoWindow("第" + count + "次");
+    if (count == 2) {
+      GEvent.removeListener(listener1);
+      GEvent.removeListener(listener2);
+    }
+  });
+
+</script>
+
+]]></Content>
+</Module>

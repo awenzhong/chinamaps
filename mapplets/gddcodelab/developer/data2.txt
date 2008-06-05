@@ -1,0 +1,10 @@
+var data = [
+  {"name" : "石家庄市", "lat" : 38.040, "lng" : 114.488, "link" : "http://torchrelay.beijing2008.cn/cn/journey/shijiazhuang/", "image" : "http://images.beijing2008.cn/20080311/Img214265858.jpg"}, 
+  {"name" : "秦皇岛市", "lat" : 39.952, "lng" : 119.586, "link" : "http://torchrelay.beijing2008.cn/cn/journey/qinhuangdao/", "image" : "http://images.beijing2008.cn/20080322/Img214277578.jpg"}, 
+  {"name" : "唐山市", "lat" : 39.631, "lng" : 118.163, "link" : "http://torchrelay.beijing2008.cn/cn/journey/tangshan/", "image" : "http://images.beijing2008.cn/20080322/Img214277563.jpg"}, 
+  {"name" : "天津市", "lat" : 39.100, "lng" : 117.240, "link" : "http://torchrelay.beijing2008.cn/cn/journey/tianjin/", "image" : "http://images.beijing2008.cn/20080321/Img214276549.jpg"}, 
+  {"name" : "北京市", "lat" : 39.905, "lng" : 116.400, "link" : "http://torchrelay.beijing2008.cn/cn/journey/beijing/", "image" : "http://images.beijing2008.cn/20080331/Img214287224.jpg"}, 
+];
+var flagimage = "http://ditu.google.cn/intl/zh-CN_cn/mapfiles/ms/micons/flag.png";
+var fireimage = "http://torch2008.googlecode.com/svn/trunk/maps/images/olympic-torch-24.png";
+

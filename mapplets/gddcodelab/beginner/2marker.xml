@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="使用marker" 
+             description="在地图上显示Hello World消息"
+             author="your name"
+             author_email="your-email@gmail.com"
+             height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<h2>Hello World!</h2>
+
+<script>
+  // 将地图中心定位于北京
+  var map = new GMap2();
+  var point = new GLatLng(39.92, 116.46);
+  map.setCenter(point, 4);
+
+  // 在地图中心添加一个标记
+  var marker = new GMarker(point);
+  map.addOverlay(marker);
+
+  // 打开一个"Hello World!"信息窗口
+  var message = "Hello World!";
+  marker.openInfoWindowHtml(message);
+</script>
+
+]]></Content>
+</Module>

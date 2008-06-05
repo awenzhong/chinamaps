@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="08奥运火炬传递" 
+             description="显示奥运火炬传递路线"
+             author="Google, Inc"
+             author_email="your-email@gmail.com"
+             height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<h2>08奥运火炬传递</h2>
+
+<script>
+var data = [
+  {"name" : "石家庄市", "lat" : 38.040, "lng" : 114.488, "link" : "http://torchrelay.beijing2008.cn/cn/journey/shijiazhuang/", "image" : "http://images.beijing2008.cn/20080311/Img214265858.jpg"}, 
+  {"name" : "秦皇岛市", "lat" : 39.952, "lng" : 119.586, "link" : "http://torchrelay.beijing2008.cn/cn/journey/qinhuangdao/", "image" : "http://images.beijing2008.cn/20080322/Img214277578.jpg"}, 
+  {"name" : "唐山市", "lat" : 39.631, "lng" : 118.163, "link" : "http://torchrelay.beijing2008.cn/cn/journey/tangshan/", "image" : "http://images.beijing2008.cn/20080322/Img214277563.jpg"}, 
+  {"name" : "天津市", "lat" : 39.100, "lng" : 117.240, "link" : "http://torchrelay.beijing2008.cn/cn/journey/tianjin/", "image" : "http://images.beijing2008.cn/20080321/Img214276549.jpg"}, 
+  {"name" : "北京市", "lat" : 39.905, "lng" : 116.400, "link" : "http://torchrelay.beijing2008.cn/cn/journey/beijing/", "image" : "http://images.beijing2008.cn/20080331/Img214287224.jpg"}, 
+];
+var flagimage = "http://ditu.google.cn/intl/zh-CN_cn/mapfiles/ms/micons/flag.png";
+var fireimage = "http://torch2008.googlecode.com/svn/trunk/maps/images/olympic-torch-24.png";
+var map = new GMap2();
+map.setCenter(new GLatLng(39.92, 116.46), 7);
+var points = [];
+var markers = [];
+var markers2 = [];
+var messages = [];
+for (var i = 0; i < data.length; i++) {
+  var d = data[i];
+  var point = new GLatLng(d.lat, d.lng);
+  var message = '<b>' + d.name + '</b><br><img src="' + d.image + '"/>';
+  message += '<br><a href="' + d.link + '" target="_blank">详细介绍</a>';
+  points[i] = point;
+  messages[i] = message;
+  markers[i] = getMarker(point, flagimage, message);
+  markers2[i] = getMarker(point, fireimage, message);
+  map.addOverlay(markers[i]);
+}
+map.setCenter(points[0], 7);
+map.addOverlay(new GPolyline(points, "#0000f0", 5, 0.7));
+map.removeOverlay(markers[0]);
+map.addOverlay(markers2[0]);
+markers2[0].openInfoWindow(messages[0]);
+var index = 1;
+window.setTimeout(next, 5000);
+
+function next() {
+  map.removeOverlay(markers[index]);
+  map.addOverlay(markers2[index]); 
+  markers2[index].openInfoWindow(messages[index]); 
+  index++;
+  if (index != points.length) {
+    window.setTimeout(next, 3000);
+  }
+}
+
+function getMarker(point, image, message) {
+  var myIcon = new GIcon(G_DEFAULT_ICON, image); 
+  myIcon.iconSize = new GSize(32, 32);
+  myIcon.iconAnchor = new GPoint(4, 20);
+  var marker = new GMarker(point, { icon: myIcon });
+  GEvent.addListener(marker, "click", function() {
+    marker.openInfoWindowHtml(message);
+  });
+  return marker;
+}
+
+</script>
+]]></Content>
+</Module>

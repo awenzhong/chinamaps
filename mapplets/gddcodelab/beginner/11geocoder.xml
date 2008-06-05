@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="地址解析" 
+             description="在地图上显示Hello World消息"
+             author="your name"
+             author_email="your-email@gmail.com"
+             height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<script>
+  var map = new GMap2();
+  var point = new GLatLng(39.92, 116.46);
+  map.setCenter(point, 6);
+
+  var geocoder = new GClientGeocoder();
+  var address = "北京市";
+  geocoder.getLatLngAsync(address, function(latlng) {
+    if (!latlng) {
+      alert("不能解析:" + address);
+    } else {
+      var marker = new GMarker(latlng);
+      GEvent.addListener(marker, "click", function() {
+        marker.openInfoWindowHtml(address);
+      });
+      map.addOverlay(marker);
+    }
+  });
+</script>
+
+]]></Content>
+</Module>

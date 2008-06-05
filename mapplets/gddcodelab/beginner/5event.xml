@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="事件处理" height="150">
+  <Require feature="sharedmap"/>
+</ModulePrefs>
+<Content type="html"><![CDATA[
+
+<script>
+  var map = new GMap2();
+  var point = new GLatLng(39.917, 116.397);
+  map.setCenter(point, 5);
+  var marker = new GMarker(point);
+  GEvent.addListener(marker, "click", function() {
+    marker.openInfoWindowHtml("<b>点击后显示我</b>");
+  });
+  map.addOverlay(marker);
+
+</script>
+
+]]></Content>
+</Module>

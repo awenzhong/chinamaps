@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Weather>
+  <city name="北京" weather="0"/>
+  <city name="天津" weather="1"/>
+  <city name="沈阳" weather="2"/>
+  <city name="石家庄" weather="1"/>
+  <city name="济南" weather="1"/>
+  <city name="郑州" weather="0"/>
+  <city name="青岛" weather="3"/>
+  <city name="烟台" weather="1"/>
+</Weather>
