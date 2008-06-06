@@ -18,6 +18,8 @@
    <Locale lang="es" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_es_ALL.xml" />
    <Locale lang="cs" messages="http://www.google.com/mapfiles/mapplets/euro2008/euro08_cs_ALL.xml" />
    <Locale lang="zh-CN" messages="http://chinamaps.googlecode.com/svn/mapplets/euro2008/euro08_cn_ALL.xml" />
+   <Locale lang="zh-TW" messages="http://chinamaps.googlecode.com/svn/mapplets/euro2008/euro08_tw_ALL.xml" />
+   <Locale lang="zh-HK" messages="http://chinamaps.googlecode.com/svn/mapplets/euro2008/euro08_hk_ALL.xml" />
  </ModulePrefs>
  <Content type="html"><![CDATA[
    <script type="text/javascript">
