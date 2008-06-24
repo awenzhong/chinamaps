@@ -1,0 +1,289 @@
+﻿<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="refresh" content="3600">
+<title>Google 地图 - 我的家乡</title>
+<style type="text/css">
+body, div, span, a, img{
+  margin:0;
+  border:0;
+  padding:0;
+}
+body{
+  font-family: Arial,sans-serif;
+}
+.viewer {
+  position:absolute;
+  bottom:0px;
+  left:0px;
+  right:0px;
+  bottom:30px;
+  border:0px solid blue;
+  width:100%;
+  height:95%;
+  padding:0px;
+  margin:0px;
+}
+
+/*console*/
+.console{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:30px;
+  background-color:#555555;
+}
+/*controller*/
+.controller{
+  position:relative;
+  top:5px;
+  left:10px;
+  width:630px;
+  float:left;
+}
+.label{
+  margin: 3px 0;
+  font-size:14px;
+  color:#f0f0f0;
+}
+.selector{
+  margin-right:15px;
+  background-color:#f3f3f3;
+  color:#000;
+  font-size:12px;
+  border:solid #606060 1px;
+}
+/*.option:hover{
+  height:16px;
+  background-color:#dddddd;
+}*/
+.city{
+  width:82px;
+}
+.title{
+  width:140px;
+}
+.prev, .next, .prev-end, .next-end{
+  height:18px;
+  width:87px;
+  margin:1px 15px;
+}
+.prev{
+  background:url("prev.gif") no-repeat left top;
+}
+.prev-end{
+  background:url("prev_end.gif") no-repeat left top;
+}
+.next{
+  background:url("next.gif") no-repeat left top;
+}
+.next-end{
+  background:url("next_end.gif") no-repeat left top;
+}
+html>body .prev, .next, .prev-end, .next-end{
+  padding:0 47px 5px 40px;
+}
+/*annotation*/
+.annotation{
+  position:relative;
+  top:9px;
+  right:6px;
+  float:right;
+  font-size:12px;
+  color:#f0f0f0;
+}
+.annotation a{
+  color:#f0f0f0;
+}
+.more-link{
+  color:#d1d1d1;
+  margin:0 10px 0 21px;
+}
+.close-icon{
+  width:12px;
+  height:12px;
+  background:url("closeIcon.gif") no-repeat left center;
+}
+html>body .close-icon{
+  padding:0 6px 2px 6px;
+}
+
+#addition{
+  margin-left:3px;
+}
+
+#loading{
+  position:absolute;
+  top:40px;
+  right:0px;
+  background:#FF2222;
+  color:white;
+  font-weight:bold;
+  padding:2px;
+  z-index:3;
+}
+
+#title{
+  font-weight:bold;
+  font-size:15pt;
+  color:white;
+}
+</style>
+<script src="http://ditu.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ"
+	type="text/javascript"></script>
+<script type="text/javascript">
+  // Shamely copy from:  http://mw1.google.com/mw-ms/viewer/viewer.html by Doug Ricket
+
+  var viewer = [];
+  var visibleFrame = 0;
+  var currentIndex = 0;
+
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+
+  var DATA_URL = "mymaps.json";  // TODO
+  /**
+        * Array of {cityName:"(city name)",mapList:[{name:"(title)", author:"", school:"", cls:"", contact:"", instructor:"", link:"", category:"", description:""},...]}
+       */
+  var cityList = null;
+  var curCityIndex = 0;
+
+
+  function onLoad() {
+    viewer[0] = el('viewer0');
+    viewer[1] = el('viewer1');
+
+    GDownloadUrl(DATA_URL, function(data){
+      cityList = eval(data);
+      var selector = el("citySelector");
+      for (var i = 0, city; city = cityList[i]; i++) {
+        var option = new Option(city.cityName, i);
+        selector.options[selector.options.length] = option;
+      }
+      changeCity(selector);
+    });
+  }
+    
+
+  function loading(status) {
+    el("loading").style.display = status ? "block" : "none";
+  }
+
+
+  function frameLoad(num, indexId) {
+    loading(false);
+    if (!viewer[num] || !viewer[num].src.length) {
+      return;
+    }
+    viewer[1-num].style.zIndex = 100; // visibility = "hidden"; 
+    viewer[num].style.zIndex = 200; // visibility = "visible"; 
+    visibleFrame = num;
+  }
+
+
+  function previous() {
+    var selector = el("mapSelector");
+    if(selector.selectedIndex > 0){
+      selector.selectedIndex -= 1;
+      selector.onchange();
+    }
+  }
+
+
+  function next() {
+    var selector = el("mapSelector");
+    if(selector.selectedIndex < selector.options.length - 1){
+      selector.selectedIndex += 1;
+      selector.onchange();
+    }
+  }
+
+
+  function closeViewer() {
+    document.location = viewer[visibleFrame].src;
+  }
+
+
+  function changeCity(selector) {
+    if (selector.selectedIndex != -1) {
+      curCityIndex = selector.selectedIndex;
+    }
+    var mapList = cityList[curCityIndex].mapList;
+    var selector = el("mapSelector");
+    selector.innerHTML = "";
+    for (var i = 0, mymap; mymap = mapList[i]; i++) {
+      var option = new Option(mymap.name, i);
+      selector.options[selector.options.length] = option;
+    }
+	changeMap(selector);
+  }
+
+
+  function changeMap(selector) {
+    var mymap;
+    if(selector.selectedIndex != -1){
+      mymap = cityList[curCityIndex].mapList[selector.selectedIndex];
+    } else {
+      mymap = cityList[curCityIndex].mapList[0];
+    }
+    el("author").innerHTML = mymap.author;
+    el("school").innerHTML = mymap.school + mymap.cls;
+    if (mymap.instructor && mymap.instructor != ''){
+      el("addition").innerHTML = "指导老师：" + mymap.instructor;
+    } else {
+      el("addition").innerHTML = "";
+    }
+      
+    //if(title.website.search(/^http:\/\//) != -1){
+    //  el("website").setAttribute("href", title.website); 
+    //}
+    viewer[1 - visibleFrame].src = mymap.link;
+    loading(true);
+    if(selector.selectedIndex == 0){
+       el("prev").className = "prev-end";
+    } else if (selector.selectedIndex == selector.options.length - 1){
+      el("next").className = "next-end";
+    } else {
+      el("prev").className = "prev";
+      el("next").className = "next";
+    }
+  }
+</script>
+
+</head>
+<body onLoad="onLoad()">
+<div id="loading">加载中...</div>
+<div id="console" class="console">
+  <div class="controller">
+    <span class="label">城市：</span>
+    <select class="city selector" id="citySelector" onchange="changeCity(this)">
+    </select>
+   <span class="label">作品名称：</span>
+   <select class="map selector" id="mapSelector" onchange="changeMap(this)">
+   </select>
+   <a class="prev" id="prev" href="javascript:previous();"></a>
+   <a class="next" id="next" href="javascript:next();"></a>
+ </div>
+ <div class="annotation">
+       作者：
+   <span id="author"></span>-
+   <span id="school"></span>
+   <!-- -
+   <a id="website" class="author-site" href="#">个人网站</a>-->
+   <span id="addition"></span>
+   <a class="more-link" href="http://ditu.google.com/support/bin/answer.py?answer=68480&hl=zh-CN">更多关于“我的地图”</a>
+   <a class="close-icon" href="javascript:closeViewer()"></a>
+  </div>
+</div>
+<iframe id="viewer0" class="viewer" frameborder="0"
+	onload="frameLoad(0)"> </iframe>
+<iframe id="viewer1" class="viewer" frameborder="0"
+	onload="frameLoad(1)"> </iframe>
+
+
+
+</body>
+</html>
