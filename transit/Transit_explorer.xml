@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="公交线路与公交车站浏览器(DEV)"
+             author="Fei Chen"
+             author_email="chinamaps-devtools+stadiaexplorer@google.com"
+             author_affiliation="Google Inc."
+             description="This is a tool for users to browse bus stops and routes."
+             height="150">
+  <Require feature="sharedmap" />
+</ModulePrefs>
+
+<Content type="html"><![CDATA[
+<script type="text/javascript">
+try {
+  document.execCommand("BackgroundImageCache", false, true);
+} catch(err) {}
+</script>
+
+<link type="text/css" rel="stylesheet" href="http://chinamaps.googlecode.com/svn/transit/transit_explorer.css"></link>
+<script type="text/javascript" src="http://chinamaps.googlecode.com/svn/transit/transit_explorer.js"></script>
+
+<div class="transit">
+  <div class="lineHead">
+     
+    <input id="searchBox" class="searchBox" type="text" value="输入公交线路名" onclick="TransitMgr.prepareSearch(this)" onkeyup="TransitMgr.searchLineByInput()" onfocus="style.color='#000'" onblur="style.color='#808080'"/>
+    <input type="button" class="searchButton" value="查" onclick="TransitMgr.searchLineByInput()"/>
+    <div id="messageBoard" class="messageBoard"></div>
+
+    城市<select id="citySelector" class="citySelector" onchange="TransitMgr.changeCity(this)">
+    </select>
+    
+  </div>
+  <div class="lineContent" id="lineContent">
+    <div class="lineTitle" id="lineTitle">
+    </div>
+    <div class="lineDescript" id="lineDescript">
+    </div>
+    <div class="scrollWrapper">
+      <a class='scrollUp' href='javascript:TransitMgr.autoScroll(1, "stopContent")' onmouseover='TransitMgr.startScroll(1, "stopContent")' onmouseout='TransitMgr.stopScroll()'></a> 
+      <div id="stopContent" class="stopContent">
+        <ul class="stopList" id="stopList">
+        </ul>
+      </div>
+      <a class='scrollDown' href='javascript:TransitMgr.autoScroll(2, "stopContent")' onmouseover='TransitMgr.startScroll(2, "stopContent")' onmouseout='TransitMgr.stopScroll()'></a>
+    </div>
+  </div>
+  <div class="stationLines" id="stationLines"></div>
+</div>
+
+<script type="text/javascript">
+TransitMgr.MSG_CACHE = "数据读取中，请稍候...";
+TransitMgr.MSG_FRM_LOADING = "公交数据下载中，请稍候...";
+TransitMgr.MSG_MAP_LOADING = "地图数据下载中，请稍候...";
+TransitMgr.MSG_NO_LINE = "请输入公交线路名，如“1路”、“机场5号线”等等";
+TransitMgr.MSG_NO_CITY = "请选择要查询所在的城市";
+TransitMgr.MSG_NO_DATA = "未查到您要的信息，请修改查询条件试试";
+TransitMgr.MSG_NO_INVERSE = "对不起，该路线没有返程路线";
+
+TransitMgr.LABEL_SEARCH_DEFAULT = '输入公交线路名';
+TransitMgr.LABEL_LINE_FROM = "从";
+TransitMgr.LABEL_LINE_TO = "到";
+TransitMgr.LABEL_REVERSE = "查看返程";
+TransitMgr.LABEL_BACK = "返回";
+TransitMgr.LABEL_STATION_TITLE = "经过本站的公交线路：";
+TransitMgr.LABEL_INFOWINDOW = "在左侧查看详细站点信息 &laquo;";
+
+  _IG_RegisterOnloadHandler(TransitMgr.start);
+</script>
+]]></Content>
+</Module>
