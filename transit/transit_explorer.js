@@ -174,7 +174,7 @@ var TransitMgr = {
   //  else {
       var result = selector.options[selector.selectedIndex].value.match(/(\S+)\((\d+\.\d*),(\d+\.\d*)\)/);
       var name = result[1];
-      var center = new GLatLng(parseFloat(result[3]), parseFloat(result[2]));
+      var center = new GLatLng(parseFloat(result[2]), parseFloat(result[3]));
       TransitMgr.map.changeCity(name, center);
       TransitMgr.curCity = TransitMgr.prepareCity(name);
   //  }
