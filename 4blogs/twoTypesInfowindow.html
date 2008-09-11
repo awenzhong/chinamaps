@@ -16,7 +16,8 @@
     <script type="text/javascript">
    var map;
    var latlng;
-   var msg = "hi, 这是一个信息窗口！";
+   var msg="这是不带标签的信息窗口";
+   var type=1;
    
    function load() {
      if (GBrowserIsCompatible()) {
@@ -35,15 +36,34 @@
 	 code.push("var point = new GLatLng(" + lat.toFixed(4)+ "," + lng.toFixed(4) + ")");
      code.push("var marker = new GMarker(point);");
 	 code.push("map.addOverlay(marker);");
-	 code.push("GEvent.addListener(marker,'click',function(){");
-	 code.push("  marker.openInfoWindowHtml('"+msg+"');");
-	 code.push("});");
+	 
+	 if(type==1){
+	 	code.push("GEvent.addListener(marker,'click',function(){");
+	    code.push("  marker.openInfoWindowHtml('"+msg+"');");
+	    code.push("});");
+	 }else if(type==2){
+	 	code.push("var tabs = [];");
+		code.push("tabs.push(new GInfoWindowTab('标签1','标签1的内容'));");
+		code.push("tabs.push(new GInfoWindowTab('标签2','标签2的内容'));");
+		code.push("GEvent.addListener(marker,'click',function(){");
+	    code.push("  marker.openInfoWindowTabsHtml(tabs);");
+	    code.push("});");
+	 }
+	 
      var codeHTML = code.join("<br/>");
      $("code").innerHTML = codeHTML;
      var codeJS = codeHTML.replace(/<br\/>/g,"\n");
      eval(codeJS);
-	 marker.openInfoWindowHtml(msg);
+	 if(tabs){
+	 	marker.openInfoWindowTabsHtml(tabs);
+	 } else {
+	 	marker.openInfoWindowHtml(msg);
+	 }
      prettyPrint();
+   }
+   function updateType(type_) {
+   	type = type_;
+	updateCode();
    }
    function $(id) {
      return document.getElementById(id);
@@ -53,7 +73,11 @@
  </head>
 
 <body onload="load()" onunload="GUnload()">
+  <div>
+    <input type="radio" name="iwType" checked=true onclick="updateType(1)">简单的信息窗口</input>
+    <input type="radio" name="iwType" onclick="updateType(2)">带有多个标签页的信息窗口</input>
+  </div>
   <div id="map" style="width: 402px; clear:both; height: 250px"></div>
-  <pre class="prettyprint" id="code" style="width:400px; height: 120px; float:left"></pre>
+  <pre class="prettyprint" id="code" style="width:400px; height: 200px; float:left"></pre>
 </body>
 </html>
