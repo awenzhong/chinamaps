@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>谷歌地图信息窗口演示</title>
+    <style type="text/css">
+      body{
+      	text-align:center;
+		margin:auto;
+		width:950px;
+      }
+    </style>
+	<link rel="stylesheet" type="text/css" href="http://www.google.com/apis/maps/documentation/local_extensions.css" />
+    <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=abcdefg" type="text/javascript"></script>
+    <script src="http://www.google.com/apis/maps/include/prettify.js" type="text/javascript"></script>
+    <script type="text/javascript">
+   var map;
+   var latlng;
+   var type=1;
+   var msg = "我是一个简单的信息窗口";
+
+   function load() {
+     if (GBrowserIsCompatible()) {
+       map = new GMap2(document.getElementById("map"));
+	   latlng = new GLatLng(33.7243396617476, 103.0078125);
+       map.setCenter(latlng, 3);
+       updateType(type);
+
+       GEvent.addListener(map,"click",function(overlay, latlng_){
+          latlng = latlng_;
+		  updateCode();
+       });
+     }
+   }
+
+   function updateCode() {
+     map.clearOverlays();
+	 var code = [];
+	 if(!latlng)latlng = map.getCenter();
+     
+     var lat = latlng.lat();
+     var lng = latlng.lng();
+     code.push("var point = new GLatLng(" + lat.toFixed(6)+ "," + lng.toFixed(6) + ");");
+	 
+	 
+     var options = ["selectedTab", "maxWidth", "noCloseOnClick", "onOpenFn", 
+                       "onCloseFn", "zoomLevel", "mapType", 
+                       "maxContent", "maxTitle", "pixelOffset"];
+	 var items = [];
+	 for (var i = 0; i < options.length; i++) {
+       var value = $(options[i]+"_option").value;
+       if (value != ""){
+	   	  var item = options[i] + ":" + value;
+          items.push(item);
+       }
+     }
+	 var optionStr = null;
+	 if (items.length > 0) {
+	   optionStr = "{"+items.join(",")+"}";
+	 }
+	 if(type==2){
+	 	code.push("var tabs = [];");
+		code.push("tabs.push(new GInfoWindowTab('标签1','标签1的内容'));");
+		code.push("tabs.push(new GInfoWindowTab('标签2','标签2的内容'));");
+		if (optionStr) {
+		  code.push("var options = "+optionStr+";");
+	 	  code.push("map.openInfoWindowTabsHtml(point, tabs,options)");
+		} else {
+		  code.push("map.openInfoWindowTabsHtml(point, tabs)");
+		}
+	 }else{
+	 	code.push("var html='"+msg+"';");
+		if(optionStr){
+			code.push("var options = "+optionStr+";");
+		    code.push("map.openInfoWindowHtml(point, html,options)");
+		}else{
+			code.push("map.openInfoWindowHtml(point, html)");
+		}
+	 }
+     
+
+
+ 
+     var codeHTML = code.join("<br/>");
+     $("code").innerHTML = codeHTML;
+     var codeJS = codeHTML.replace(/<br\/>/g,"\n");
+     eval(codeJS);
+
+     prettyPrint();
+   }
+   
+   function updateType(type_) {
+   	type = type_;
+//   	$("simpleOptions").style.display = "none";
+//	$("maxableOptions").style.display = "none";
+//	$("tabableOptions").style.display = "none";
+	switch(type){
+		case 1:
+//		  $("simpleOptions").style.display = "block";
+		  msg = "我是一个简单的信息窗口";
+		  break;
+		case 2:
+//		  $("tabableOptions").style.display = "block";
+		  msg = "我是一个带有多个标签页的信息窗口";
+		  break;
+	}
+	updateCode();
+   }
+
+   function $(id) {
+     return document.getElementById(id);
+   }
+
+   </script>
+ </head>
+
+<body onload="load()" onunload="GUnload()">
+  <div style="clear:both;width:100%;">
+	<div>
+	  <input type="radio" name="iwType" checked=true onclick="updateType(1)">简单的信息窗口</input>
+	  <input type="radio" name="iwType" onclick="updateType(2)">带有多个标签页的信息窗口</input>
+	</div>
+	<div id="maxableOptions" style="text-align:left;">
+		<div style="width:300px; float:left;">
+		<code>selectedTab</code>
+		<select id="selectedTab_option" onchange="updateCode()">
+			<option></option>
+			<option value="0">标签1</option>
+			<option value="1">标签2</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>maxWidth</code>
+		<select id="maxWidth_option" onchange="updateCode()">
+			<option></option>
+			<option value="100">100px</option>
+			<option value="200">200px</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>noCloseOnClick</code>
+		<select id="noCloseOnClick_option" onchange="updateCode()">
+			<option></option>
+			<option value="true">true</option>
+			<option value="false">false(默认值)</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>onOpenFn</code>
+		<select id="onOpenFn_option" onchange="updateCode()">
+			<option></option>
+			<option value="function(){alert('信息窗口打开了')}">alert("信息窗口打开了")</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>onCloseFn</code>
+		<select id="onCloseFn_option" onchange="updateCode()">
+			<option></option>
+			<option value="function(){alert('信息窗口关闭了')}">alert("信息窗口关闭了")</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>zoomLevel</code>
+		<select id="zoomLevel_option" onchange="updateCode()">
+			<option></option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>mapType</code>
+		<select id="mapType_option" onchange="updateCode()">
+			<option></option>
+			<option value="G_NORMAL_MAP">G_NORMAL_MAP</option>
+			<option value="G_SATELLITE_MAP">G_SATELLITE_MAP</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>maxContent</code>
+		<select id="maxContent_option" onchange="updateCode()">
+			<option></option>
+			<option value="'最大化时的现实内容'">最大化时的现实内容</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>maxTitle</code>
+		<select id="maxTitle_option" onchange="updateCode()">
+			<option></option>
+			<option value="'最大化时的标题'">最大化时的标题</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;">
+		<code>pixelOffset</code>
+		<select id="pixelOffset_option" onchange="updateCode()">
+			<option></option>
+			<option value="new GSize(50, 50)">new GSize(50, 50)</option>
+		</select>
+	</div>
+	
+  </div>
+  <p><br/></p>
+  <div style="clear:both;text-align:left;">
+  	<div id="map" style="width: 450px; float:left; margin:0.5em;height: 402px"></div>
+    <pre class="prettyprint" id="code" style="width:450px; height: 400px; overflow:auto;float:left"></pre>
+  </div>
+  <div id="result" style="width:100px;height:50px"></div>
+ </body>
+</html>
