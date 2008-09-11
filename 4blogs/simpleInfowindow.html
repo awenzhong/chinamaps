@@ -42,8 +42,7 @@
      $("code").innerHTML = codeHTML;
      var codeJS = codeHTML.replace(/<br\/>/g,"\n");
      eval(codeJS);
-	 marker.openInfoWindowHtml(msg);
-     prettyPrint();
+	 prettyPrint();
    }
    function $(id) {
      return document.getElementById(id);
