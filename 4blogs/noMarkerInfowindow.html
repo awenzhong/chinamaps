@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>谷歌地图信息窗口演示</title>
+	<style>
+		body, div, pre, p{
+			margin:0;
+			padding:0;
+			border:0;
+		}
+	</style>
+    <link rel="stylesheet" type="text/css" href="http://www.google.com/apis/maps/documentation/local_extensions.css" />
+    <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxQMwdEejL6PNWQ60w7dBVYMUBtoYxSzpO8QrLyX6KzYJkpyIz3Q53terg" type="text/javascript"></script>
+    <script src="http://www.google.com/apis/maps/include/prettify.js" type="text/javascript"></script>
+    <script type="text/javascript">
+   var map;
+   var latlng;
+   
+   function load() {
+     if (GBrowserIsCompatible()) {
+       map = new GMap2(document.getElementById("map"));
+	   latlng = new GLatLng(33.7243396617476, 103.0078125);
+       map.setCenter(latlng, 3);
+	   updateCode();
+     }
+   }
+
+   function updateCode() {
+     map.clearOverlays();
+	 var code = [];
+     var lat = latlng.lat();
+     var lng = latlng.lng();
+	 code.push("GEvent.addListener(map,'click',function(overlay, point){");
+	 code.push("  var html='<p>没错, 这也是一个信息窗口！</p>'");
+	 code.push("  if(point){");
+	 code.push("    html += '点击位置: ';");
+	 code.push("    html += 'lat='+point.lat().toFixed(2);");
+	 code.push("    html += ', lng='+point.lng().toFixed(2);");
+	 code.push("    map.openInfoWindowHtml(point, html);");
+	 code.push("  }");
+	 code.push("});");
+     var codeHTML = code.join("\n");
+	 $("code").appendChild(document.createTextNode(codeHTML));
+//     $("code").innerHTML = codeHTML;
+//     var codeJS = codeHTML.replace(/<br\/>/g,"\n");
+     eval(codeHTML);
+	 prettyPrint();
+   }
+   function $(id) {
+     return document.getElementById(id);
+   }
+
+   </script>
+ </head>
+
+<body onload="load()" onunload="GUnload()">
+  <div id="map" style="width: 402px; clear:both; height: 250px"></div>
+  <pre class="prettyprint" id="code" style="width:400px; height: 150px; float:left"></pre>
+</body>
+</html>
