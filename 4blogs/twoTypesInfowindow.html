@@ -11,7 +11,7 @@
 		}
 	</style>
     <link rel="stylesheet" type="text/css" href="http://www.google.com/apis/maps/documentation/local_extensions.css" />
-    <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxQMwdEejL6PNWQ60w7dBVYMUBtoYxSzpO8QrLyX6KzYJkpyIz3Q53terg" type="text/javascript"></script>
+    <script src="http://ditu.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxQMwdEejL6PNWQ60w7dBVYMUBtoYxSzpO8QrLyX6KzYJkpyIz3Q53terg" type="text/javascript"></script>
     <script src="http://www.google.com/apis/maps/include/prettify.js" type="text/javascript"></script>
     <script type="text/javascript">
    var map;
@@ -75,8 +75,8 @@
 
 <body onload="load()" onunload="GUnload()">
   <div style="height:30px;">
-    <input type="radio" name="iwType" checked=true onclick="updateType(1)">简单的信息窗口</input>
-    <input type="radio" name="iwType" onclick="updateType(2)">带有多个标签页的信息窗口</input>
+    <input type="radio" name="iwType" checked=true onclick="updateType(1)">不带标签页的信息窗口</input>
+    <input type="radio" name="iwType" onclick="updateType(2)">带有标签页的信息窗口</input>
   </div>
   <div id="map" style="width: 402px; clear:both; height: 250px"></div>
   <pre class="prettyprint" id="code" style="width:400px; height: 200px; float:left"></pre>
