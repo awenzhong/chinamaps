@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>谷歌地图信息窗口API演示</title>
+    <style type="text/css">
+      body{
+      	text-align:center;
+		margin:auto;
+		width:950px;
+		font-size:13px;
+      }
+	  div, p, pre, span{
+	  	margin:0;
+		padding:0;
+		border:0;
+	  }
+	  .boldBorder{
+	  	border:solid #999 2px;
+	  }
+    </style>
+	<link rel="stylesheet" type="text/css" href="http://www.google.com/apis/maps/documentation/local_extensions.css" />
+    <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxQMwdEejL6PNWQ60w7dBVYMUBtoYxSzpO8QrLyX6KzYJkpyIz3Q53terg" type="text/javascript"></script>
+    <script src="http://www.google.com/apis/maps/include/prettify.js" type="text/javascript"></script>
+ </head>
+
+<body onload="load()" onunload="GUnload()">
+  <div style="float:left;clear:both;width:100%;">
+	<div style="text-align:left;">
+	  <span style="font-weight:bolder; margin-right:10px;">方法：</span>
+	  <input type="checkbox" id="tabType" onclick="updateCode()">带有标签页</input>
+	  <input type="checkbox" id="markerType" onclick="updateCode()">使用Marker打开信息窗口</input>
+	  <input type="checkbox" id="blowupType" onclick="updateCode()">嵌入放大地图</input>
+	  <input type="checkbox" id="bindType" onclick="updateCode()">绑定点击事件</input>
+	  <div style="display:none">
+	  <input type="checkbox" id="updateCurrentType" onclick="updateCode()">更新当前内容</input>
+	  <input type="checkbox" id="updateType" onclick="updateCode()">更新信息窗口</input></div>
+	</div>
+	<div style="text-align:left;margin:3px 0;">
+	  <span style="font-weight:bolder; margin-right:10px;">属性：</span>
+	  <div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">selectedTab</code>
+		<select id="selectedTab_option" onchange="updateCode()">
+			<option></option>
+			
+		</select>
+		</div>
+		
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">zoomLevel</code>
+		<select id="zoomLevel_option" onchange="updateCode()">
+			<option></option>
+			<option value="8">8</option>
+			<option value="10">10</option>
+			<option value="13">13</option>
+			<option value="15">15</option>
+			<option value="17">17</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">mapType</code>
+		<select id="mapType_option" onchange="updateCode()">
+			<option></option>
+			<option value="G_NORMAL_MAP">G_NORMAL_MAP</option>
+			<option value="G_SATELLITE_MAP">G_SATELLITE_MAP</option>
+		</select>
+		</div>
+		
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">maxWidth</code>
+		<select id="maxWidth_option" onchange="updateCode()">
+			<option></option>
+			<option value="100">100px</option>
+			<option value="200">200px</option>
+		</select>
+		</div>
+		
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">maxContent</code>
+		<select id="maxContent_option" onchange="updateCode()">
+			<option></option>
+			<option value="'最大化时的显示内容'">最大化时的显示内容</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">maxTitle</code>
+		<select id="maxTitle_option" onchange="updateCode()">
+			<option></option>
+			<option value="'最大化时的标题'">最大化时的标题</option>
+		</select>
+		</div>
+		
+		
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">noCloseOnClick</code>
+		<select id="noCloseOnClick_option" onchange="updateCode()">
+			<option></option>
+			<option value="true">true</option>
+			<option value="false">false(默认值)</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">onOpenFn</code>
+		<select id="onOpenFn_option" onchange="updateCode()">
+			<option></option>
+			<option value="function(){alert('信息窗口打开了')}">alert("信息窗口打开了")</option>
+		</select>
+		</div>
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">onCloseFn</code>
+		<select id="onCloseFn_option" onchange="updateCode()">
+			<option></option>
+			<option value="function(){alert('信息窗口关闭了')}">alert("信息窗口关闭了")</option>
+		</select>
+		</div>
+		
+		
+		<div style="width:300px; float:left;margin:3px 0;">
+		<code style="width:50px;">pixelOffset</code>
+		<select id="pixelOffset_option" onchange="updateCode()">
+			<option></option>
+			<option value="new GSize(50, 50)">new GSize(50, 50)</option>
+			<option value="new GSize(100, 0)">new GSize(100, 0)</option>
+		</select>
+	    </div>
+	</div>
+	
+	<div style="text-align:left;clear:both;margin:3px 0;">
+		<span style="font-weight:bolder; margin-right:10px;">内容：</span>
+		
+		<div style="width:200px; float:left;margin:3px 0;">
+		  <code style="width:50px;">文本</code>
+		  <select id="text_content" onchange="updateCode()">
+			<option></option>
+			<option value="<span>普通文本</span>">普通文本</option>
+			<option value="<a href='http://www.google.com' target='_blank'>带链接的文本</a>">带链接的文本</option>
+		  </select>
+	    </div>
+		<div style="width:200px; float:left;margin:3px 0;">
+		  <code style="width:50px;">图片</code>
+		  <select id="img_content" onchange="updateCode()">
+			<option></option>
+			<option value="<img src='http://www.google.cn/intl/zh-CN/images/logo_cn.gif'/>">图片</option>
+		  </select>
+	    </div>
+		<div style="width:200px; float:left;margin:3px 0;">
+		  <code style="width:50px;">视频</code>
+		  <select id="video_content" onchange="updateCode()">
+			<option></option>
+			<option value="<object width='210' height='170'><param name='movie' value='http://www.youtube.com/v/1oNXQ8ECOjw&hl=en&fs=1'></param><param name='allowFullScreen' value='true'></param><embed src='http://www.youtube.com/v/1oNXQ8ECOjw&hl=en&fs=1' type='application/x-shockwave-flash' allowfullscreen='true' width='210' height='170'></embed></object>">视频</option>
+		  </select>
+	    </div>
+		<div style="width:200px; float:left;margin:3px 0;">
+		  <code style="width:50px;">IFrame</code>
+		  <select id="iframe_content" onchange="updateCode()">
+			<option></option>
+			<option value="<iframe frameBorder=no src='http://www.google.com'/>">IFrame</option>
+		  </select>
+	    </div>
+		<div style="width:200px; float:left;margin:3px 0;display:none;">
+		  <code style="width:50px;">JavaScript</code>
+		  <select id="js_content" onchange="updateCode()">
+			<option></option>
+			<option value="<script> alert('hello');</script>">JavaScript</option>
+		  </select>
+	    </div>
+		<div style="width:200px; float:left;margin:3px 0;display:none;">
+		  <code style="width:50px;">CSS</code>
+		  <select id="css_content" onchange="updateCode()">
+			<option></option>
+			<option value="<style type='text/css'>.boldBorder{border:solid #999 2px;}</style>">CSS</option>
+		  </select>
+	    </div>
+		<div style="width:100%; float:left;margin:3px 0;">
+		<span style="font-weight:bolder; margin-right:10px;">窗口大小：</span>
+		  width<input type="input" id="width_content"/>
+		  height<input type="input" id="height_content"/>
+		  overflow<input type="input" id="overflow_content"/>
+		  <input type="button" value="设定" onclick="updateCode()"/>
+	    </div>
+	</div>
+	</div>
+  <p><br/></p>
+  <div style="clear:both;text-align:left;">
+  	<div id="map" style="width: 902px; float:left; margin:0;height: 500px"></div>
+    <pre class="prettyprint" id="code" style="width:900px; height: 500px; overflow:auto;float:left; margin:0;"></pre>
+  </div>
+ </body>
+ <script type="text/javascript">
+   var map;
+   var latlng;
+   var type=null;
+   
+   function load() {
+     if (GBrowserIsCompatible()) {
+       map = new GMap2(document.getElementById("map"));
+	   latlng = new GLatLng(33.7243396617476, 103.0078125);
+       map.setCenter(latlng, 5);
+       updateCode();
+//       GEvent.addListener(map,"click",function(overlay, latlng_){
+//          latlng = latlng_;
+//		  updateCode();
+//       });
+     }
+   }
+
+   function updateCode() {
+     map.clearOverlays();
+	 var code = [];
+	 if(!latlng)latlng = map.getCenter();
+     code.push("var point = new GLatLng(" + latlng.lat().toFixed(6)+ "," + latlng.lng().toFixed(6) + ");");
+	 var optionStr = createOption(code);
+     if($("tabType").checked){
+	 	createContent(code, true);
+	 	variable = "tabs"
+		method = "openInfoWindowTabsHtml";
+	 } else {
+		createContent(code, false);
+		variable = "html";
+		method = "openInfoWindowHtml";
+	 }
+	 if ($("bindType").checked && $("markerType").checked) {
+	   $("blowupType").disabled = true;
+	   method = $("tabType").checked ? "bindInfoWindowTabsHtml" : "bindInfoWindowHtml";
+	 } else {
+	   $("blowupType").disabled = false;
+	   if($("blowupType").checked){
+	 	method = "showMapBlowup";
+		variable = "";
+		optionStr = optionStr.substr(1);
+	   }
+	 }
+	 
+	 if($("markerType").checked){
+	 	$("bindType").disabled = false;
+	 	code.push("var marker = new GMarker(point,{draggable:true});");
+		code.push("map.addOverlay(marker);");
+		code.push("marker."+method+"("+variable+optionStr+");");
+	 } else {
+	 	$("bindType").disabled = true;
+		if(!variable && ! optionStr){
+			code.push("map."+method+"(point);");
+		}else{
+			code.push("map."+method+"(point,"+variable+optionStr+");");
+		}
+	 }
+	 var codeHTML = code.join("\n");
+	 $("code").innerHTML = "";
+	 $("code").appendChild(document.createTextNode(codeHTML));
+     eval(codeHTML);
+     prettyPrint();
+   }
+   
+   function createContent(code, isTab){
+   	 var contents = ["text", "img", "video", "iframe", "js", "css", "width", "height"];
+	 var wrapperFlag = false;
+	 var wrapper = "<div style='";
+	 if($("width_content").value){
+	 	wrapperFlag = true;
+	 	wrapper += "width:"+$("width_content").value+";";
+	 }
+	 if($("height_content").value){
+	 	wrapperFlag = true;
+	 	wrapper += "height:"+$("height_content").value+";";
+	 }
+	 if($("overflow_content").value){
+	 	wrapperFlag = true;
+	 	wrapper += "overflow:"+$("overflow_content").value+";";
+	 }
+	 wrapper += "'>"
+	 if(isTab){
+	 	var selector = $("selectedTab_option");
+		var index = 0;
+	 	code.push("var tabs = [];");
+		if($("text_content").value){
+		  var html = "";
+		  if(wrapperFlag){
+		  	html += wrapper; 
+		  }
+		  html += $("text_content").value
+		  if (wrapperFlag) {
+			html += "</div>";
+		  }
+		  code.push("tabs.push(new GInfoWindowTab('文本',\""+html+"\"));");
+		  var option = new Option("文本", index);
+		  selector.options[selector.options.length] = option;3
+		  index++;
+		}
+		if($("img_content").value){
+			var html = "";
+		  if(wrapperFlag){
+		  	html += wrapper; 
+		  }
+		  html += $("img_content").value
+		  if (wrapperFlag) {
+			html += "</div>";
+		  }
+		  code.push("tabs.push(new GInfoWindowTab('图片',\""+html+"\"));");
+		  var option = new Option("图片", index );
+		  selector.options[selector.options.length] = option;
+		  index++;
+		}
+		if($("video_content").value){
+			var html = "";
+		  if(wrapperFlag){
+		  	html += wrapper; 
+		  }
+		  html += $("video_content").value
+		  if (wrapperFlag) {
+			html += "</div>";
+		  }
+		  code.push("tabs.push(new GInfoWindowTab('视频',\""+html+"\"));");
+		  var option = new Option("视频", index );
+		  selector.options[selector.options.length] = option;
+		  index++;
+		}
+		if($("iframe_content").value){
+			var html = "";
+		  if(wrapperFlag){
+		  	html += wrapper; 
+		  }
+		  html += $("iframe_content").value
+		  if (wrapperFlag) {
+			html += "</div>";
+		  }
+		  code.push("tabs.push(new GInfoWindowTab('IFrame',\""+html+"\"));");
+		  var option = new Option( "iframe",index);
+		  selector.options[selector.options.length] = option;
+		  index++;
+		}
+		
+	 } else {
+	 	code.push("var html = \"\";");
+		if(wrapperFlag){
+			code.push("html += \"" + wrapper+"\";");
+		}
+		
+		if($("text_content").value){
+		  code.push("html += \""+$("text_content").value+"\";");
+		}
+		if($("img_content").value){
+		  code.push("html += \""+$("img_content").value+"\";");
+		}
+		if($("video_content").value){
+		  code.push("html += \""+$("video_content").value+"\";");
+		}
+		if($("iframe_content").value){
+		  code.push("html += \""+$("iframe_content").value+"\";");
+		}
+		if (wrapperFlag) {
+			code.push("html += \"</div>\";");
+		}
+	 }
+   }
+   
+   function createOption(code){
+   	 var options = ["selectedTab", "maxWidth", "noCloseOnClick", "onOpenFn", "onCloseFn", "zoomLevel", "mapType", "maxContent", "maxTitle", "pixelOffset"];
+	 var items = [];
+	 for (var i = 0; i < options.length; i++) {
+       var value = $(options[i]+"_option").value;
+       if (value != ""){
+	   	  var item = options[i] + ":" + value;
+          items.push(item);
+       }
+     }
+	 var optionStr = null;
+	 if (items.length > 0) {
+	   optionStr = "{"+items.join(",")+"}";
+	 }
+	 if(optionStr){
+	 	code.push("var options = "+optionStr+";");
+	 	return ", options";
+	 } else {
+	 	return "";
+	 }
+   }
+   function $(id) {
+     return document.getElementById(id);
+   }
+
+   </script>
+</html>
