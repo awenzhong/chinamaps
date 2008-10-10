@@ -268,7 +268,7 @@ var rpcProxy = (function(){
   }
 })();
 
-var domUtil = (function(){
+var dom = (function(){
   var boundsStops = {};
   var blueIcon = createIcon("blueStopIcon.png");
   var redIcon = createIcon("redStopIcon.png");
@@ -539,10 +539,10 @@ var transitMgr = (function(){
 
     GEvent.addListener(map, "zoomend", function(oldLevel, newLevel) {
       if (!isInVisible(newLevel)) {
-        domUtil.hideBoundsStops();
+        dom.hideBoundsStops();
       } else if (!isInVisible(oldLevel) && isInVisible(newLevel)) {
       	map.getBoundsAsync(function(bounds){
-      	  domUtil.showBoundsStops(bounds);
+      	  dom.showBoundsStops(bounds);
           rpcProxy.getStopsByBounds(bounds);
       	});
       }
@@ -567,7 +567,7 @@ var transitMgr = (function(){
     if(cityName != cur.cityName){
       cur = {};
       cur.cityName = cityName;
-      domUtil.changeCity(cityName);
+      dom.changeCity(cityName);
       rpcProxy.getLinesByCity(cityName);
     }
     if(needRelocate){
@@ -615,7 +615,7 @@ var transitMgr = (function(){
   	},
   	importLineStops : function(stops){
       var line = cityList[cur.cityName].lineList[cur.lineId];
-      domUtil.fillLineStops(line, map, stops);
+      dom.fillLineStops(line, map, stops);
     },
     importBoundsStops : function(stops){
       if(stops && stops.length > 0){
@@ -627,12 +627,12 @@ var transitMgr = (function(){
       if(cur.cityName && cur.lineId){
         lineStops = cityList[cur.cityName].lineList[cur.lineId].stopList;
       }
-      domUtil.displayBoundsStops(stops, lineStops, map);
+      dom.displayBoundsStops(stops, lineStops, map);
     },
     importStationLines : function(lines){
   	  var stopName = cur.stopName;
   	  if(cur.lineId) var lineName = cityList[cur.cityName].lineList[cur.lineId].name;
-  	  domUtil.fillStationLines(stopName, lines, lineName);
+  	  dom.fillStationLines(stopName, lines, lineName);
   	},
     clickLine : function(lineId, isFromSearch){
   	  if(isFromSearch){
@@ -654,7 +654,7 @@ var transitMgr = (function(){
       }
       var newLine = cityList[cur.cityName].lineList[lineId];
       if(newLine && newLine.stopList){
-        domUtil.fillLineStops(newLine, map);
+        dom.fillLineStops(newLine, map);
       } else {
         rpcProxy.getStopsByLine(lineId, cur.cityName);
       }
@@ -670,7 +670,7 @@ var transitMgr = (function(){
       rpcProxy.getLinesByStation(stopName, cur.cityName);
       if(!isMockClick){
         var stop = cityList[cur.cityName].lineList[cur.lineId].stopList[stopName];
-        domUtil.highlightStop(stop);
+        dom.highlightStop(stop);
       }
     },
     clickInverse : function(){
@@ -686,7 +686,7 @@ var transitMgr = (function(){
       }
     },
     clickTri : function(){
-      domUtil.openCitySearchPane(cityList);
+      dom.openCitySearchPane(cityList);
     },
     clickCity : function(cityName){
       checkCity(cityName, true);
@@ -712,7 +712,7 @@ var transitMgr = (function(){
           }
         }
       }
-      domUtil.openLineSearchPane(result, key);
+      dom.openLineSearchPane(result, key);
     },
     searchCity : function(id){
       var key = $(id).value;
@@ -725,7 +725,7 @@ var transitMgr = (function(){
           result[i] = cityList[i];
         }
       }
-      domUtil.openCitySearchPane(result, key);
+      dom.openCitySearchPane(result, key);
     },
     restore : function(id, type){
       var key = $(id).value;
@@ -752,7 +752,7 @@ window['Transit'] = {
   'click_stop' : transitMgr.clickStop,
   'click_line' : transitMgr.clickLine,
   'click_inverse' : transitMgr.clickInverse,
-  'click_back' : domUtil.clickBack,
+  'click_back' : dom.clickBack,
   'click_tri' : transitMgr.clickTri,
   'click_city' : transitMgr.clickCity,
   'searchLine' : transitMgr.searchLine,
