@@ -315,12 +315,13 @@ var dom = (function(){
   	  line.stopList = {};
   	var points = [stops.length];
     for(var i = 0, item; item = stops[i]; i++){
+      var seq = item['line_seq'];
       var name = item['name'];
-      var stop = line.stopList[name] = {};
+      var stop = line.stopList[seq] = {};
       stop.name = name;
-      stop.seq = item['line_seq'];
+      stop.seq = seq;
       stop.marker = createStopMarker(item['coordinates'], redIcon, name);
-      points[item['line_seq']] = stop.marker.point;
+      points[seq] = stop.marker.point;
     }
     line.route = [];
     if (points.length > 1) {
@@ -434,8 +435,9 @@ var dom = (function(){
   	  for(var i = 0, polyline; polyline = line.route[i]; i++){
         map.addOverlay(polyline);
       }
-      for(var i in line.stopList){
-      	var stop = line.stopList[i];
+      var list = line.stopList;
+      for(var i in list){
+      	var stop = list[i];
         map.addOverlay(stop.marker);
       	html += '<p class="stopIcon" style="line-height:1.5em;" onclick="Transit.click_stop(\''+stop.name+'\')" onmouseover="style.fontWeight=\'bolder\';style.cursor=\'pointer\'" onmouseout="style.fontWeight=\'normal\';">';
     	html += '  <span style="text-align:center;width:15px;color:#666">'+stop.seq+'</span>';
@@ -620,7 +622,7 @@ var transitMgr = (function(){
     importBoundsStops : function(stops){
       if(stops && stops.length > 0){
         checkCity(stops[0].location);
-      } else {
+      } else if(!cur.cityName){
         map.setCenter(DEFAULT_CENTER, DEFAULT_LEVEL);
       }
       var lineStops = {};
@@ -669,7 +671,14 @@ var transitMgr = (function(){
       }
       rpcProxy.getLinesByStation(stopName, cur.cityName);
       if(!isMockClick){
-        var stop = cityList[cur.cityName].lineList[cur.lineId].stopList[stopName];
+        var list = cityList[cur.cityName].lineList[cur.lineId].stopList;
+      	var stop;
+      	for(var i in list){
+      	  if(list[i].name == stopName){
+      	    stop = list[i];
+      	    break;
+      	  }
+      	}
         dom.highlightStop(stop);
       }
     },
