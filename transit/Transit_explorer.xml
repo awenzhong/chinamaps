@@ -305,6 +305,7 @@ var domUtil = (function(){
   	var result = latlngStr.split(",");
   	var point = new GLatLng(parseFloat(result[1]),parseFloat(result[0]));
   	var marker = new GMarker(point, { icon: icon, title: name});
+  	marker.point = point;
   	if(map) map.addOverlay(marker);
     addMarkerListener(marker, name);
     return marker;
@@ -319,10 +320,7 @@ var domUtil = (function(){
       stop.name = name;
       stop.seq = item['line_seq'];
       stop.marker = createStopMarker(item['coordinates'], redIcon, name);
-      stop.marker.getPointAsync(function(point){
-        points[item['line_seq']] = point;
-      });
-      
+      points[item['line_seq']] = stop.marker.point;
     }
     line.route = [];
     if (points.length > 1) {
@@ -443,7 +441,7 @@ var domUtil = (function(){
     	html += '  <span style="text-align:center;width:15px;color:#666">'+stop.seq+'</span>';
     	html += '  <span id="'+stop.name+'">'+stop.name+'</span>';
     	html += '</p>';
-    	bounds.extend(stop.marker.getLatLng());
+    	bounds.extend(stop.marker.point);
       }
   	  $("stopPaneContent").innerHTML = html;
       var center = bounds.getCenter();
@@ -482,7 +480,7 @@ var domUtil = (function(){
     showBoundsStops : function(bounds){
       for(var i in boundsStops){
       	var marker = boundsStops[i].marker;
-      	if(bounds.containsLatLng(marker.getLatLng())){
+      	if(bounds.containsLatLng(marker.point)){
       	  marker.show();
       	}
       }
