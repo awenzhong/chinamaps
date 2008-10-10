@@ -528,7 +528,6 @@ var transitMgr = (function(){
     } else {
       map.setCenter(DEFAULT_CENTER, DEFAULT_LEVEL);
     }
-    map.enableScrollWheelZoom();
     addMapListener();
   }
   
