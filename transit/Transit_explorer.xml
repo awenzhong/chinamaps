@@ -480,7 +480,7 @@ var dom = (function(){
     showBoundsStops : function(bounds){
       for(var i in boundsStops){
       	var marker = boundsStops[i].marker;
-      	if(bounds.containsLatLng(marker.point)){
+      	if(bounds.contains(marker.point)){
       	  marker.show();
       	}
       }
