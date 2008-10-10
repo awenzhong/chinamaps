@@ -5,7 +5,7 @@
              author_email="chinamaps-devtools+stadiaexplorer@google.com"
              author_affiliation="Google Inc."
              description="This is a tool for users to browse bus stops and routes."
-             height="300">
+             height="500">
   <Require feature="sharedmap" />
 </ModulePrefs>
 
@@ -57,6 +57,7 @@ a:visited{color:#00c}
  }
 .messageBoard, .searchPane{
   position:absolute;
+  left:0;
   top:30px;
   background-color:#fff;
   border:solid #333333 1px;
