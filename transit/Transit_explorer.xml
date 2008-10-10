@@ -319,7 +319,10 @@ var domUtil = (function(){
       stop.name = name;
       stop.seq = item['line_seq'];
       stop.marker = createStopMarker(item['coordinates'], redIcon, name);
-      points[item['line_seq']] = stop.marker.getLatLng();
+      stop.marker.getPointAsync(function(point){
+        points[item['line_seq']] = point;
+      });
+      
     }
     line.route = [];
     if (points.length > 1) {
