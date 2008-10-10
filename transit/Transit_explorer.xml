@@ -32,8 +32,7 @@ a{color:#00c;font-size:0.9em;}
 a:active{color:#f00} 
 a:visited{color:#00c}
 .transit{
-  width:300px;
-  height:300px;
+  height:500px;
 }
 .lineHead{
   margin: 0 0 10px 5px;
