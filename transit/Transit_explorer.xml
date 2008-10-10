@@ -445,7 +445,7 @@ var domUtil = (function(){
       }
   	  $("stopPaneContent").innerHTML = html;
       var center = bounds.getCenter();
-      map.getBoundsZoomLevelAsync(function(zoom){
+      map.getBoundsZoomLevelAsync(bounds, function(zoom){
         map.setCenter(center, zoom);
       });
       
@@ -545,7 +545,6 @@ var transitMgr = (function(){
       	  domUtil.showBoundsStops(bounds);
           rpcProxy.getStopsByBounds(bounds);
       	});
-      	
       }
     });
 
