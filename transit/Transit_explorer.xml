@@ -533,9 +533,9 @@ var transitMgr = (function(){
   }
   
   function addMapListener(){
-    GEvent.addListener(map, "infowindowclose", function() {
-      if(cur.lineId)  Transit.click_back();
-    });
+    //GEvent.addListener(map, "infowindowclose", function() {
+    //  if(cur.lineId)  Transit.click_back();
+    //});
 
     GEvent.addListener(map, "zoomend", function(oldLevel, newLevel) {
       if (!isInVisible(newLevel)) {
