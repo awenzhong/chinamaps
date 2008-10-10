@@ -342,14 +342,17 @@ var dom = (function(){
   	openLineSearchPane : function(lines, key){
   	  $("citySearchPane").style.display = "none";
       $("lineSearchPane").style.display = "block";
-  	  var html = "";
-  	  var counter = 0;
+  	  var html = "", counter = 0, existLines = {};
   	  var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	  for(var i in lines){
-  	    html += '<div style="position:relative;margin:3px;" onclick=Transit.click_line(' + lines[i].id + ') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">';
-        html += '<p style="float:left;width:40%;">' + lines[i].name.replace(key, replacement) + '</p>';
-        html += '<p style="float:right;width:55%;"><span style="display:block;color:#666;">（' + lines[i].start + '<a class="plyIcon"></a>' + lines[i].end + '）</span></p>';
+  	  	//NEW: filter duplicate line
+  	  	var name = lines[i].name;
+  	    if(existLines[name]) continue;
+  	    html += '<div style="position:relative;margin:3px;" onclick=Transit.click_line(' + lines[i].id + ') onmouseover="this.style.backgroundColor=\'#c0c0c0\';this.style.cursor=\'pointer\'" onmouseout="this.style.backgroundColor=\'#fff\';">';
+        html += '<span style="float:left;width:40%;">' + name.replace(key, replacement) + '</span>';
+        html += '<span style="float:right;width:55%;"><span style="display:block;color:#666;">' + lines[i].start + '<a class="plyIcon"></a>' + lines[i].end + '</span></span>';
   	    html += '<div style="clear:both"></div></div><div style="clear:both"></div>';
+  	    existLines[name] = name;
   	    counter ++;
   	  }
   	  if(html == ""){
