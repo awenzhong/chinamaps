@@ -728,13 +728,22 @@ var transitMgr = (function(){
       if (key == null || key == "") {
       	return;
       }
-      var result = {};
+      var result = {}, counter = 0;
       for(var i in cityList){
         if(i.indexOf(key) != -1){
           result[i] = cityList[i];
+          counter ++;
         }
       }
-      dom.openCitySearchPane(result, key);
+      if(counter == 1){
+      	for(var i in result)
+      	var name = result[i].name;
+        if(cur.cityName != name){
+          checkCity(name, true);
+        }
+      } else {
+        dom.openCitySearchPane(result, key);
+      }
     },
     restore : function(id, type){
       var key = $(id).value;
