@@ -117,7 +117,7 @@ html>body .plyIcon{
 	<input id="liveCity" class="liveCity" onkeyup="Transit.searchCity(id)" onmouseover="this.select()" onclick="this.value=''" onblur="Transit.restore(id, 2)"/>
 	<span onclick="Transit.click_tri()">▼</span>
 	
-	<div id="lineSearchPane" class="searchPane" style="overflow-x:auto;">
+	<div id="lineSearchPane" class="searchPane">
 	  <span class="closeIcon" onclick="this.parentNode.style.display='none'" onmouseover="style.backgroundColor='#c0c0c0';style.cursor='pointer'" onmouseout="style.backgroundColor='#fff';">X</span>
 	  <div id="lineSearchResult">路线搜索结果</div>
 	</div>
@@ -348,10 +348,10 @@ var dom = (function(){
   	  	//NEW: filter duplicate line
   	  	var name = lines[i].name;
   	    if(existLines[name]) continue;
-  	    html += '<div style="position:relative;margin:3px;" onclick=Transit.click_line(' + lines[i].id + ') onmouseover="this.style.backgroundColor=\'#c0c0c0\';this.style.cursor=\'pointer\'" onmouseout="this.style.backgroundColor=\'#fff\';">';
+  	    html += '<div style="position:relative;margin:3px;overflow:auto;" onclick=Transit.click_line(' + lines[i].id + ') onmouseover="this.style.backgroundColor=\'#c0c0c0\';this.style.cursor=\'pointer\'" onmouseout="this.style.backgroundColor=\'#fff\';">';
         html += '<span style="float:left;width:40%;">' + name.replace(key, replacement) + '</span>';
         html += '<span style="float:right;width:55%;"><span style="display:block;color:#666;">' + lines[i].start + '<a class="plyIcon"></a>' + lines[i].end + '</span></span>';
-  	    html += '<div style="clear:both"></div></div><div style="clear:both"></div>';
+  	    html += '</div><div style="clear:both"></div>';
   	    existLines[name] = name;
   	    counter ++;
   	  }
@@ -415,10 +415,10 @@ var dom = (function(){
   	    var end = item['end_station'];
   	    //NEW: filter duplicate line
   	    if(existLines[name]) continue;
-  	    html += '<div style="position:relative;margin:5px 3px;">';
+  	    html += '<div style="position:relative;margin:5px 3px;overflow:auto;">';
         html += '<p class="list-line-name" style="float:left;width:40%;" onclick=Transit.click_line(' + id + ') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</p>';
         html += '<p style="float:right; width:57%;">' + start + '<a class="plyIcon"></a>' + end + '</p>';
-        html += '<div style="clear:both"></div></div><div style="clear:both"></div>';
+        html += '</div><div style="clear:both"></div>';
         existLines[name] = name;
       }
       $("linePaneContent").innerHTML = html;
