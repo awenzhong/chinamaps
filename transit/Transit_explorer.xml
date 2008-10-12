@@ -115,7 +115,7 @@ html>body .plyIcon{
     <input type="button" class="searchButton" value="查" onclick="Transit.searchLine('lineBox')"/>
 	城市
 	<input id="liveCity" class="liveCity" onkeyup="Transit.searchCity(id)" onmouseover="this.select()" onclick="this.value=''" onblur="Transit.restore(id, 2)"/>
-	<span onclick="Transit.click_tri()">▼</span>
+	<span onclick="Transit.click_tri()" onmouseover="style.cursor='pointer'">▼</span>
 	
 	<div id="lineSearchPane" class="searchPane">
 	  <span class="closeIcon" onclick="this.parentNode.style.display='none'" onmouseover="style.backgroundColor='#c0c0c0';style.cursor='pointer'" onmouseout="style.backgroundColor='#fff';">X</span>
