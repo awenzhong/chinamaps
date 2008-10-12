@@ -302,6 +302,7 @@ var dom = (function(){
   var baseUrl = "http://chinamaps.googlecode.com/svn/transit/";
   var blueIconUrl = baseUrl + "icons/blueStopIcon.png";
   var redIconUrl = baseUrl + "icons/redStopIcon.png";
+  var highIconUrl = baseUrl + "icons/highStopIcon2.png";
   var blueIcon = createIcon(blueIconUrl);
   var redIcon = createIcon(redIconUrl);
   
@@ -319,14 +320,6 @@ var dom = (function(){
       highlightStopNode(name);
       transitMgr.clickStop(name, true);
     });
-    GEvent.addListener(marker, 'mouseover', function() {
-      marker.setImage(highIconUrl);
-      highlightStopNode(name);
-    });
-    GEvent.addListener(marker, 'mouseout', function() {
-      marker.setImage(redIconUrl);
-      unhighlightStopNode(name);
-    });
   }
   function openStopInfoWindow(marker, name){
     var html = '<div style="font-weight:bold;font-size:1.2em;margin-bottom:3px;">' + name + '</div>';
@@ -336,8 +329,14 @@ var dom = (function(){
   function highlightStopNode(stopName){
     var curStopNode = $(stopName);
     if (curStopNode) {
-      curStopNode.className = "selected";
-      scrollToVisible(curStopNode); 
+      curStopNode.className = "stopIcon selected";
+      scrollToVisible(curStopNode);
+    }
+  }
+  function unhighlightStopNode(stopName){
+    var curStopNode = $(stopName);
+    if (curStopNode) {
+      curStopNode.className = "stopIcon";
     }
   }
   function createStopMarker(latlngStr, icon, name, map){
@@ -492,7 +491,7 @@ var dom = (function(){
     	html += '  <span style="text-align:center;width:15px;color:#666">'+stop.seq+'</span>';
     	html += '  <span>'+stop.name+'</span>';
     	html += '</p>';
-    	bounds.extend(stop.marker.getLatLng());
+    	bounds.extend(stop.marker.point);
       }
   	  stopsDom.content.innerHTML = html;
       var center = bounds.getCenter();
@@ -783,8 +782,10 @@ var transitMgr = (function(){
       var key = lineDom.value;
       if (key == null || key == "" || key == '输入公交线路名') return;
       var result = {};
-      var lineList = cityList[cur.cityName].lineList;
-      if(!lineList){
+      var lineList;
+      if(cur.cityName && cityList[cur.cityName].lineList){
+        lineList = cityList[cur.cityName].lineList;
+      } else {
         setTimeout("Transit.searchLine()", 500);
         return;
       }
