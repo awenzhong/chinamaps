@@ -348,10 +348,10 @@ var dom = (function(){
   	  	//NEW: filter duplicate line
   	  	var name = lines[i].name;
   	    if(existLines[name]) continue;
-  	    html += '<div style="position:relative;margin:3px;overflow:auto;" onclick=Transit.click_line(' + lines[i].id + ') onmouseover="this.style.backgroundColor=\'#c0c0c0\';this.style.cursor=\'pointer\'" onmouseout="this.style.backgroundColor=\'#fff\';">';
+  	    html += '<div style="margin:3px;overflow:hidden;width:100%;" onclick=Transit.click_line(' + lines[i].id + ') onmouseover="this.style.backgroundColor=\'#c0c0c0\';this.style.cursor=\'pointer\'" onmouseout="this.style.backgroundColor=\'#fff\';">';
         html += '<span style="float:left;width:40%;">' + name.replace(key, replacement) + '</span>';
         html += '<span style="float:right;width:55%;color:#666;">' + lines[i].start + '<a class="plyIcon"></a>' + lines[i].end + '</span>';
-  	    html += '</div><div style="clear:both"></div>';
+  	    html += '</div>';
   	    existLines[name] = name;
   	    counter ++;
   	  }
