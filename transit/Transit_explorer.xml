@@ -124,7 +124,7 @@ html>body .plyIcon{
 	
 	<div id="searchPane" class="searchPane">
 	  <div style="overflow:hidden;height:1.2em;">
-	    <span class="closeIcon" onclick="this.parentNode.style.display='none'" onmouseover="style.backgroundColor='#c0c0c0';style.cursor='pointer'" onmouseout="style.backgroundColor='#fff';">X</span>
+	    <span class="closeIcon" onclick="this.parentNode.parentNode.style.display='none'" onmouseover="style.backgroundColor='#c0c0c0';style.cursor='pointer'" onmouseout="style.backgroundColor='#fff';">X</span>
 	  </div>
 	  <div id="searchResult" class="searchResult">搜索结果</div>
 	</div>
