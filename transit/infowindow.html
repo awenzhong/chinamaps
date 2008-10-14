@@ -6,7 +6,7 @@
 	color:#000;
 	background:#fff
   }
-  p,div,ul,li{
+  p,div{
     margin:0;
     padding:0;
     border:0;
@@ -64,15 +64,20 @@
   	  var end = item['end_station'];
   	  if(existLines[name]) continue;
   	  html += '<div style="position:relative;margin:5px 3px;overflow:auto;">';
-      html += '<p class="list-line-name" style="float:left;width:40%;" onclick=Transit.click_line(' + id + ') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</p>';
+      html += '<p class="list-line-name" style="float:left;width:40%;" onclick=Transit.sendMsg(' + id + ') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</p>';
       html += '<p style="float:right; width:57%;">' + start + '<a class="plyIcon"></a>' + end + '</p>';
       html += '</div>';
       existLines[name] = name;
     }
     container.innerHTML = html; 
   }
+  
+  function sendMsg(lineId){
+    window.location = location.host+"#"+lineId;
+  }
   window['Transit'] = {
-    'fillLines' : fillLines
+    'fillLines' : fillLines,
+    'sendMsg' : sendMsg
   }
    
   request(paramStr);
