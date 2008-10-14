@@ -1,0 +1,47 @@
+
+<script type="text/javascript">
+  function request(paramStr){
+    var backend_url = "http://211.157.3.197:8080/transit/";
+    var url = backend_url + "?" + paramStr + "&random=" + Math.random();
+    var scriptTag = document.createElement('script');
+    scriptTag.setAttribute('type', 'text/javascript');
+    scriptTag.setAttribute('charset', 'utf-8');
+    scriptTag.setAttribute('id', 'jsonpScriptTag');
+    scriptTag.setAttribute('src', url);
+    var oldTag = document.getElementById('jsonpScriptTag');
+    var head = document.getElementsByTagName('head')[0];
+    if (oldTag) {
+      head.removeChild(oldTag);
+    }
+    head.appendChild(scriptTag);
+  }
+  
+  function  fillLines(stopName, lines, lineName){
+    var html = '';
+    var existLines = {};
+    for(var i = 0, item; item = lines[i]; i++){
+      var id = item['line_id'];
+  	  var name = item['short_name'];
+  	  var start = item['start_station'];
+  	  var end = item['end_station'];
+  	  if(existLines[name]) continue;
+  	  html += '<div style="position:relative;margin:5px 3px;overflow:auto;">';
+      html += '<p class="list-line-name" style="float:left;width:40%;" onclick=Transit.click_line(' + id + ') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</p>';
+      html += '<p style="float:right; width:57%;">' + start + '<a class="plyIcon"></a>' + end + '</p>';
+      html += '</div>';
+      existLines[name] = name;
+    }
+    container.innerHTML = html; 
+  }
+
+  var container = document.getElementById("container");
+  var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
+  var paramStr = "api=ls&sn="+params[1]+"city="+params[2]+"&callback=fillLines";
+  container.innerHTML = "加载经过"+params[1]+"的公交路线..";; 
+  request(paramStr);
+
+</script>    
+<div id="container">
+
+
+</div>
