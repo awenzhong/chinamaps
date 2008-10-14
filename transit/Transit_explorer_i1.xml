@@ -534,7 +534,7 @@ var dom = (function(){
     changeCity : function(cityName){
       closePopup();
       cityDom.value = cityName;
-      linesDom.pane.style.display = 'none';
+//      linesDom.pane.style.display = 'none';
       stopsDom.pane.style.display = 'none';
       boundsStops = {};
     },
