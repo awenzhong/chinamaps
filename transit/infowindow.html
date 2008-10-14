@@ -83,8 +83,8 @@
   function sendMsg(lineId){
     var url = "http://chinamaps.googlecode.com/svn/transit/pipeFrame.html";
     //var url = window.location
-    getPipeFrame().location = url+"#"+lineId;
-    //Transit.lineId = lineId;
+    //getPipeFrame().location = url+"#"+lineId;
+    Transit.lineId = lineId;
   }
   window['Transit'] = {
     'fillLines' : fillLines,
