@@ -735,7 +735,7 @@ var transitMgr = (function(){
       var frame = getInfoFrame(window);
       if(frame && frame.Transit){
         var lineId = frame.Transit.lineId;
-        if(lineId != cur.lineId){
+        if(lineId && lineId != cur.lineId){
           Transit.click_line(lineId);
           checkCounter = 0;
         } else {
