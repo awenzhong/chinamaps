@@ -30,7 +30,7 @@
 <div id="container">
   <span>公交路线加载中...</span>
 </div>
-
+<iframe id="pipeFrame" src="http://chinamaps.googlecode.com/svn/transit/pipe.html" width=0></iframe>
 <script type="text/javascript">
 (function(){
   var container = document.getElementById("container");
@@ -71,16 +71,25 @@
     }
     container.innerHTML = html; 
   }
-  
+  function getPipeFrame(){
+    var frame;
+    if(navigator.userAgent.indexOf("Safari") != -1){
+      frame = frames["pipeFrame"];
+    }else{
+      frame = document.getElementById("pipeFrame").contentWindow;
+    }
+    return frame;
+  }
   function sendMsg(lineId){
-    //var url = "http://chinamaps.googlecode.com/svn/transit/infowindow.html";
+    var url = "http://chinamaps.googlecode.com/svn/transit/pipeFrame.html";
     //var url = window.location
-    //window.location = url+"#"+lineId;
-    Transit.lineId = lineId;
+    getPipeFrame().location = url+"#"+lineId;
+    //Transit.lineId = lineId;
   }
   window['Transit'] = {
     'fillLines' : fillLines,
-    'sendMsg' : sendMsg
+    'sendMsg' : sendMsg,
+    'getPipeFrame' : getPipeFrame
   }
    
   request(paramStr);
