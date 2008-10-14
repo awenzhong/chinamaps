@@ -63,8 +63,9 @@
   	  var start = item['start_station'];
   	  var end = item['end_station'];
   	  if(existLines[name]) continue;
-  	  html += '<div style="position:relative;margin:5px 3px;overflow:auto;">';
-      html += '<p class="list-line-name" style="float:left;width:40%;" onclick=Transit.sendMsg(\'' + id + '\') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</p>';
+  	  html += '<div style="position:relative;margin:5px 3px;overflow:hidden;">';
+      html += '<p style="float:left;width:38%;">' + name + '</p>';
+      html += '<span class="list-line-name" onclick=Transit.sendMsg(\'' + id + '\') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</span></p>';
       html += '<p style="float:right; width:57%;">' + start + '<a class="plyIcon"></a>' + end + '</p>';
       html += '</div>';
       existLines[name] = name;
