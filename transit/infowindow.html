@@ -73,7 +73,8 @@
   }
   
   function sendMsg(lineId){
-    window.location = location.host+"#"+lineId;
+    var url = "http://chinamaps.googlecode.com/svn/transit/infowindow.html";
+    window.location = url+"#"+lineId;
   }
   window['Transit'] = {
     'fillLines' : fillLines,
