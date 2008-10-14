@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 body{
-	font-size:100%;
+	font-size:13px;
 	font-family:Arial,sans-serif;
 	color:#000;
 	background:#fff
@@ -8,14 +8,14 @@ body{
 p,div,ul,li{
   margin:0;
   padding:0;
-	border:0;
+  border:0;
 }
-a{color:#00c} 
+a{color:#00c;font-size:0.9em;} 
 a:active{color:#f00} 
 a:visited{color:#00c}
 .transit{
   width:300px;
-  height:300px;
+  height:500px;
 }
 .lineHead{
   margin: 0 0 10px 5px;
@@ -26,78 +26,41 @@ a:visited{color:#00c}
 .searchBox{
   margin:0;
   width:100px;
-	color:#808080;
+  color:#808080;
 }
 .searchButton{
   margin:0 15px 0 -3px;
   font-size:14px;
 }
-.messageBoard{
-  display:none;
-  position:absolute;
-	top:30px;
-	left:0px;
-	font-size:0.8em;
-  width:250px;
-  padding: 3px;
-  border:#000000 solid 1px;
-  background-color:#FFFFFF;
-  z-index:100;
-}
-.resultLines:link,.resultLines:visited, .resultLines:active{
-  margin:3px 0 3px 0;
-  float:left;
-  clear:both;
-  width:250px;
-  position:relative;
-  color:#000000;
-  text-decoration:none;
-}
-.resultLines:hover{
-  background-color:#C0C0C0;
-}
-.resultLines .line-name{
+.liveCity{
+ 	width:60px;
+	border:0;
+	border-bottom:solid 1px #333;
+ }
+.messageBoard, .searchPane{
   position:absolute;
   left:0;
-}
-.resultLines p{
-  position:relative;
-  margin-left:110px;
-  color:#666;
-	width:140px;
-	word-wrap:break-word;
-	word-break:keep-all;
-}
-
-.lineContent{
-  margin: 10px 0 0 5px;
+  top:30px;
+  background-color:#fff;
+  border:solid #333333 1px;
+  padding:3px;
+  width:90%;
+  z-index:100;
   display:none;
-  position:relative;
-  z-index:-1;
 }
-html>body .lineContent{
-  z-index:0;
+.searchResult{
+  overflow-y:auto;
+  overflow-x:hidden;
 }
-.lineTitle{
-  position:relative;
+.lineName, .list-line-name{
   font-weight:bold;
-  margin:0 0 5px 0;
-}
-.lineTitle img{
-	margin:0 3px;
-}
-.lineName{
-  position:absolute;
-	font-size:1.2em;
+  font-size:1.2em;
   border:#666 solid 2px;
-  padding:3px 2px;
+  padding:1px 2px;
 }
-#titleDest{
-  position:relative;
-  float:right;
-  right:0;
-  top:0;
-  padding:3px 0;
+.list-line-name{
+  font-size:1em;
+  border-width:1px;
 }
 .plyIcon{
   width:16px;
@@ -108,145 +71,28 @@ html>body .plyIcon{
   padding:2px 8px;
 }
 .lineDescript{
-  font-size:0.8em;
-  margin: 8px 0 5px 0;
+  margin: 5px 0;
+  font-size:1.1em;
 }
-.lineDescript span{
-  margin:0 15px 0 3px;
-}
-.stopContent{
-  float:left;
-  width:300px;
-  height:250px;
-  font-size:0.9em;
-  overflow-y:hidden;
-}
-.stopList{
-  
-}
-.stopList li{
-  position:relative;
-	padding:2px 0 2px 5px;
-	line-height:1.5em;
-  list-style-type:none;
-  background-image:url("http://chinamaps.googlecode.com/svn/transit/icons/blueStopIcon.png");
-  background-repeat:no-repeat;
-	background-position:0 50%;
-}
-.stopList span{
-	position:absolute;
-	float:left;
-	top:0;
-  margin-left:15px;
-  color:#666;
-	text-align:center;
-	width:15px;
-}
-html>body .stopList span{
-	top:3px;
-}
-.stopList a:link, .stopList a:visited, .stopList a:active{
-	margin-left:35px;
-  color:#000000;
-	text-decoration:none;
-}
-.stopList a:hover{
-  text-decoration:underline;
-}
-.stopList a.selected{
-  font-weight:bold;
-}
-
-.scrollWrapper{
-  position:relative;
-  height:260px;
-}
-/*scroll bar*/
-.scrollUp, .scrollDown{
-  position:relative;
-  float:left;
-  left:0;
-  z-index:3;
-  width:300px;
-	height:10px;
-  font-size:8px;
-}
-html>body .scrollUp, scrollDown{
-  font-size:12px;
-}
-.scrollUp:link, .scrollUp:visited, .scrollUp:active{
-  background:url("http://chinamaps.googlecode.com/svn/transit/icons/scrollUp.jpg") no-repeat 0 0;
-}
-.scrollDown:link, .scrollDown:visited, .scrollDown:active{
-  background-image:url("http://chinamaps.googlecode.com/svn/transit/icons/scrollDown.jpg");
-  background-position:0 -10px;
-}
-.scrollDown:hover{
-  background-position:0 0;
-}
-.scrollUp:hover{
-  background-position:0 -10px;
-}
-.stationLines{
-  display:none;
-}
-.backLink{
-	font-size:0.8em;
+.stopIcon{
+  cursor:pointer;
+  font-weight:normal;
+  padding-left: 20px;
+  background:url("http://chinamaps.googlecode.com/svn/transit/icons/blueStopIcon.png") no-repeat 0 50%;
 }
 .stationName{
   font-weight:bold;
   font-size:1.2em;
-	margin:10px 0 5px 0;
-  padding:0 0 0 20px;
-  background-image:url("http://chinamaps.googlecode.com/svn/transit/icons/blueStopIcon.png");
-  background-repeat:no-repeat;
-  background-position:0 50%;
+  margin:10px 0 5px 0;
 }
-.stationName span{
-  font-weight:normal;
-  font-size:1em;
-}
-.stationTitle{
-  margin:5px 0 10px 16px;
-}
-.stationContent{
-  float:left;
-  width:300px;
-  height:250px;
-  font-size:0.9em;
-  overflow-y:auto;
-	
-}
-.lineList{
-  margin:0 0 0 10px;
-}
-.lineInfo{
-  margin:5px 0;
-  position:relative;
-  list-style-type:none;
-  
-}
-.lineInfo a:link, .lineInfo a:visited, .lineInfo a:active{
+.closeIcon{
+  float:right;
   font-weight:bold;
-  color:#000000;
-  padding:3px 2px;
-  border:#666 solid 1px;
-  text-decoration:none;
-  position:absolute;
-  left:0;
 }
-.lineInfo a:hover{
-  text-decoration:underline;
+#linePaneContent, #stopPaneContent{
+  height:300px;
+  overflow-y:auto;
 }
-.lineTermi{
-  position:relative;
-  margin-left:120px;
-  color:#666;
-	padding:3px 0;
-	width:150px;
-	word-wrap:break-word;
-	word-break:keep-all;
-}
-.highLightMsg{
-	color:#FF0000;
+.selected{
+  font-weight:bolder;
 }
