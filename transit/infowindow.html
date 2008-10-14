@@ -27,16 +27,16 @@
   </style>
 </head>
 <body>
-<!--div id="container">
+<div id="container">
   <span>公交路线加载中...</span>
-</div-->
+</div>
 
 <script type="text/javascript">
 (function(){
-  //var container = document.getElementById("container");
-  //var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
-  //var paramStr = "api=ls&sn="+params[1]+"&city="+params[2]+"&callback=Transit.fillLines";
-  //container.innerHTML = "加载经过"+decodeURIComponent(params[1])+"的公交路线..";
+  var container = document.getElementById("container");
+  var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
+  var paramStr = "api=ls&sn="+params[1]+"&city="+params[2]+"&callback=Transit.fillLines";
+  container.innerHTML = "加载经过"+decodeURIComponent(params[1])+"的公交路线..";
   
   function request(paramStr){
     var backend_url = "http://211.157.3.197:8080/transit/";
@@ -80,11 +80,10 @@
   }
   window['Transit'] = {
     'fillLines' : fillLines,
-    'sendMsg' : sendMsg,
-    'lineId' : null
+    'sendMsg' : sendMsg
   }
    
-  //request(paramStr);
+  request(paramStr);
 })()
  
 
