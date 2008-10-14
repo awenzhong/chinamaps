@@ -1,8 +1,9 @@
-<div id="container"></div>
+<div id="container">
+  <span>公交路线加载中...</span>
+</div>
 
 <script type="text/javascript">
 (function(){
-
   var container = document.getElementById("container");
   var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
   var paramStr = "api=ls&sn="+params[1]+"city="+params[2]+"&callback=Transit.fillLines";
@@ -24,7 +25,7 @@
     head.appendChild(scriptTag);
   }
   
-  function fillLines(stopName, lines, lineName){
+  function fillLines(lines){
     var html = '';
     var existLines = {};
     for(var i = 0, item; item = lines[i]; i++){
