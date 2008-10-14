@@ -24,7 +24,7 @@
 (function(){
   var container = document.getElementById("container");
   var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
-  var paramStr = "api=ls&sn="+params[1]+"city="+params[2]+"&callback=Transit.fillLines";
+  var paramStr = "api=ls&sn="+params[1]+"&city="+params[2]+"&callback=Transit.fillLines";
   container.innerHTML = "加载经过"+decodeURIComponent(params[1])+"的公交路线..";
   
   function request(paramStr){
