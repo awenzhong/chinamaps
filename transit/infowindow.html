@@ -1,7 +1,8 @@
 <div id="container"></div>
 
 <script type="text/javascript">
-  function request(paramStr){
+(function(){
+function request(paramStr){
     var backend_url = "http://211.157.3.197:8080/transit/";
     var url = backend_url + "?" + paramStr + "&random=" + Math.random();
     var scriptTag = document.createElement('script');
@@ -17,7 +18,7 @@
     head.appendChild(scriptTag);
   }
   
-  function  fillLines(stopName, lines, lineName){
+  function fillLines(stopName, lines, lineName){
     var html = '';
     var existLines = {};
     for(var i = 0, item; item = lines[i]; i++){
@@ -34,11 +35,14 @@
     }
     container.innerHTML = html; 
   }
+  window['Transit']['fillLines'] = fillLines;
 
   var container = document.getElementById("container");
   var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
-  var paramStr = "api=ls&sn="+params[1]+"city="+params[2]+"&callback=fillLines";
-  container.innerHTML = "加载经过"+params[1]+"的公交路线..";; 
+  var paramStr = "api=ls&sn="+params[1]+"city="+params[2]+"&callback=Transit.fillLines";
+  container.innerHTML = "加载经过"+decodeURIComponent(params[1])+"的公交路线..";; 
   request(paramStr);
+})()
+ 
 
 </script>    
