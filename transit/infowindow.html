@@ -35,7 +35,9 @@ function request(paramStr){
     }
     container.innerHTML = html; 
   }
-  window['Transit']['fillLines'] = fillLines;
+  window['Transit'] = {
+    'fillLines' = fillLines;
+  }
 
   var container = document.getElementById("container");
   var params = window.location.search.match(/\?stop=(.+)\&city=(.+)/);
