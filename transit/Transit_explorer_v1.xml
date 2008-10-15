@@ -4,7 +4,7 @@
              author="Fei Chen"
              author_email="chinamaps-devtools+stadiaexplorer@google.com"
              author_affiliation="Google Inc."
-             description="This is a tool for users to browse bus stops and routes."
+             description="This is a tool for users to browse bus stops and routes.">
   <Require feature="sharedmap" />
 </ModulePrefs>
 
