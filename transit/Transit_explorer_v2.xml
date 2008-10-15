@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Module>
 <ModulePrefs title="公交线路与公交车站浏览器(DEV)"
              author="Fei Chen"
@@ -112,7 +112,7 @@ html>body .plyIcon{
   font-weight:bolder;
 }
 </style>
-<div class="transit">
+<div class="transit" id="transit">
   <div class="lineHead" id="lineHead">
     <input type="text" id="lineBox" class="searchBox" value="输入公交线路名" onmouseover="this.select()" onclick="this.value=''" onkeyup="Transit.searchLine()" onfocus="style.color='#000'" onblur="Transit.restore(id, 1);style.color='#808080'"/>
     <input type="button" class="searchButton" value="查" onclick="Transit.searchLine()"/>
