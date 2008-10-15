@@ -3,8 +3,8 @@ try {
   document.execCommand("BackgroundImageCache", false, true);
 } catch(err) {}
 </script>
-<script src="http://www.google.com/jsapi?key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA"></script>
-<script src="http://ditu.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA"></script>
+<script src="http://www.google.com/jsapi?key=ABCDEFG"></script>
+<script src="http://ditu.google.com/maps?file=api&amp;v=2&amp;key=abcdefg"></script>
 
 <link type="text/css" rel="stylesheet" href="transit_explorer.css"></link>
 <div class="transit" style="float:left;">
@@ -22,6 +22,14 @@ try {
 	  <div id="searchResult" class="searchResult">搜索结果</div>
 	</div>
     <div id="msgBoard" class="messageBoard">消息框</div>
+  </div>
+  
+  <div id="linePane" style="display:none">
+  	<a href="javascript:Transit.click_back()" id="backStop" style="display:none;">返回某条路线</a>
+	<div class="stationName stopIcon" id="stationName">车站名</div>
+	<p style="font-size:0.9em;color:#666">经过本站的公交线路：</p>
+	<iframe></iframe>
+	<div id="linePaneContent">路线列表</div>
   </div>
   
   <div id="stopPane" style="display:none">

@@ -135,18 +135,17 @@ var rpcProxy = (function(){
 })();
 
 var dom = (function(){
-  var stationRequest = {};
   var searchDom = {
     pane : $("searchPane"),
     result : $("searchResult")
   };
   
-//  var linesDom = {
-//    pane : $("linePane"),
-//    back : $("backStop"),
-//    stopName : $("stationName"),
-//    content : $("linePaneContent")
-//  };
+  var linesDom = {
+    pane : $("linePane"),
+    back : $("backStop"),
+    stopName : $("stationName"),
+    content : $("linePaneContent")
+  };
   var stopsDom = {
     pane : $("stopPane"),
     lineName : $("lineName"),
@@ -172,9 +171,11 @@ var dom = (function(){
     return icon;
   }
   
-  function addMarkerListener(marker, name, seq){
+  function addMarkerListener(marker, name){
     GEvent.addListener(marker, 'click', function() {
-      Transit.click_stop(name, seq);
+      openStopInfoWindow(marker, name);
+      highlightStopNode(name);
+      transitMgr.clickStop(name, true);
     });
     GEvent.addListener(marker, 'mouseover', function() {
 //      marker.setImage(highIconUrl);
@@ -186,14 +187,9 @@ var dom = (function(){
     });
   }
   
-  function openStopInfoWindow(marker, name, city){
-    var html = '<div class="stationName stopIcon" id="stationName">' + name + '</div>';
-    html += '<p style="font-size:0.9em;color:#666">经过本站的公交线路：</p>';
-    var url = baseUrl + "infowindow.html?stop="+encodeURIComponent(name)+"&city="+encodeURIComponent(city);
-//    var url = "infowindow.html?stop="+encodeURIComponent(name)+"&city="+encodeURIComponent(city);
-    html += '<iframe name="infoFrame" id="infoFrame" width=220 height=200 frameBorder=0 src="'+url+'"></iframe>';
-//    html += '<iframe name="infowindow" width=220 height=200 frameBorder=0 src="'+url+'" onload="Transit.loadStationLines(this, \''+name+'\')"></iframe>';
-//	<div id="linePaneContent">路线列表</div>
+  function openStopInfoWindow(marker, name){
+    var html = '<div style="font-weight:bold;font-size:1.2em;margin-bottom:3px;">' + name + '</div>';
+    html += '<div style="font-size:0.8em;margin:10px 5px 5px 10px;color:#808080;">在左侧查看详细站点信息 &laquo;<div>';
     marker.openInfoWindowHtml(html);
   }
   function highlightStopNode(stopName){
@@ -222,12 +218,12 @@ var dom = (function(){
     }
   }
   
-  function createStopMarker(latlngStr, icon, name, map, seq){
+  function createStopMarker(latlngStr, icon, name, map){
   	var result = latlngStr.split(",");
   	var point = new GLatLng(parseFloat(result[1]),parseFloat(result[0]));
   	var marker = new GMarker(point, { icon: icon, title: name});
   	if(map) map.addOverlay(marker);
-    addMarkerListener(marker, name, seq);
+    addMarkerListener(marker, name);
     return marker;
   }
   
@@ -241,7 +237,7 @@ var dom = (function(){
       var stop = line.stopList[seq] = {};
       stop.name = name;
       stop.seq = seq;
-      stop.marker = createStopMarker(item['coordinates'], redIcon, name, null, seq);
+      stop.marker = createStopMarker(item['coordinates'], redIcon, name);
       points[seq] = stop.marker.getLatLng();
     }
     line.route = [];
@@ -316,13 +312,13 @@ var dom = (function(){
   	},
     fillStationLines : function(stopName, lines, lineName){
       closePopup();
-//      stopsDom.pane.style.display = "none";
-//  	  linesDom.pane.style.display = "block";
-//      if (lineName) {
-//        linesDom.back.style.display = "block";
-//        linesDom.back.innerHTML = "返回" + lineName;
-//      }
-//      linesDom.stopName.innerHTML = stopName;
+      stopsDom.pane.style.display = "none";
+  	  linesDom.pane.style.display = "block";
+  	  if (lineName) {
+  	  	linesDom.back.style.display = "block";
+        linesDom.back.innerHTML = "返回" + lineName;
+      }
+      linesDom.stopName.innerHTML = stopName;
       var html = '';
       var existLines = {};
       for(var i = 0, item; item = lines[i]; i++){
@@ -337,13 +333,12 @@ var dom = (function(){
         html += '</div>';
         existLines[name] = name;
       }
-      transitMgr.addStopRequestResponse(stopName, html);
-//      linesDom.content.innerHTML = html; //TODO cache and check if is expired
+      linesDom.content.innerHTML = html;
     },
     fillLineStops : function(line, map, stops){
       closePopup();
       stopsDom.pane.style.display = "block";
-//  	  linesDom.pane.style.display = "none";
+  	  linesDom.pane.style.display = "none";
   	  stopsDom.lineName.innerHTML = line.name;
   	  stopsDom.start.innerHTML = line.start;
   	  stopsDom.end.innerHTML = line.end;
@@ -359,7 +354,7 @@ var dom = (function(){
       for(var i in list){
       	var stop = list[i];
       	map.addOverlay(stop.marker);
-      	html += '<p class="stopIcon" id="'+stop.name+'" style="line-height:1.5em;" onclick="Transit.click_stop(\''+stop.name+'\','+stop.seq+')" onmouseover="Transit.high_stop(\''+stop.name+'\')" onmouseout="Transit.unhigh_stop(\''+stop.name+'\')">';
+      	html += '<p class="stopIcon" id="'+stop.name+'" style="line-height:1.5em;" onclick="Transit.click_stop(\''+stop.name+'\')" onmouseover="Transit.high_stop(\''+stop.name+'\')" onmouseout="Transit.unhigh_stop(\''+stop.name+'\')">';
     	html += '  <span style="text-align:center;width:15px;color:#666">'+stop.seq+'</span>';
     	html += '  <span>'+stop.name+'</span>';
     	html += '</p>';
@@ -409,16 +404,16 @@ var dom = (function(){
     changeCity : function(cityName){
       closePopup();
       cityDom.value = cityName;
-//      linesDom.pane.style.display = 'none';
+      linesDom.pane.style.display = 'none';
       stopsDom.pane.style.display = 'none';
       boundsStops = {};
     },
     clickBack : function(){
       stopsDom.pane.style.display = "block";
-//      linesDom.pane.style.display = "none";
+      linesDom.pane.style.display = "none";
     },
-    openStop : function(stop, city){
-      openStopInfoWindow(stop.marker, stop.name, city);
+    openStop : function(stop){
+      openStopInfoWindow(stop.marker, stop.name);
       highlightStopNode(stop.name);
     },
     highStop : function(stop){
@@ -505,22 +500,7 @@ var transitMgr = (function(){
   	var result = cityList[cityName].latlng.match(/\((\d+\.\d*),(\d+\.\d*)\)/);
 	return new GLatLng(parseFloat(result[1]), parseFloat(result[2]));
   }
-  var stopRequest = {};
-  var checkLineId;
-  function getInfoFrame(win){
-    var frame = null;
-    if(navigator.userAgent.indexOf("Safari") != -1){
-      frame = win.frames["infoFrame"];
-    }else{
-      var elem = win.document.getElementById("infoFrame");
-      if(elem) frame = elem.contentWindow;
-    }
-    if(!frame && win != top){
-      win = win.parent;
-      getPipeFrame(win);
-    }
-    return frame;
-  }
+  
   return {
     init : function(){
       rpcProxy.getCities();
@@ -585,7 +565,7 @@ var transitMgr = (function(){
       	  for(var i = 0, polyline; polyline = oldLine.route[i]; i++){
       	    map.removeOverlay(polyline);
       	  }
-      	  // Question: if remove polyline first, the markers can not removed.
+      	  // BIG Question: if remove polyline first, the markers can not removed.
       	}
       	cur.lineId = lineId;
       }
@@ -596,7 +576,7 @@ var transitMgr = (function(){
         rpcProxy.getStopsByLine(lineId, cur.cityName);
       }
     },
-    clickStop : function(stopName, stopSeq){
+    clickStop : function(stopName, isMockClick){
       if(cur.stopName != stopName){
         var curStopNode = $(cur.stopName);
         if (curStopNode) {
@@ -604,27 +584,17 @@ var transitMgr = (function(){
         }
         cur.stopName = stopName;
       }
-      stopRequest[stopName] = null;
-//      stopFlag = true;
-//      rpcProxy.getLinesByStation(stopName, cur.cityName);
-      var stop = cityList[cur.cityName].lineList[cur.lineId].stopList[stopSeq];
-      dom.openStop(stop, cur.cityName);
-      transitMgr.checkLineSelectEvent();
-    },
-    loadInfoWindowIframe : function(iframe, name){
-      ifr = iframe;
-      var doc = ifr.contentWindow.document;
-      if(stopRequest[name]){
-      	//var doc = ifr.contentWindow.document;
-      	doc.write(stopRequest[name]);
-      } else {
-      	doc.write("loading...");
-        setTimeout("Transit.loadStationLines('"+name+"')", 200); 
-      }
-    },
-    addStopRequestResponse : function(name, html){
-      if(stopRequest[name] == null){
-        stopRequest[name] = html;
+      rpcProxy.getLinesByStation(stopName, cur.cityName);
+      if(!isMockClick){
+      	var list = cityList[cur.cityName].lineList[cur.lineId].stopList;
+      	var stop;
+      	for(var i in list){
+      	  if(list[i].name == stopName){
+      	    stop = list[i];
+      	    break;
+      	  }
+      	}
+        dom.openStop(stop);
       }
     },
     highStop : function(stopName){
@@ -723,36 +693,10 @@ var transitMgr = (function(){
       	  dom.value = cur.cityName;
       	}
       }
-    },
-    checkLineSelectEvent : function(){
-//      var lineId = top.frames['infowindow'].Transit.lineId;
-      if(checkCounter > 50){
-        clearTimeout(checkLineId);
-      	checkCounter = 0;
-      	GLog.write("time out");
-      	return;
-      }
-      var frame = getInfoFrame(window);
-      if(frame && frame.Transit){
-        var lineId = frame.Transit.lineId;
-        if(lineId && lineId != cur.lineId){
-          Transit.click_line(lineId);
-          checkCounter = 0;
-        } else {
-          checkLineId = setTimeout("Transit.checkLine()", 200);
-          checkCounter ++;
-        }
-      } else {
-      	checkLineId = setTimeout("Transit.checkLine()", 200);
-      	checkCounter ++;
-        GLog.write("can't find info-window!");
-      }
-      
     }
   }
 })();
-var checkCounter = 0;
-//var ifr = null;
+
 // Export global symbols.
 // They are used for callback when got json results.
 window['Transit'] = {
@@ -772,9 +716,7 @@ window['Transit'] = {
   'click_city' : transitMgr.clickCity,
   'searchLine' : transitMgr.searchLine,
   'searchCity' : transitMgr.searchCity,
-  'restore' : transitMgr.restore,
-  'loadStationLines' : transitMgr.loadInfoWindowIframe,
-  'checkLine' : transitMgr.checkLineSelectEvent
+  'restore' : transitMgr.restore
 };
 
 Transit.start();
