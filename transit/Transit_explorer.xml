@@ -5,6 +5,7 @@
              author_email="chinamaps-devtools+stadiaexplorer@google.com"
              author_affiliation="Google Inc."
              description="This is a tool for users to browse bus stops and routes.">
+  <Require feature="dynamic-height"/>
   <Require feature="sharedmap" />
 </ModulePrefs>
 
@@ -344,6 +345,8 @@ var transitMgr = (function(){
   var blueIcon = createIcon(blueIconUrl);
   var redIcon = createIcon(redIconUrl);
   
+  var isMarkerClick = false;
+  
   function createIcon(imageUrl) {
   	var icon = new GIcon();
     icon.image = imageUrl;
@@ -360,13 +363,14 @@ var transitMgr = (function(){
       	  map.setCenter(marker.point, DEFAULT_LEVEL);
         }
       });
+      isMarkerClick = true;
       openStopInfoWindow(marker, stopName);
       rpcProxy.getLinesByStation(stopName, cur.cityName);
     });
   }
-  function openStopInfoWindow(marker, name, noDetail){
+  function openStopInfoWindow(marker, name){
     var html = '<div style="font-weight:bold;font-size:1.2em;margin-bottom:3px;">' + name + '</div>';
-    if(!noDetail){
+    if(isMarkerClick){
       html += '<div style="font-size:0.8em;margin:10px 5px 5px 10px;color:#808080;">在左侧查看详细站点信息 &laquo;<div>';
     }
     marker.openInfoWindowHtml(html);
@@ -436,7 +440,6 @@ var transitMgr = (function(){
     lineSearchDom.blur();
     citySearchDom.blur();
   }
-  
   function initMap(){
     if(google.loader && google.loader.ClientLocation){
       var loc = google.loader.ClientLocation;
@@ -447,12 +450,19 @@ var transitMgr = (function(){
     }
     addMapListener();
   }
-  
   function addMapListener(){
     GEvent.addListener(map, "infowindowclose", function() {
-      if(cur.lineId)  transitMgr.clickBack();
+      if(cur.lineId){
+        stopsDom.pane.style.display = "block";
+        linesDom.pane.style.display = "none";
+      }
     });
-
+    GEvent.addListener(map, "infowindowopen", function(){
+      if(isMarkerClick){
+        stopsDom.pane.style.display = "none";
+        linesDom.pane.style.display = "block";
+      }
+    });
     GEvent.addListener(map, "zoomend", function(oldLevel, newLevel) {
       if (!isInVisible(newLevel)) {
         for(var i in boundsStops){
@@ -468,10 +478,8 @@ var transitMgr = (function(){
           }
           rpcProxy.getStopsByBounds(bounds);
       	});
-      	
       }
     });
-
     GEvent.addListener(map, "moveend", function() {
       map.getZoomAsync(function(level){
         if (isInVisible(level)) {
@@ -480,7 +488,6 @@ var transitMgr = (function(){
           });
         }
       });
-      
     });
   }
   function isInVisible(zoom){
@@ -569,7 +576,7 @@ var transitMgr = (function(){
   	    html += "<div class='search-pane-city-row'>";
   	  	lineCounter ++;
   	  }
-  	  html += '<span id="'+i+'" onclick=Transit.click_city(id) onmouseover="Transit.mouse_over(this, 2)" style="float:left;width:24%;text-align:center;">' +
+  	  html += '<span index="'+counter%4+'" id="'+i+'" onclick=Transit.click_city(id) onmouseover="Transit.mouse_over(this, 2)" style="float:left;width:24%;text-align:center;">' +
   	  		    '<span>' + i.replace(key, replacement) + '</span>' +
   	          '</span>';
   	  if(counter%4 == 3){
@@ -648,7 +655,8 @@ var transitMgr = (function(){
   	dynamicContentHeight(linesDom);
   }
   function dynamicContentHeight(container){
-    var total = wrapDom.pane.offsetHeight;
+    _IG_AdjustIFrameHeight();
+    var total = wrapDom.pane.clientHeight;
   	var head1 = wrapDom.head.offsetHeight;
   	var head2 = container.head.offsetHeight;
   	container.content.style.height = (total - head1 - head2) + "px";
@@ -700,12 +708,16 @@ var transitMgr = (function(){
         if(focus.dom.id) transitMgr.clickCity(focus.dom.id);
         break;
       case 37:  //left
-      case 38:  //up
         transToPreCity();
         break;
+      case 38:  //up
+        transToUpCity();
+        break;
       case 39:  //right
-      case 40:  //down
         transToNextCity();
+        break;
+      case 40:  //down
+        transToDownCity();
         break;
     }
   }
@@ -714,8 +726,8 @@ var transitMgr = (function(){
     var next = focus.dom.nextSibling;
     if(!next){
       var nextRow = focus.dom.parentNode.nextSibling
-      if(nextRow && nextRow.firstChild){
-        next = nextRow.firstChild;
+      if(nextRow){
+        next = nextRow.firstChild || focus.dom;
       } else {
         next = focus.dom;
       }
@@ -729,8 +741,8 @@ var transitMgr = (function(){
     var pre = focus.dom.previousSibling;
     if(!pre){
       var preRow = focus.dom.parentNode.previousSibling
-      if(preRow && preRow.lastChild){
-        pre = preRow.lastChild;
+      if(preRow){
+        pre = preRow.lastChild || focus.dom;
       } else {
         pre = focus.dom;
       }
@@ -739,7 +751,45 @@ var transitMgr = (function(){
     focus.dom = pre;
     scrollToVisible(focus.dom.parentNode);
   }
-
+  function transToUpCity(){
+    focus.dom.className = "mouseout";
+    var preRow = focus.dom.parentNode.previousSibling;
+    var up;
+    if(preRow){
+      up = preRow.childNodes[focus.dom.getAttribute("index")];
+      if(!up){
+        up = preRow.lastChild || focus.dom;
+      } 
+    } else {
+      up = focus.dom;
+    }
+    up.className = "mouseover";
+    focus.dom = up;
+    scrollToVisible(focus.dom.parentNode);
+  }
+  function transToDownCity(){
+    focus.dom.className = "mouseout";
+    var nextRow = focus.dom.parentNode.nextSibling;
+    var down;
+    if(nextRow){
+      down = nextRow.childNodes[parseInt(focus.dom.getAttribute("index"))];
+      if(!down && nextRow.lastChild){
+        down = nextRow.lastChild || focus.dom;
+      } 
+    } else {
+      down = focus.dom;
+    }
+    down.className = "mouseover";
+    focus.dom = down;
+    scrollToVisible(focus.dom.parentNode);
+  }
+  function checkNum(str){
+  	var num = "1234567890";
+    for(var i = 0, c; c = str.charAt(i); i++){
+      if(num.indexOf(c) == -1) return false;
+    }
+    return true;
+  }
   return {
     init : function(){
       rpcProxy.getCities();
@@ -834,7 +884,8 @@ var transitMgr = (function(){
       	      map.setCenter(stop.marker.point, DEFAULT_LEVEL);
       	    }
           });
-          openStopInfoWindow(stop.marker, stop.name, noDetail);
+          isMarkerClick = false;
+          openStopInfoWindow(stop.marker, stop.name);
         } else {
           GLog.write("None stop found.");
         }
@@ -868,15 +919,15 @@ var transitMgr = (function(){
         return;
       }
       var result = {};
-      if (isNaN(parseInt(key))) {
+      if(checkNum(key)){
         for (var i in lineList) {
-          if(lineList[i].name.indexOf(key) != -1){
+          if (lineList[i].name.match(/\d+/) == key) {
             result[i] = lineList[i];
           }
         }
       } else {
         for (var i in lineList) {
-          if (lineList[i].name.match(/\d+/) == key) {
+          if(lineList[i].name.indexOf(key) != -1){
             result[i] = lineList[i];
           }
         }
@@ -911,7 +962,7 @@ var transitMgr = (function(){
     clickBack : function(){
       stopsDom.pane.style.display = "block";
       linesDom.pane.style.display = "none";
-      map.closeInfoWindow();
+      //map.closeInfoWindow();
     },
     onmouseover : function(elem, type){
       if(type == 2){  // Popup
