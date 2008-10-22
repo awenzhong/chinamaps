@@ -313,6 +313,8 @@ var transitMgr = (function(){
     content : $("stopPaneContent")
   };
   var map = new GMap2();
+  lineSearchDom.onkeyup = onkeyup;
+  citySearchDom.onkeyup = onkeyup;
   /**
    * Container of Objects below
    * City Object: cityName:{name: ***, latlng:***, lineList:{list of Line Object}}
@@ -345,8 +347,18 @@ var transitMgr = (function(){
   var blueIcon = createIcon(blueIconUrl);
   var redIcon = createIcon(redIconUrl);
   
-  var isMarkerClick = false;
-  
+  function onkeyup(e){
+      e = e || window.event;
+      var keyCode = e.keyCode || e.which || e.charCode;
+      var elem = e.target || e.srcElement;
+      if(elem && elem.id  && keyCode != 13 && keyCode != 37 && keyCode != 38 && keyCode != 39 && keyCode != 40){
+        if(elem.id == "lineSearch"){
+          transitMgr.searchLine();
+        } else if(elem.id == "citySearch"){
+          transitMgr.searchCity();
+        }
+      }
+    }
   function createIcon(imageUrl) {
   	var icon = new GIcon();
     icon.image = imageUrl;
@@ -437,8 +449,8 @@ var transitMgr = (function(){
   function openPopup(type){
   	focus.type = type;
     searchDom.pane.style.display = "block";
-    lineSearchDom.blur();
-    citySearchDom.blur();
+//    lineSearchDom.blur();
+//    citySearchDom.blur();
   }
   function initMap(){
     if(google.loader && google.loader.ClientLocation){
@@ -859,13 +871,13 @@ var transitMgr = (function(){
       	  }
       	  // BIG Question: if remove polyline first, the markers can not removed.
       	}
+      }
       	cur.lineId = lineId;
       	var newLine = cityList[cur.cityName].lineList[lineId];
         if(newLine && newLine.stopList){
           fillLineStops(newLine);
         } else {
           rpcProxy.getStopsByLine(lineId, cur.cityName);
-        }
       }
     },
     clickStop : function(stopName, noDetail){
@@ -978,11 +990,19 @@ var transitMgr = (function(){
       e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
       var keyCode = e.keyCode || e.which || e.charCode;
       var elem = e.target || e.srcElement;
-      if(elem && elem.id  && keyCode == 13){
+      if(elem && elem.id && keyCode == 13){
         if(elem.id == "lineSearch"){
-          transitMgr.searchLine();
+          if(searchDom.pane.style.display == "none"){
+            transitMgr.searchLine();
+          } else {
+            onLineSearchResultKeydown(keyCode);
+          }
         } else if(elem.id == "citySearch"){
-          transitMgr.searchCity();
+          if(searchDom.pane.style.display == "none"){
+          	transitMgr.searchCity();
+          } else {
+            onCitySearchResultKeydown(keyCode);
+          }
         }
       } else {
         switch(focus.type){
