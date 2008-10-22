@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-<ModulePrefs title="公交线路与公交车站浏览器(DEV)"
+<ModulePrefs title="公交线路与公交车站浏览器"
              author="Fei Chen"
              author_email="chinamaps-devtools+stadiaexplorer@google.com"
              author_affiliation="Google Inc."
@@ -121,7 +121,7 @@ html>body .plyIcon{
 </style>
 <div class="transit" id="transit">
   <div class="lineHead" id="lineHead">
-    <input type="text" id="lineSearch" class="searchBox" value="输入公交线路名" onmouseover="this.select()" onfocus="style.color='#000'" onblur="Transit.blur(id, 1);style.color='#808080'"/>
+    <input type="text" id="lineSearch" class="searchBox" value="输入公交线路名" onclick="if(this.value=='输入公交线路名') this.value='';" onmouseover="this.select()" onfocus="style.color='#000'" onblur="Transit.blur(id, 1);style.color='#808080'"/>
     <input type="button" class="searchButton" id="lineSearchButton" value="查" onclick="Transit.searchLine()"/>
 	城市
 	<input id="citySearch" class="liveCity" onmouseover="this.select()" onblur="Transit.blur(id, 2)"/>
