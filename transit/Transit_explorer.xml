@@ -166,7 +166,7 @@ var $ = function(id){
  */
 var rpcProxy = (function(){
   // Private member
-  var backend_url = "http://211.157.3.197:8080/transit/";
+  var backend_url = "http://transit.dituapps.cn:8080/transit";
   var msgBoard = $("msgBoard");
   var msgFlag = 0;
   function getParamStr(paramObj){
