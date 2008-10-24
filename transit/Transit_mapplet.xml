@@ -199,15 +199,19 @@ var rpcProxy = (function(){
     }
     head.appendChild(scriptTag);
   }
+  //  Supplied by liuli
   function openMsgBoard(msg) {
   	if(!msg) msg = "数据加载中...";
   	msgBoard.style.display = 'block';
     msgBoard.innerHTML = msg;
     msgFlag = new Date().getTime();
     msgCounter ++;
-    if(!msgTimeId){
-      msgTimeId = setTimeout("Transit.checkMsgBoard()", 5000);
-    }
+    if(!msgTimeId)  clearTimeout(msgTimeId);
+    msgTimeId = setTimeout(function(){
+      msgTimeId = null;
+      msgCounter = 0;
+      closeMsgBoard();
+    }, 5000);
     var h = msgBoard.offsetHeight + msgBoard.offsetTop;
     if(wrapDom.offsetHeight < h){
       wrapDom.style.height = h + "px";
@@ -218,50 +222,13 @@ var rpcProxy = (function(){
   	if(msgCounter > 1){
   	  msgCounter --;
   	} else {
-  	  clearTimeout(msgTimeId);
+  	  if(msgTimeId) clearTimeout(msgTimeId);
   	  msgTimeId = null;
   	  msgBoard.style.display = 'none';
   	  msgCounter = 0;
   	}
   }
-  function checkMsgBoard(){
-    if(msgBoard.style.display != 'none'){
-      if(new Date().getTime() - msgFlag > 5000){
-  	  clearTimeout(msgTimeId);
-  	  msgTimeId = null;
-        msgBoard.style.display = 'none';
-        msgCounter = 0;
-    } else {
-      msgTimeId = setTimeout("Transit.checkMsgBoard()", 5000);
-      }
-    }
-  }
-/*solution supplied by liuli  
-  var msg_count = 0;
-var timer_id = null;
-function open(msg) {
-  msg_count++;
-  if (timer_id)
-    clearTimer(timer_id);
-  timer_id = setTimeout(5, function() {
-      timer_id = null;
-      msg_count = 0;
-      close();
-     });
-  showMsg();
-}
-function close() {
-if (msg_count > 0)
-msg_count--;
-else {
-clearMsg();
-if (timer_id) {
-clearTimeout(timer_id);
-timer_id = null;
-}
-}
-}
- */ 
+ 
   return {  // Public members
     getCities:function(){
       openMsgBoard("城市数据加载中...");
@@ -1100,9 +1067,7 @@ window['Transit'] = {
   'blur' : transitMgr.restore,
   'click_inverse' : transitMgr.clickInverse,
   'click_back' : transitMgr.clickBack,
-  'click_tri' : transitMgr.clickTri,
-  
-  'checkMsgBoard' : rpcProxy.checkMsgBoard
+  'click_tri' : transitMgr.clickTri
 };
 })()
 _IG_RegisterOnloadHandler(Transit.start);
