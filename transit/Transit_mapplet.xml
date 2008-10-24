@@ -168,7 +168,10 @@ var rpcProxy = (function(){
   // Private member
   var backend_url = "http://transit.dituapps.cn:8080/transit";
   var msgBoard = $("msgBoard");
+  var wrapDom = $("transit");
   var msgFlag = 0;
+  var msgCounter = 0;
+  var msgTimeId = null;
   function getParamStr(paramObj){
     var paramArray = [];
     for (var i in paramObj) {
@@ -200,18 +203,65 @@ var rpcProxy = (function(){
   	if(!msg) msg = "数据加载中...";
   	msgBoard.style.display = 'block';
     msgBoard.innerHTML = msg;
-    msgFlag ++;
+    msgFlag = new Date().getTime();
+    msgCounter ++;
+    if(!msgTimeId){
+      msgTimeId = setTimeout("Transit.checkMsgBoard()", 5000);
+    }
+    var h = msgBoard.offsetHeight + msgBoard.offsetTop;
+    if(wrapDom.offsetHeight < h){
+      wrapDom.style.height = h + "px";
+    }
   }
 
   function closeMsgBoard(){
-  	if(msgFlag > 1){
-  	  msgFlag --;
+  	if(msgCounter > 1){
+  	  msgCounter --;
   	} else {
+  	  clearTimeout(msgTimeId);
+  	  msgTimeId = null;
   	  msgBoard.style.display = 'none';
-  	  msgFlag = 0;
+  	  msgCounter = 0;
   	}
   }
-
+  function checkMsgBoard(){
+    if(msgBoard.style.display != 'none'){
+      if(new Date().getTime() - msgFlag > 5000){
+  	  clearTimeout(msgTimeId);
+  	  msgTimeId = null;
+        msgBoard.style.display = 'none';
+        msgCounter = 0;
+    } else {
+      msgTimeId = setTimeout("Transit.checkMsgBoard()", 5000);
+      }
+    }
+  }
+/*solution supplied by liuli  
+  var msg_count = 0;
+var timer_id = null;
+function open(msg) {
+  msg_count++;
+  if (timer_id)
+    clearTimer(timer_id);
+  timer_id = setTimeout(5, function() {
+      timer_id = null;
+      msg_count = 0;
+      close();
+     });
+  showMsg();
+}
+function close() {
+if (msg_count > 0)
+msg_count--;
+else {
+clearMsg();
+if (timer_id) {
+clearTimeout(timer_id);
+timer_id = null;
+}
+}
+}
+ */ 
   return {  // Public members
     getCities:function(){
       openMsgBoard("城市数据加载中...");
@@ -451,6 +501,9 @@ var transitMgr = (function(){
     searchDom.pane.style.display = "block";
 //    lineSearchDom.blur();
 //    citySearchDom.blur();
+    if(MSIE && linesDom.pane.style.display=="none" && stopsDom.pane.style.display=="none"){
+      wrapDom.pane.style.height = searchDom.pane.offsetHeight + searchDom.pane.offsetTop + "px";
+    }
   }
   function initMap(){
     if(google.loader && google.loader.ClientLocation){
@@ -551,7 +604,7 @@ var transitMgr = (function(){
   }
   
   function openLineSearchPane(lines, key){
-    openPopup(focus.lineSearch);
+    
     var html = "", counter = 0, existLines = {};
   	var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	for(var i in lines){
@@ -577,9 +630,10 @@ var transitMgr = (function(){
       focus.dom = searchDom.result.firstChild;
   	  focus.dom.className = "mouseover";
     }
+    openPopup(focus.lineSearch);
   }
   function openCitySearchPane(cities, key){
-  	openPopup(focus.citySearch);
+  	
     var html = "", counter = 0, lineCounter = 0;
   	var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	for(var i in cities){
@@ -609,6 +663,7 @@ var transitMgr = (function(){
       focus.dom = searchDom.result.firstChild.firstChild;
   	  focus.dom.className = "mouseover";
     }
+    openPopup(focus.citySearch);
   }
   function fillLineStops(line){
     closePopup();
@@ -667,11 +722,12 @@ var transitMgr = (function(){
   	dynamicContentHeight(linesDom);
   }
   function dynamicContentHeight(container){
-    _IG_AdjustIFrameHeight();
+    wrapDom.pane.style.height = "100%";
     var total = wrapDom.pane.clientHeight;
   	var head1 = wrapDom.head.offsetHeight;
   	var head2 = container.head.offsetHeight;
   	container.content.style.height = (total - head1 - head2) + "px";
+  	_IG_AdjustIFrameHeight();
   }
   function findStop(stopName){
   	var list = cityList[cur.cityName].lineList[cur.lineId].stopList;
@@ -686,7 +742,9 @@ var transitMgr = (function(){
   function onLineSearchResultKeydown(keyCode){
     switch(keyCode){
       case 13:  //Enter
-        if(focus.dom.id) transitMgr.clickLine(focus.dom.id);
+        if(!focus.dom.id)
+          focus.dom = searchDom.result.firstChild;
+        transitMgr.clickLine(focus.dom.id);
         break;
       case 37:  //left
       case 38:  //up
@@ -717,7 +775,9 @@ var transitMgr = (function(){
   function onCitySearchResultKeydown(keyCode){
     switch(keyCode){
       case 13:  //Enter
-        if(focus.dom.id) transitMgr.clickCity(focus.dom.id);
+        if(!focus.dom.id)
+          focus.dom = searchDom.result.firstChild.firstChild;
+        transitMgr.clickCity(focus.dom.id);
         break;
       case 37:  //left
         transToPreCity();
@@ -1040,7 +1100,9 @@ window['Transit'] = {
   'blur' : transitMgr.restore,
   'click_inverse' : transitMgr.clickInverse,
   'click_back' : transitMgr.clickBack,
-  'click_tri' : transitMgr.clickTri
+  'click_tri' : transitMgr.clickTri,
+  
+  'checkMsgBoard' : rpcProxy.checkMsgBoard
 };
 })()
 _IG_RegisterOnloadHandler(Transit.start);
