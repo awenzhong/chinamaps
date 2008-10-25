@@ -32,7 +32,7 @@ a{color:#00c;font-size:0.9em;}
 a:active{color:#f00} 
 a:visited{color:#00c}
 .transit{
-  height:100%;
+  height:500px;
 }
 .lineHead{
   margin: 0 0 10px 5px;
@@ -161,14 +161,40 @@ html>body .plyIcon{
 var $ = function(id){
   return document.getElementById(id);
 }
+
+var lineSearchDom = $('lineSearch');
+var citySearchDom = $('citySearch');
+var msgBoard = $("msgBoard");
+var searchDom = {
+    pane : $("searchPane"),
+    result : $("searchResult"),
+    button : $("lineSearchButton")
+  };
+var wrapDom = {
+    pane : $("transit"),
+    head : $("lineHead")
+  }
+var linesDom = {
+    pane : $("linePane"),
+    head : $("linePaneHead"),
+    back : $("backStop"),
+    stopName : $("stationName"),
+    content : $("linePaneContent")
+  };
+var stopsDom = {
+    pane : $("stopPane"),
+    head : $("stopPaneHead"),
+    lineName : $("lineName"),
+    start : $("lineStart"),
+    end : $("lineEnd"),
+    content : $("stopPaneContent")
+  };
 /**
  * A Singletom class as a request proxy
  */
 var rpcProxy = (function(){
   // Private member
   var backend_url = "http://transit.dituapps.cn:8080/transit";
-  var msgBoard = $("msgBoard");
-  var wrapDom = $("transit");
   var msgFlag = 0;
   var msgCounter = 0;
   var msgTimeId = null;
@@ -201,6 +227,9 @@ var rpcProxy = (function(){
   }
   //  Supplied by liuli
   function openMsgBoard(msg) {
+    if(stopsDom.pane.style.display == "none" && linesDom.pane.style.display == "none"){
+      wrapDom.pane.style.height = "500px";
+    }
   	if(!msg) msg = "数据加载中...";
   	msgBoard.style.display = 'block';
     msgBoard.innerHTML = msg;
@@ -212,10 +241,6 @@ var rpcProxy = (function(){
       msgCounter = 0;
       closeMsgBoard();
     }, 5000);
-    var h = msgBoard.offsetHeight + msgBoard.offsetTop;
-    if(wrapDom.offsetHeight < h){
-      wrapDom.style.height = h + "px";
-    }
   }
 
   function closeMsgBoard(){
@@ -303,32 +328,6 @@ var rpcProxy = (function(){
 })();
 
 var transitMgr = (function(){
-  var lineSearchDom = $('lineSearch');
-  var citySearchDom = $('citySearch');
-  var searchDom = {
-    pane : $("searchPane"),
-    result : $("searchResult"),
-    button : $("lineSearchButton")
-  };
-  var wrapDom = {
-    pane : $("transit"),
-    head : $("lineHead")
-  }
-  var linesDom = {
-    pane : $("linePane"),
-    head : $("linePaneHead"),
-    back : $("backStop"),
-    stopName : $("stationName"),
-    content : $("linePaneContent")
-  };
-  var stopsDom = {
-    pane : $("stopPane"),
-    head : $("stopPaneHead"),
-    lineName : $("lineName"),
-    start : $("lineStart"),
-    end : $("lineEnd"),
-    content : $("stopPaneContent")
-  };
   var map = new GMap2();
   lineSearchDom.onkeyup = onkeyup;
   citySearchDom.onkeyup = onkeyup;
@@ -466,10 +465,8 @@ var transitMgr = (function(){
   function openPopup(type){
   	focus.type = type;
     searchDom.pane.style.display = "block";
-//    lineSearchDom.blur();
-//    citySearchDom.blur();
-    if(MSIE && linesDom.pane.style.display=="none" && stopsDom.pane.style.display=="none"){
-      wrapDom.pane.style.height = searchDom.pane.offsetHeight + searchDom.pane.offsetTop + "px";
+    if(stopsDom.pane.style.display == "none" && linesDom.pane.style.display == "none"){
+      wrapDom.pane.style.height = "500px";
     }
   }
   function initMap(){
@@ -528,6 +525,11 @@ var transitMgr = (function(){
   }
   function checkCity(cityName){
     if(cityName && cityName != cur.cityName){
+      if(MSIE && cityName == "上海"){
+        DEFAULT_LEVEL = MAX_LEVEL;
+      } else {
+        DEFAULT_LEVEL = MSIE ? 16 : 15;
+      }
       // Clear current data
       if(cur.cityName){  // Need relocate map
         map.clearOverlays();
@@ -600,7 +602,6 @@ var transitMgr = (function(){
     openPopup(focus.lineSearch);
   }
   function openCitySearchPane(cities, key){
-  	
     var html = "", counter = 0, lineCounter = 0;
   	var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	for(var i in cities){
