@@ -7,37 +7,35 @@ try {
 <script src="http://ditu.google.com/maps?file=api&amp;v=2&amp;key=abcdefg"></script>
 
 <link type="text/css" rel="stylesheet" href="transit_explorer.css"></link>
-<div class="transit" style="float:left;">
+<div class="transit" style="float:left;" id="transit">
   <div class="lineHead" id="lineHead">
-    <input type="text" id="lineBox" class="searchBox" value="输入公交线路名" onmouseover="this.select()" onclick="this.value=''" onkeyup="Transit.searchLine()" onfocus="style.color='#000'" onblur="Transit.restore(id, 1);style.color='#808080'"/>
-    <input type="button" class="searchButton" value="查" onclick="Transit.searchLine()"/>
+    <input type="text" id="lineSearch" class="searchBox" value="输入公交线路名" onclick="if(this.value=='输入公交线路名') this.value='';" onmouseover="this.select();" onfocus="style.color='#000';" onblur="Transit.blur(id, 1);style.color='#808080';"/>
+    <input type="button" class="searchButton" id="lineSearchButton" value="查" onclick="Transit.searchLine()"/>
 	城市
-	<input id="liveCity" class="liveCity" onkeyup="Transit.searchCity()" onmouseover="this.select()" onblur="Transit.restore(id, 2)"/>
-	<span onclick="Transit.click_tri()" onmouseover="style.cursor='pointer'">▼</span>
-	
+	<input id="citySearch" class="liveCity" onmouseover="this.select();" onblur="Transit.blur(id, 2);"/>
+	<span onclick="Transit.click_tri();" onmouseover="style.cursor='pointer';">▼</span>
+	<div id="msgBoard" class="messageBoard">消息框</div>
 	<div id="searchPane" class="searchPane">
-	  <div style="overflow:hidden;height:1.2em;">
-	    <span class="closeIcon" onclick="this.parentNode.parentNode.style.display='none'" onmouseover="style.backgroundColor='#c0c0c0';style.cursor='pointer'" onmouseout="style.backgroundColor='#fff';">X</span>
-	  </div>
 	  <div id="searchResult" class="searchResult">搜索结果</div>
+	  <a style="float:right;font-size:0.9em;" href="#" onclick="javascript:this.parentNode.style.display='none';">取消</a>
 	</div>
-    <div id="msgBoard" class="messageBoard">消息框</div>
   </div>
-  
   <div id="linePane" style="display:none">
-  	<a href="javascript:Transit.click_back()" id="backStop" style="display:none;">返回某条路线</a>
-	<div class="stationName stopIcon" id="stationName">车站名</div>
-	<p style="font-size:0.9em;color:#666">经过本站的公交线路：</p>
-	<iframe></iframe>
+    <div id="linePaneHead">
+  	  <a href="javascript:Transit.click_back()" id="backStop" style="display:none;">返回某条路线</a>
+	  <div class="stationName stopIcon" id="stationName">车站名</div>
+	  <p style="font-size:0.9em;color:#666">经过本站的公交线路：</p>
+	</div>
 	<div id="linePaneContent">路线列表</div>
   </div>
-  
   <div id="stopPane" style="display:none">
-  	<div>
-	  <span id="lineName" class="lineName">路线名</span><a href="javascript:Transit.click_inverse()" style="margin:1em 0 0 1em;">查看返程</a>
-	</div><div style="clear:both"></div>
-	<div class="lineDescript">
+    <div id="stopPaneHead">
+  	  <div>
+	    <span id="lineName" class="lineName">路线名</span><a href="javascript:Transit.click_inverse()" style="margin:1em 0 0 1em;">查看返程</a>
+	  </div><div style="clear:both"></div>
+	  <div class="lineDescript">
     	<span id="lineStart">起点</span><a class="plyIcon"></a><span id="lineEnd">终点</span>
+      </div>
     </div>
 	<div id="stopPaneContent">车站列表</div>
   </div>

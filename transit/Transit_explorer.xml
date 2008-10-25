@@ -32,7 +32,7 @@ a{color:#00c;font-size:0.9em;}
 a:active{color:#f00} 
 a:visited{color:#00c}
 .transit{
-  height:100%;
+  height:500px;
 }
 .lineHead{
   margin: 0 0 10px 5px;
@@ -161,14 +161,44 @@ html>body .plyIcon{
 var $ = function(id){
   return document.getElementById(id);
 }
+
+var lineSearchDom = $('lineSearch');
+var citySearchDom = $('citySearch');
+var msgBoard = $("msgBoard");
+var searchDom = {
+    pane : $("searchPane"),
+    result : $("searchResult"),
+    button : $("lineSearchButton")
+  };
+var wrapDom = {
+    pane : $("transit"),
+    head : $("lineHead")
+  }
+var linesDom = {
+    pane : $("linePane"),
+    head : $("linePaneHead"),
+    back : $("backStop"),
+    stopName : $("stationName"),
+    content : $("linePaneContent")
+  };
+var stopsDom = {
+    pane : $("stopPane"),
+    head : $("stopPaneHead"),
+    lineName : $("lineName"),
+    start : $("lineStart"),
+    end : $("lineEnd"),
+    content : $("stopPaneContent")
+  };
+  
 /**
  * A Singletom class as a request proxy
  */
 var rpcProxy = (function(){
   // Private member
   var backend_url = "http://transit.dituapps.cn:8080/transit";
-  var msgBoard = $("msgBoard");
   var msgFlag = 0;
+  var msgCounter = 0;
+  var msgTimeId = null;
   function getParamStr(paramObj){
     var paramArray = [];
     for (var i in paramObj) {
@@ -196,22 +226,35 @@ var rpcProxy = (function(){
     }
     head.appendChild(scriptTag);
   }
+  //  Supplied by liuli
   function openMsgBoard(msg) {
+    if(stopsDom.pane.style.display == "none" && linesDom.pane.style.display == "none"){
+      wrapDom.pane.style.height = "500px";
+    }
   	if(!msg) msg = "数据加载中...";
   	msgBoard.style.display = 'block';
     msgBoard.innerHTML = msg;
-    msgFlag ++;
+    msgFlag = new Date().getTime();
+    msgCounter ++;
+    if(!msgTimeId)  clearTimeout(msgTimeId);
+    msgTimeId = setTimeout(function(){
+      msgTimeId = null;
+      msgCounter = 0;
+      closeMsgBoard();
+    }, 5000);
   }
 
   function closeMsgBoard(){
-  	if(msgFlag > 1){
-  	  msgFlag --;
+  	if(msgCounter > 1){
+  	  msgCounter --;
   	} else {
+  	  if(msgTimeId) clearTimeout(msgTimeId);
+  	  msgTimeId = null;
   	  msgBoard.style.display = 'none';
-  	  msgFlag = 0;
+  	  msgCounter = 0;
   	}
   }
-
+ 
   return {  // Public members
     getCities:function(){
       openMsgBoard("城市数据加载中...");
@@ -286,32 +329,6 @@ var rpcProxy = (function(){
 })();
 
 var transitMgr = (function(){
-  var lineSearchDom = $('lineSearch');
-  var citySearchDom = $('citySearch');
-  var searchDom = {
-    pane : $("searchPane"),
-    result : $("searchResult"),
-    button : $("lineSearchButton")
-  };
-  var wrapDom = {
-    pane : $("transit"),
-    head : $("lineHead")
-  }
-  var linesDom = {
-    pane : $("linePane"),
-    head : $("linePaneHead"),
-    back : $("backStop"),
-    stopName : $("stationName"),
-    content : $("linePaneContent")
-  };
-  var stopsDom = {
-    pane : $("stopPane"),
-    head : $("stopPaneHead"),
-    lineName : $("lineName"),
-    start : $("lineStart"),
-    end : $("lineEnd"),
-    content : $("stopPaneContent")
-  };
   var map = new GMap2();
   lineSearchDom.onkeyup = onkeyup;
   citySearchDom.onkeyup = onkeyup;
@@ -449,8 +466,9 @@ var transitMgr = (function(){
   function openPopup(type){
   	focus.type = type;
     searchDom.pane.style.display = "block";
-//    lineSearchDom.blur();
-//    citySearchDom.blur();
+    if(stopsDom.pane.style.display == "none" && linesDom.pane.style.display == "none"){
+      wrapDom.pane.style.height = "500px";
+    }
   }
   function initMap(){
     if(google.loader && google.loader.ClientLocation){
@@ -508,6 +526,11 @@ var transitMgr = (function(){
   }
   function checkCity(cityName){
     if(cityName && cityName != cur.cityName){
+      if(MSIE && cityName == "上海"){
+        DEFAULT_LEVEL = MAX_LEVEL;
+      } else {
+        DEFAULT_LEVEL = MSIE ? 16 : 15;
+      }
       // Clear current data
       if(cur.cityName){  // Need relocate map
         map.clearOverlays();
@@ -551,7 +574,6 @@ var transitMgr = (function(){
   }
   
   function openLineSearchPane(lines, key){
-    openPopup(focus.lineSearch);
     var html = "", counter = 0, existLines = {};
   	var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	for(var i in lines){
@@ -577,9 +599,9 @@ var transitMgr = (function(){
       focus.dom = searchDom.result.firstChild;
   	  focus.dom.className = "mouseover";
     }
+    openPopup(focus.lineSearch);
   }
   function openCitySearchPane(cities, key){
-  	openPopup(focus.citySearch);
     var html = "", counter = 0, lineCounter = 0;
   	var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	for(var i in cities){
@@ -609,6 +631,7 @@ var transitMgr = (function(){
       focus.dom = searchDom.result.firstChild.firstChild;
   	  focus.dom.className = "mouseover";
     }
+    openPopup(focus.citySearch);
   }
   function fillLineStops(line){
     closePopup();
@@ -667,11 +690,12 @@ var transitMgr = (function(){
   	dynamicContentHeight(linesDom);
   }
   function dynamicContentHeight(container){
-    _IG_AdjustIFrameHeight();
+    wrapDom.pane.style.height = "100%";
     var total = wrapDom.pane.clientHeight;
   	var head1 = wrapDom.head.offsetHeight;
   	var head2 = container.head.offsetHeight;
   	container.content.style.height = (total - head1 - head2) + "px";
+  	_IG_AdjustIFrameHeight();
   }
   function findStop(stopName){
   	var list = cityList[cur.cityName].lineList[cur.lineId].stopList;
@@ -686,7 +710,9 @@ var transitMgr = (function(){
   function onLineSearchResultKeydown(keyCode){
     switch(keyCode){
       case 13:  //Enter
-        if(focus.dom.id) transitMgr.clickLine(focus.dom.id);
+        if(!focus.dom.id)
+          focus.dom = searchDom.result.firstChild;
+        transitMgr.clickLine(focus.dom.id);
         break;
       case 37:  //left
       case 38:  //up
@@ -717,7 +743,9 @@ var transitMgr = (function(){
   function onCitySearchResultKeydown(keyCode){
     switch(keyCode){
       case 13:  //Enter
-        if(focus.dom.id) transitMgr.clickCity(focus.dom.id);
+        if(!focus.dom.id)
+          focus.dom = searchDom.result.firstChild.firstChild;
+        transitMgr.clickCity(focus.dom.id);
         break;
       case 37:  //left
         transToPreCity();
@@ -808,7 +836,7 @@ var transitMgr = (function(){
   	  initMap();
   	  map.getBoundsAsync(function(bounds){
   	    rpcProxy.getStopsByBounds(bounds);
-  	  });
+      });
   	},
     importCities:function(cities){
   	  for(var i = 0, item; item = cities[i]; i++){
