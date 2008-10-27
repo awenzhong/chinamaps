@@ -32,7 +32,7 @@ a{color:#00c;font-size:0.9em;}
 a:active{color:#f00} 
 a:visited{color:#00c}
 .transit{
-  height:500px;
+  height:300px;
 }
 .lineHead{
   margin: 0 0 10px 5px;
@@ -103,6 +103,7 @@ html>body .plyIcon{
   margin:10px 0 5px 0;
 }
 #linePaneContent, #stopPaneContent{
+  height:100%;
   overflow-y:auto;
 }
 .selected{
@@ -189,6 +190,7 @@ var stopsDom = {
     end : $("lineEnd"),
     content : $("stopPaneContent")
   };
+  
 /**
  * A Singletom class as a request proxy
  */
@@ -227,8 +229,8 @@ var rpcProxy = (function(){
   }
   //  Supplied by liuli
   function openMsgBoard(msg) {
-    if(stopsDom.pane.style.display == "none" && linesDom.pane.style.display == "none"){
-      wrapDom.pane.style.height = "500px";
+    if(wrapDom.pane.offsetHeight < 300){
+      wrapDom.pane.style.height = "300px";
     }
   	if(!msg) msg = "数据加载中...";
   	msgBoard.style.display = 'block';
@@ -484,6 +486,7 @@ var transitMgr = (function(){
       if(cur.lineId){
         stopsDom.pane.style.display = "block";
         linesDom.pane.style.display = "none";
+        dynamicContentHeight(stopsDom);
       }
     });
     GEvent.addListener(map, "infowindowopen", function(){
@@ -573,7 +576,6 @@ var transitMgr = (function(){
   }
   
   function openLineSearchPane(lines, key){
-    
     var html = "", counter = 0, existLines = {};
   	var replacement = '<span style="font-weight:bold;">' + key + '</span>';
   	for(var i in lines){
@@ -670,7 +672,9 @@ var transitMgr = (function(){
   	if (cur.lineId) {
   	  linesDom.back.style.display = "block";
   	  linesDom.back.innerHTML = "返回" + cityList[cur.cityName].lineList[cur.lineId].name;
-  	}
+  	} else {
+      linesDom.back.style.display = "none";
+    }
       
   	var html = '';
   	var existLines = {};
@@ -680,7 +684,7 @@ var transitMgr = (function(){
   	  html += '<div style="position:relative;margin:5px 3px;overflow:auto;">';
   	  html += '<p class="list-line-name" style="float:left;width:40%;" onclick=Transit.click_line(\'' + item['line_id'] + '\') onmouseover="style.backgroundColor=\'#c0c0c0\';style.cursor=\'pointer\'" onmouseout="style.backgroundColor=\'#fff\';">' + name + '</p>';
   	  html += '<p style="float:right; width:57%;">' + item['start_station'] + '<a class="plyIcon"></a>' + item['end_station'] + '</p>';
-  	  html += '</div>';
+  	  html += '</div><div style="clear:both"></div>';
   	  existLines[name] = name;
   	}
   	if(html == ""){
@@ -691,6 +695,9 @@ var transitMgr = (function(){
   }
   function dynamicContentHeight(container){
     wrapDom.pane.style.height = "100%";
+    if(wrapDom.pane.offsetHeight < 300){
+      wrapDom.pane.style.height = "300px";
+    }
     var total = wrapDom.pane.clientHeight;
   	var head1 = wrapDom.head.offsetHeight;
   	var head2 = container.head.offsetHeight;
@@ -836,7 +843,7 @@ var transitMgr = (function(){
   	  initMap();
   	  map.getBoundsAsync(function(bounds){
   	    rpcProxy.getStopsByBounds(bounds);
-  	  });
+      });
   	},
     importCities:function(cities){
   	  for(var i = 0, item; item = cities[i]; i++){
@@ -1002,7 +1009,7 @@ var transitMgr = (function(){
     clickBack : function(){
       stopsDom.pane.style.display = "block";
       linesDom.pane.style.display = "none";
-      //map.closeInfoWindow();
+      dynamicContentHeight(stopsDom);
     },
     onmouseover : function(elem, type){
       if(type == 2){  // Popup
