@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+   <channel>
+     <title>北京景点</title>
+     <link>http://ditu.google.com</link>
+     <description>北京景点地标</description>
+
+<item>
+  <title><![CDATA[颐和园]]></title>
+  <description></description>
+  <geo:lat>39.99</geo:lat>
+  <geo:long>116.27</geo:long>
+  </item>
+<item>
+  <title><![CDATA[故宫]]></title>
+  <description></description>
+  <geo:lat>39.917</geo:lat>
+  <geo:long>116.397</geo:long>
+  </item>
+<item>
+  <title><![CDATA[天坛]]></title>
+  <description></description>
+  <geo:lat>39.883</geo:lat>
+  <geo:long>116.412</geo:long>
+  </item>  
+
+   </channel>
+</rss>
