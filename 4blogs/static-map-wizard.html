@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"> 
+<head> 
+<title>谷歌静态地图向导</title> 
+<!--
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxTZdFmpiU8vv3PBIA-hr88t-5BzzxSWLKKXiJcvC2EABsDlfXq6gJWAxA"
+      type="text/javascript"></script>
+--> 
+<script src="http://ditu.google.com/maps?file=api&amp;hl=zh-CN&amp;v=2&amp;key=ABQIAAAAjU0EJWnWPMv7oQ-jjS7dYxSPW5CJgpdgO_s4yyMovOaVh_KvvhSfpvagV18eOyDWu7VytS6Bi1CWxw"
+      type="text/javascript"></script> 
+<style type="text/css"> 
+td {
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+  height: 40px;
+  font-size: 11pt;
+}
+body {
+ font-family: Arial, sans serif;
+ font-size: 11pt;
+}
+</style> 
+<script> 
+ 
+var map;
+var polys = [];
+var markers = [];
+var editingNow = false;
+ 
+function updateImage() {
+   var baseUrl = "http://ditu.google.com/staticmap?";
+ 
+   var params = [];
+   params.push("center=" + map.getCenter().lat().toFixed(6) + "," + map.getCenter().lng().toFixed(6));
+ 
+   var markerSize = document.getElementById("markerSizeSELECT").value;
+   var markerColor = document.getElementById("markerColorSELECT").value;
+   var markerLetter = document.getElementById("markerLetterSELECT").value;
+   var markerParams = markerSize + markerColor + markerLetter;
+   var markersArray = [];
+   for (var i = 0; i < markers.length; i++) {  
+     markersArray.push(markers[i].getLatLng().lat().toFixed(6) + "," + markers[i].getLatLng().lng().toFixed(6) + "," + markerParams);
+   }
+   if (markersArray.length) params.push("markers=" + markersArray.join("|"));
+ 
+   var polyColor = document.getElementById("polyColorSELECT").value;
+   var polyAlpha = document.getElementById("polyAlphaSELECT").value;
+   var polyWeight = document.getElementById("polyWeightSELECT").value;
+   var polyParams = "rgba:0x" + polyColor + polyAlpha + ",weight:" + polyWeight + "|";
+   for (var i = 0; i < polys.length; i++) {
+     var poly = polys[i];
+     var polyLatLngs = [];
+     for (var j = 0; j < poly.getVertexCount(); j++) {
+       polyLatLngs.push(poly.getVertex(j).lat().toFixed(5) + "," + poly.getVertex(j).lng().toFixed(5));
+     }
+     params.push("path=" + polyParams + polyLatLngs.join("|"));
+   }
+   if (map.getCurrentMapType() == G_SATELLITE_MAP) {
+     params.push("maptype=satellite");
+   }
+//   if (map.getCurrentMapType() == G_HYBRID_MAP) {
+//     params.push("maptype=hybrid");
+//   }
+   if (map.getCurrentMapType() == G_PHYSICAL_MAP) {
+     params.push("maptype=terrain");
+   }
+ 
+   params.push("zoom=" + map.getZoom());
+   params.push("size=" + document.getElementById("mapWidthTEXT").value + "x" + document.getElementById("mapHeightTEXT").value);
+   var img = document.createElement("img");
+   //img.src = baseUrl + params.join("&") + "&key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxTZdFmpiU8vv3PBIA-hr88t-5BzzxSWLKKXiJcvC2EABsDlfXq6gJWAxA";
+   img.src = baseUrl + params.join("&") + "&key=ABQIAAAAjU0EJWnWPMv7oQ-jjS7dYxSPW5CJgpdgO_s4yyMovOaVh_KvvhSfpvagV18eOyDWu7VytS6Bi1CWxw";
+   document.getElementById("staticMapIMG").innerHTML = "";
+   document.getElementById("staticMapIMG").appendChild(img);
+ 
+   document.getElementById("staticMapURL").innerHTML = baseUrl + params.join("&") + "&key=YOUR_KEY_HERE";
+}
+ 
+function load() {
+  if (GBrowserIsCompatible()) {
+    map = new GMap2(document.getElementById("map"));
+    map.setCenter(new GLatLng(39.917, 116.397), 14);
+    map.addMapType(G_PHYSICAL_MAP);
+    map.addControl(new GSmallMapControl());
+    map.addControl(new GMapTypeControl());
+    GEvent.addListener(map, "moveend", function(marker, point) {
+      updateImage();
+    });
+    GEvent.addListener(map, "maptypechanged", function(marker, point) {
+      updateImage();
+    });
+    GEvent.addListener(map, "click", function(overlay, latlng) {
+      if (latlng && !editingNow) {
+        createPolyAt(latlng);
+      }
+      updateImage();
+     });
+    geocoder = new GClientGeocoder();
+    updateImage();
+  }
+}
+ 
+ 
+function createPolyAt(latlng) {
+  var poly = new GPolyline([latlng]);
+  map.addOverlay(poly);
+  poly.enableDrawing();
+  editingNow = true;
+  GEvent.addListener(poly, "mouseover", function() {
+    poly.enableEditing();
+  });
+  GEvent.addListener(poly, "mouseout", function() {
+    poly.disableEditing();
+  });
+  GEvent.addListener(poly, "lineupdated", function() {
+    updateImage();
+  });
+  GEvent.addListener(poly, "endline", function() {
+    editingNow = false;
+  });
+  polys.push(poly);
+}
+ 
+function createMarkerAt(latlng) {
+  var marker = new GMarker(latlng, {draggable:true});
+  GEvent.addListener(marker, 'dragend', function() {
+    updateImage();
+  });
+  map.addOverlay(marker);
+  markers.push(marker);
+}
+ 
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    map.removeOverlay(markers[i]);
+  }
+  markers = [];
+  updateImage();
+}
+ 
+function clearPolys() {
+  for (var i = 0; i < polys.length; i++) {
+    map.removeOverlay(polys[i]);
+  }
+  polys = [];
+  updateImage();
+}
+ 
+function showAddress() {
+  var address = document.getElementById("addressTEXT").value;
+  geocoder.getLatLng(
+    address,
+    function(latlng) {
+      if (!latlng) {
+        alert(address + " not found");
+      } else {
+        map.setCenter(latlng, 13);
+        createMarkerAt(latlng);
+        updateImage();
+      }
+    }
+  );
+}
+ 
+function disableSelects() {
+  document.getElementById("markerSizeSELECT").disabled = false;
+  document.getElementById("markerColorSELECT").disabled = false;
+  document.getElementById("markerLetterSELECT").disabled = false;
+ 
+  var markerColor = document.getElementById("markerColorSELECT").value;
+  var markerSize = document.getElementById("markerSizeSELECT").value;
+  if (markerSize == "small" || markerSize == "tiny") { 
+    document.getElementById("markerLetterSELECT").selectedIndex = 0;
+    document.getElementById("markerLetterSELECT").disabled = true;
+  } 
+}
+ 
+</script> 
+<link rel="stylesheet" type="text/css" href="http://code.google.com/css/dev_docs.css"> 
+</head> 
+<body onload="load()"> 
+<h2>静态地图创建向导</h2> 
+  <p> 
+  本向导使用<a href="http://code.google.com/apis/maps/documentation/staticmaps" target="_blank">谷歌静态地图API</a>.
+  </p> 
+ 
+<h3><img src="http://www.google.com/uds/solutions/wizards/img/1b.gif" 
+style="vertical-align:middle"/>定义地图视图、标记位置、折线</h3> 
+<br/> 
+  <b>改变地图视图:</b> 
+  <p> 
+    使用地图控制器缩放地图到需要的层
+  </p> 
+<br/> 
+   <b>创建一个标记</b> 
+  <p>在输入框输入你要标识的地点然后点击按钮。如果有偏移，可以拖拽这个标记到准确位置。
+  <br/> 
+  <input type="text" size="30" id="addressTEXT" value="故宫" /> 
+  <input type="button" value="创建标记" onclick="showAddress()"/> 
+  </p> 
+<br/> 
+  <b>添加折线</b> 
+  <p> 
+  如果需要添加折线，你可以在地图上点击开始绘图，双击结束绘图。
+  </p> 
+  <br/> 
+  <div id="map" style="width: 500px; margin-left: 20px; height: 300px"></div> 
+  <p> 
+  <input type="button" value="清除标记" onclick="clearMarkers()"/> 
+  <input type="button" value="清除折线" onclick="clearPolys();"/> 
+  </p> 
+<br clear="all"/> 
+ 
+<h3><img src="http://www.google.com/uds/solutions/wizards/img/2b.gif" 
+style="vertical-align:middle"/>自定义地图大小并预览</h3> 
+  <p> 
+  <table> 
+  <tr> 
+  <td><b>地图</b></td> 
+  <td>宽:
+  <input type="text" size="3" id="mapWidthTEXT" value="500" onkeyup="updateImage()" onkeypress="updateImage()" /> 
+  </td> 
+  <td>高:
+  <input type="text" size="3" id="mapHeightTEXT" value="300" onkeyup="updateImage()" onkeypress="updateImage()" /> 
+  </td> 
+  </tr> 
+  <tr> 
+  <td><b>标记</b></td> 
+  <td>大小: 
+  <select id="markerSizeSELECT" onchange="disableSelects(); updateImage();"> 
+    <option value="" SELECTED>正常</option> 
+    <option value="mid">中等</option> 
+    <option value="small">小</option> 
+    <option value="tiny">微小</option> 
+  </select> 
+  </td> 
+  <td>颜色:
+  <select id="markerColorSELECT" onchange="updateImage();"> 
+    <option value="black">黑色</option> 
+    <option value="brown">棕色</option> 
+    <option value="green">绿色</option> 
+    <option value="purple">紫色</option> 
+    <option value="yellow">黄色</option> 
+    <option value="blue">蓝色</option> 
+    <option value="gray">灰色</option> 
+    <option value="orange">橙色</option> 
+    <option value="red" SELECTED>红色</option> 
+    <option value="white">白色</option> 
+  </select> 
+  </td> 
+  <td>字母:
+  <select id="markerLetterSELECT" onchange="updateImage();"> 
+    <option value="">无</option> 
+    <option value="a">A</option> 
+    <option value="b">B</option> 
+    <option value="c">C</option> 
+    <option value="d">D</option> 
+    <option value="e">E</option> 
+    <option value="f">F</option> 
+    <option value="g">G</option> 
+  </select> 
+  </td> 
+  </tr> 
+  <tr> 
+  <td><b>折线</b></td> 
+  <td>颜色:
+  <select id="polyColorSELECT" onchange="updateImage();"> 
+    <option value="000000">黑色</option> 
+    <option value="8B4513">棕色</option> 
+    <option value="008000">绿色</option> 
+    <option value="800080">紫色</option> 
+    <option value="FFCC00">黄色</option> 
+    <option value="0000FF" SELECTED>蓝色</option> 
+    <option value="808080">灰色</option> 
+    <option value="ffa500">橙色</option> 
+    <option value="ff0000">红色</option> 
+    <option value="ffffff">白色</option> 
+  </select> 
+  </td> 
+  <td> 
+  透明度:
+  <select id="polyAlphaSELECT" onchange="updateImage();"> 
+    <option value="19">10%</option> 
+    <option value="33">20%</option> 
+    <option value="4d">30%</option> 
+    <option value="66">40%</option> 
+    <option value="80" SELECTED>50%</option> 
+    <option value="99">60%</option> 
+    <option value="b3">70%</option> 
+    <option value="cc">80%</option> 
+    <option value="e6">90%</option> 
+    <option value="ff">100%</option> 
+  </select> 
+  </td> 
+  <td> 
+  宽度:
+  <select id="polyWeightSELECT" onchange="updateImage();"> 
+    <option value="1">1</option> 
+    <option value="2">2</option> 
+    <option value="3">3</option> 
+    <option value="4">4</option> 
+    <option value="5" SELECTED>5</option> 
+    <option value="6">6</option> 
+    <option value="7">7</option> 
+    <option value="8">8</option> 
+    <option value="9">9</option> 
+    <option value="10">10</option> 
+  </select> 
+  </td> 
+  </tr> 
+  </table> 
+  </p> 
+  <div id="staticMapIMG" style="width: 500px; margin-left: 20px; height: 300px"></div> 
+<br clear="all"/> 
+ 
+<h3><img src="http://www.google.com/uds/solutions/wizards/img/3b.gif" 
+style="vertical-align:middle"/>生成URL</h3> 
+<p>静态地图API需要一个免费申请一个API密钥,这个密钥需要使用你的<a href="http://www.google.com/accounts/">谷歌帐号</a>以及静态地图所在网站的URL.
+你可以在<a href="http://code.google.com/apis/maps/signup.html">这里登录</a>，替换下面的URL参数中“&key=”的值。
+<br/> 
+<p> 
+<!--<input id="keyBUTTON" type="button" onclick="generateKey();"
+value="Generate Key"/>--> 
+</p> 
+<pre id="staticMapURL" class="code"> 
+</pre> 
+ 
+</body> 
+</html> 
+ 
+ 
