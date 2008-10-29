@@ -15,7 +15,7 @@
 
 	function initialize() {
   	  if (GBrowserIsCompatible()) {
-  	    geoXml = new GGeoXml("http://gadgetlab.googlecode.com/svn/trunk/docs/examples/beijing-resorts.xml");
+  	    geoXml = new GGeoXml("http://chinamaps.googlecode.com/svn/docs/examples/beijing-resorts.xml");
         map = new GMap2(document.getElementById("map_canvas"));
         map.setCenter(new GLatLng(39.917,116.397), 11); 
         map.addControl(new GLargeMapControl());
