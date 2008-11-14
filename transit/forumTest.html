@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" > 
+<head><title> 
+  GOOGLE
+</title><meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA"
+      type="text/javascript"></script> 
+       <script type="text/javascript"> 
+    //<![CDATA[
+    function load(){
+      if(GBrowserIsCompatible()){
+        var map = new GMap2(document.getElementById("map"));
+        map.setCenter(new GLatLng(32.079819, 118.778794), 17);
+        //map.addControl(new GSmallMapControl()); 
+        map.addControl(new GLargeMapControl());
+        map.addControl(new GScaleControl());
+        //map.addControl(new GMapTypeControl());
+        map.addControl(new GOverviewMapControl());
+        map.setMapType(G_SATELLITE_MAP);
+        map.enableScrollWheelZoom();      
+        var iconimg        = "./logoncar.gif";
+        var iconobj        = new GIcon();
+        iconobj.image      = iconimg;
+        iconobj.iconSize   = new GSize(24, 22);         
+        iconobj.iconAnchor = new GPoint(0, 0);
+        iconobj.infoWindowAnchor = new GPoint(5, 1);
+        var markerOptions  = {icon:iconobj};
+        var markerobj = new GMarker(new GLatLng(32.079819, 118.778794),markerOptions);
+        map.addOverlay(markerobj);
+        GEvent.addListener(markerobj,"click",function(){
+          markerobj.openInfoWindowHtml("<b id='b_str'>A78562</b>");
+        });  
+      }
+    }
+    //]]>
+    </script> 
+</head> 
+<body style="margin:0px; font-size:12px"> 
+ <form name="frm" method="post" action="googlepage.aspx" id="frm"> 
+  <div> 
+    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTg2Njc2NjM3M2RkB0FQYYJ9rKBait3+OG80L+j6A8I=" /> 
+  </div> 
+  <div id="map" style="width: 1200px; height:720px"></div> 
+ </form> 
+ <script type="text/javascript"> 
+   load();
+ </script> 
+</body> 
+</html> 
