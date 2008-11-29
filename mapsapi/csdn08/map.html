@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>简单地图</title>
+    <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+        map.addControl(new GSmallMapControl ());
+        map.addControl(new GScaleControl());
+        map.addControl(new GMapTypeControl());
+        map.setCenter(new GLatLng(39.917, 116.397), 12);
+
+        // 允许使用鼠标滚轮缩放
+        map.enableScrollWheelZoom();
+
+        // 添加折线
+        var points = [];
+        points.push(new GLatLng(39.927, 116.338));
+        points.push(new GLatLng(39.905, 116.354));
+        points.push(new GLatLng(39.938, 116.383));
+        points.push(new GLatLng(39.915, 116.424));
+        points.push(new GLatLng(39.901, 116.427));
+        map.addOverlay(new GPolyline(points));
+
+       var marker = new GMarker(new GLatLng(39.943, 116.380));
+       map.addOverlay(marker);
+   
+      GEvent.addListener(marker, "click", function() {
+        marker.openInfoWindowHtml('朝三暮四酒吧');
+      });
+ 
+        GEvent.addListener(map,"click", function(overlay,latlng) {
+          if (overlay) {
+            // ignore if we click on the info window
+            return;
+          }
+          var tileCoordinate = new GPoint();
+          var tilePoint = new GPoint();
+          var currentProjection = G_NORMAL_MAP.getProjection();
+          tilePoint = currentProjection.fromLatLngToPixel(latlng, map.getZoom());
+          tileCoordinate.x = Math.floor(tilePoint.x / 256);
+          tileCoordinate.y = Math.floor(tilePoint.y / 256);
+          var myHtml = "Latitude: " + latlng.lat() + "<br/>Longitude: " + latlng.lng() + 
+            "<br/>The Tile Coordinate is:<br/> x: " + tileCoordinate.x + 
+            "<br/> y: " + tileCoordinate.y + "<br/> at zoom level " + map.getZoom();
+          map.openInfoWindow(latlng, myHtml);
+        });
+
+      }
+    }
+
+    </script>
+  </head>
+  <body onload="initialize()" onunload="GUnload()">
+    <div id="map_canvas" style="width: 400px; height: 400px"></div>
+  </body>
+</html>
