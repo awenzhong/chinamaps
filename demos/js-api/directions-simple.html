@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>谷歌地图API示例: 高级定向</title>
-    <script src=" http://ditu.google.com/?file=api&amp;v=2.x&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA"
+    <script src=" http://ditu.google.cn/?file=api&amp;v=2.x&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA"
       type="text/javascript"></script>
     <style type="text/css">
       body {
@@ -19,70 +19,6 @@
         color: #000000;
       }
     </style>
-    <script type="text/javascript">
- 
-    var map;
-    var gdir;
-    var geocoder = null;
-    var addressMarker;
-
-    function initialize() {
-      if (GBrowserIsCompatible()) {      
-        map = new GMap2(document.getElementById("map_canvas"));
-        gdir = new GDirections(map, document.getElementById("directions"));
-//        GEvent.addListener(gdir, "load", onGDirectionsLoad);
-        GEvent.addListener(gdir, "error", handleErrors);
-
-        setDirections("北京市海淀区清华园", "上海体育场", "zh-CN");
-      }
-    }
-    
-    function setDirections(fromAddress, toAddress, locale) {
-      gdir.load("from: " + fromAddress + " to: " + toAddress,
-                { "locale": locale });
-    }
-
-    function handleErrors(){
-     var status = gdir.getStatus();
-      switch(status.code) {
-        case G_GEO_BAD_REQUEST :
-          alert("定向查询条件设定有误");
-          break;
-        case G_GEO_SERVER_ERROR :
-          alert("服务器不能正确解析你输入的地址");
-          break;
-        case G_GEO_MISSING_QUERY :
-        case G_GEO_MISSING_ADDRESS :
-          alert("查询条件（地址）不能为空");
-          break;
-        case G_GEO_UNKNOWN_ADDRESS :
-          alert("查询地址未知");
-          break;
-        case G_GEO_UNAVAILABLE_ADDRESS :
-          alert("因当地法律或其他原因不能解析给出地址");
-          break;
-        case G_GEO_UNKNOWN_DIRECTIONS :
-          alert("给出的两地之间无路可走或我们的现有的数据中缺少定向路线");
-          break;
-        case G_GEO_BAD_KEY :
-          alert("导入类库是指定的密钥有误");
-          break;
-        case G_GEO_TOO_MANY_QUERIES :
-          alert("查询太过频繁，超出密钥允许的查询次数");
-          break;
-      }
-  }
-
-  function onGDirectionsLoad(){ 
-      // Use this function to access information about the latest load()
-      // results.
-
-      // e.g.
-      // document.getElementById("getStatus").innerHTML = gdir.getStatus().code;
-    // and yada yada yada...
-  }
-    </script>
-
   </head>
   <body onload="initialize()" onunload="GUnload()">
   
@@ -128,4 +64,64 @@
     </tr>
     </table> 
   </body>
+  <script type="text/javascript">
+    var map;
+    var gdir;
+    var geocoder = null;
+    var addressMarker;
+
+    function initialize(){
+      if (GBrowserIsCompatible()) {      
+        map = new GMap2(document.getElementById("map_canvas"));
+        gdir = new GDirections(map, document.getElementById("directions"));
+//        GEvent.addListener(gdir, "load", onGDirectionsLoad);
+        GEvent.addListener(gdir, "error", handleErrors);
+        setDirections("北京市海淀区清华园", "上海体育场", "zh-CN");
+      }
+    }
+
+    function setDirections(fromAddress, toAddress, locale) {
+      gdir.load("from: " + fromAddress + " to: " + toAddress,
+                { "locale": locale });
+    }
+
+    function handleErrors(){
+     var status = gdir.getStatus();
+      switch(status.code) {
+        case G_GEO_BAD_REQUEST :
+          alert("定向查询条件设定有误");
+          break;
+        case G_GEO_SERVER_ERROR :
+          alert("服务器不能正确解析你输入的地址");
+          break;
+        case G_GEO_MISSING_QUERY :
+        case G_GEO_MISSING_ADDRESS :
+          alert("查询条件（地址）不能为空");
+          break;
+        case G_GEO_UNKNOWN_ADDRESS :
+          alert("查询地址未知");
+          break;
+        case G_GEO_UNAVAILABLE_ADDRESS :
+          alert("因当地法律或其他原因不能解析给出地址");
+          break;
+        case G_GEO_UNKNOWN_DIRECTIONS :
+          alert("给出的两地之间无路可走或我们的现有的数据中缺少定向路线");
+          break;
+        case G_GEO_BAD_KEY :
+          alert("导入类库是指定的密钥有误");
+          break;
+        case G_GEO_TOO_MANY_QUERIES :
+          alert("查询太过频繁，超出密钥允许的查询次数");
+          break;
+      }
+    }
+
+    function onGDirectionsLoad(){ 
+      // Use this function to access information about the latest load()
+      // results.
+      // e.g.
+      // document.getElementById("getStatus").innerHTML = gdir.getStatus().code;
+      // and yada yada yada...
+    }
+    </script>
 </html>
