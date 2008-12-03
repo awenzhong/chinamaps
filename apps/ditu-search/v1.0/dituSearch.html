@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Ditu Search</title>
+<script src="http://ditu.google.cn/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxRPKYUD0LB1hHX0NMqdN8Qz-M0M4hQHXLqJv6Rj7UxK5Pgex7UvrHnEXg" type="text/javascript"></script>
+<style type="text/css">
+#wrapper__MODULE_ID__  {
+  font-size:13px;
+  position : relative;
+  overflow : hidden;
+}
+#wrapper__MODULE_ID__  p{
+  margin:0;
+  padding:0;
+}
+#map__MODULE_ID__ {
+  border : 1px solid #979797;
+  height : 300px;
+}
+   
+/*common*/
+div, p, a, span, form{
+  margin:0;
+  padding:0;
+  border:0;
+}
+.input{
+  height:1.5em;
+  border:solid #ccccff 1px;
+  margin:1px 2px;
+}
+/*tab*/
+.tab{
+  margin: 2px 0;
+}
+.tab-head{
+  border-top:solid #666666 1px;
+  padding: 0 0 4px 0;
+  width:100%;
+}
+.tab-item{
+  text-decoration:none;
+  color:#000;
+  margin:0 0 0 5px;
+  padding:2px 5px;
+  border:solid #666666 1px;
+  background-color:#cfcfcf;
+}
+html>body .tab-item{
+  padding:0 5px;
+}
+.active-tab{
+  border-top:solid #FFF 1px;
+  background-color:#FFF;
+}
+.ditu-tab, .favorite-tab{
+  position:relative;
+}
+.favorite-tab{
+  height:84px;
+  overflow:auto;
+}
+/*ditu-tab*/
+.ditu-tab .button{
+  width:5em;
+  text-align:center;
+}
+.ditu-tab span{
+  color:#666666;
+  font-weight:bold;
+}
+.ditu-tab form{
+  margin:2px 0;
+}
+/*favorite-tab*/
+.custom-item, .favorite-item{
+  position:relative;
+  margin:1px 0;
+  width:95%;
+}
+.favo-name{
+  float:left;
+  width:55%;
+}
+.favo-action{
+  float:left;
+  width:110px;
+  text-align:right;
+}
+.favo-default{
+  width:60px;
+  margin: 0 5px;
+  color:#666666;
+}
+.custom-editor{
+  position:absolute;
+  z-index:3;
+  border:solid #333366 1px;
+  background-color:#efefff;
+  left:0;
+  top:0;
+}
+/*search control*/
+.search-container{
+  position:relative;
+  
+}
+.search-control{
+  border:solid #999999 1px;
+  position:relative;
+  padding:2px;
+  float:left;
+  background-color:#fff;
+}
+.search-input{
+  border-left:solid #999999 1px;
+  padding: 0 0 0 3px;
+  float:left;
+}
+.search-input input{
+  margin:0;
+  padding:0;
+  width:100px;
+}
+.search-go{
+  cursor:pointer;
+}
+.search-enable, .search-disable{
+  float:left;
+  padding-right:8px;
+  margin:3px 2px 3px 0;
+  cursor:pointer;
+  background-repeat:no-repeat;
+  background-position:100% 45%;
+}
+.search-disable{
+  background-image:url("http://gadgetlab.googlecode.com/svn/trunk/mapsearch/images/open-arrow.PNG");
+}
+.search-enable{
+  background-image:url("http://gadgetlab.googlecode.com/svn/trunk/mapsearch/images/close-arrow.PNG");
+}
+.empty-clear{
+  clear:both;
+}
+/*hint message*/
+.search-result{
+  float:left;
+  border:solid #333366 1px;
+  background-color:#efefff;
+  padding:2px 10px 2px 6px;
+  margin:2px 1px;
+} 
+.result-hint{
+  position:relative;
+}
+.result-hint span{
+  margin-right:30px;
+}
+.result-hint .null-hint{
+  color:#ff0000;
+}
+.result-hint a{
+  text-align:right;
+}
+</style>
+
+<script type="text/javascript">
+function OnLoad__MODULE_ID__() {
+ // new DituGadget(__MODULE_ID__);
+ new DituGadget(1);
+}
+
+/**
+ * Begin Anonymous Code, exports window.DituGadget
+ */
+
+/** END Anonymous Function **/
+
+//_IG_RegisterOnloadHandler(OnLoad__MODULE_ID__);
+</script>
+<body onload="OnLoad__MODULE_ID__()">
+<div id="wrapper">
+   <div id="map__MODULE_ID__" class="loading-map-__MODULE_ID__">
+      <img class="spinner__MODULE_ID__" src="/ig/modules/mapsearch/mapsearch_content/spinner.gif"/>
+      <span class="message__MODULE_ID__">__MSG_loading__</span>
+   </div>
+   
+  <div class="tab">
+    <div class="ditu-tab" id="dituTab__MODULE_ID__">
+      <form id="comTab__MODULE_ID__" method="get" action="http://ditu.google.cn/maps?" target="_blank">
+        <input type="hidden" name="f" value="q" />
+        <input type="hidden" name="hl" value="zh-CN" />
+        <input type="hidden" name="ie" value="UTF8" />
+        <input class="input" name="q" type="text" value="" />
+        <input class="button" name="btn" type="submit" value="__MSG_ditu_search_label__" />
+      </form>
+      <form id="roundTab__MODULE_ID__" method="get" action="http://ditu.google.cn/maps?" target="_blank">
+        <input type="hidden" name="f" value="l" />
+        <input type="hidden" name="hl" value="zh-CN" />
+        <input type="hidden" name="ie" value="UTF8" />
+        <span id="tabLbl__MODULE_ID__">__MSG_round_search_location__</span><input class="input" type="text" name="near" value="" /><span>__MSG_round_search_content__</span><input class="input" type="text" name="q" value="" />
+        <input class="button" type="submit" value="__MSG_round_search_label__" />
+      </form>
+      <form id="transitTab__MODULE_ID__" method="get" action="http://ditu.google.cn/maps?" target="_blank">
+        <input type="hidden" name="f" value="d" />
+        <input type="hidden" name="hl" value="zh-CN" />
+        <input type="hidden" name="ie" value="UTF8" />
+        <span>__MSG_transit_search_start__</span><input class="input" type="text" name="saddr" value="" /><span>__MSG_transit_search_end__</span><input class="input" type="text" name="daddr" value="" />
+        <input class="button" type="submit" value="__MSG_drive_search_label__" />
+        <input class="button" type="button" value="__MSG_transit_search_label__" id="transitButton__MODULE_ID__"/>
+      </form>
+    </div>
+    <div class="favorite-tab" id="favoTab__MODULE_ID__">
+      <p class="custom-item">
+        <a href="#" id="customLink__MODULE_ID__">__MSG_custom_label__</a>
+        <div class="custom-editor" id="customEditor__MODULE_ID__" style="display:none">
+            __MSG_custom_title__<input type="text" class="input" id="customInput__MODULE_ID__"/>
+            <input type="button" value="__MSG_custom_ok__" id="customOK__MODULE_ID__"/>
+            <input type="button" value="__MSG_custom_cancel__" id="customCancel__MODULE_ID__"/>
+        </div>
+      </p>
+    </div>
+    <div class="tab-head" id="largeModeTab__MODULE_ID__">
+      <span class="tab-item" id="dituItem__MODULE_ID__">__MSG_tab_item_ditu__</span>
+      <span class="tab-item" id="favoItem__MODULE_ID__">__MSG_tab_item_favorite__</span>
+    </div>
+  </div> 
+</div>
+</body></html>

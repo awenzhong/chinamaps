@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Ditu Search</title>
+<style type="text/css">
+/*common*/
+div, p, a, span{
+  font-size:13px;
+  margin:0;
+  padding:0;
+  border:0;
+}
+.wrapper{
+  width:402px;
+  padding:2px;
+  border : 1px solid #979797;
+}
+/*map-container*/
+.map-container{
+  width:400px;
+  height:400px;
+  border:solid #333 1px;
+}
+.result-panel{
+  font-size:12px;
+  padding:0 1px;
+  display:none;
+}
+/*info-window*/
+.info-title{
+  width:100%;padding:2px 5px;font-weight:bolder;font-size:1.1em;
+}
+.info-paragraph{
+  width:220px;float:left;margin-top:5px;
+}
+.info-tip{
+  font-size:0.9em; color:#666;margin-bottom:3px;
+}
+/*tab*/
+.tab-head{
+  width:100%;
+  /*height:1.5em;
+  background-color:#cfcfcf;*/
+  overflow:auto;
+  border-bottom:solid #CCD9F2 1px;
+}
+.tab-item{
+  text-align:center;
+  float:left;
+  padding:1px 5px;
+  cursor:pointer;
+  color:#0000FF;
+}
+.active-tab{
+  /*border:solid #666666 1px;
+  border-bottom:solid #FFF 1px;
+  background-color:#FFF;*/
+  color:#000;
+  font-weight:bold;
+  text-decoration:none;
+}
+.tab-content{
+  padding-top:5px;
+  display:none;
+}
+.wrapper .gmls {
+  width : 100%;
+}
+.wrapper .gmls-app{
+  border:none;
+}
+.wrapper .gmls-search-form {
+  padding: 2px;
+  margin:0;
+}
+.info-button, .traffic-button{
+  border:#000000 solid 1px;
+  background-color:#FFF;
+  padding:1.5px 4px;
+  cursor:pointer;
+}
+.wrapper .googledir, .wrapper .googledir table, .wrapper .googledir td, .wrapper .googledir div{
+  font-size:12px;
+  margin:0;
+  padding:0;
+}
+</style>
+<script src="http://www.google.com/jsapi?hl=zh-CN&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA" type="text/javascript"></script>
+<script src="http://ditu.google.cn/?file=api&amp;v=2.x&amp;hl=zh-CN&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA" type="text/javascript"></script>
+</head>
+<body>
+	<div class="wrapper" id="wrapper">
+    <div class="map-container" id="mapContainer"></div>
+    <img style="padding:5px;" id="loadingImg" src="loading_circle.gif"/>
+    <div class="result-panel" id="localResult"></div>
+    <div class="result-panel" id="routeResult" style="overflow-y:auto;"></div>
+  <div>
+</body>
+<script src="ditu.js"></script>
+</html>
