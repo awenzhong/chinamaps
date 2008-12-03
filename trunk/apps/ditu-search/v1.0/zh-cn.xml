@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messagebundle>
+<msg name="title">谷歌地图搜索</msg>
+  <msg name="description">使用谷歌地图搜索你要去的地方</msg>
+  <msg name="location">默认地点</msg>
+  <msg name="favorite">使用地址收藏夹</msg>
+  <msg name="large_map">使用大地图</msg>
+  <msg name="last_loca">保存最后登录地点</msg>
+  <msg name="loading">加载中...</msg>
+  
+  <msg name="tab_item_ditu">地图搜索项</msg>
+  <msg name="tab_item_favorite">我的地址收藏夹</msg>
+  <msg name="tab_item_transit">交通路线</msg>
+  <msg name="ditu_search_example">例如："王府井"或"北京王府井宾馆"!</msg>
+  <msg name="ditu_search_label">搜索地图</msg>
+  <msg name="round_search_location">在</msg>
+  <msg name="round_search_location_example">例如："北京市东城区"</msg>
+  <msg name="round_search_content">找</msg>
+  <msg name="round_search_content_example">例如："书店"</msg>
+  <msg name="round_search_label">搜索周边</msg>
+  <msg name="transit_search_start">从</msg>
+  <msg name="transit_search_start_example">例如："动物园"</msg>
+  <msg name="transit_search_end">到</msg>
+  <msg name="transit_search_end_example">例如："颐和园"</msg>
+  <msg name="drive_search_label">行车路线</msg>
+  <msg name="transit_search_label">公交换乘</msg>
+  
+  <msg name="search_label">地址定位</msg>
+  <msg name="null_result_hint">去谷歌地图搜索</msg>
+  <msg name="null_result_tip">输入地址，快速定位</msg>
+  <msg name="add_favorite">加入地址收藏夹</msg>
+  
+  <msg name="custom_label">定义自己的地址</msg>
+  <msg name="custom_hint">把这个标志拖到你想定位的位置</msg>
+  <msg name="custom_title">拖动地图中的标记，并给标志所在位置起个名字：</msg>
+  <msg name="custom_ok">确定</msg>
+  <msg name="custom_cancel">取消</msg>
+  <msg name="favo_delete">删除</msg>
+  <msg name="favo_setDefault">设为默认</msg>
+  <msg name="favo_default">默认地点</msg>
+</messagebundle>
