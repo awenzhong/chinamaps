@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google</title>
+    <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+	var map = new GMap2(document.getElementById("map_canvas"));
+        var tilelayer = G_NORMAL_MAP.getTileLayers()[0];
+        tilelayer.getTileUrl = function(point, zoom) {
+          zoom = 17 - zoom;
+          return "http://mt0.google.cn/mt?v=v0.0&x=" + point.x.toString() + "&y=" + point.y.toString() + "&zoom=" + zoom.toString();
+      }
+        tilelayer.isPng = function() { return true;};
+        tilelayer.getOpacity = function() { return 2.0; }
+        map.setCenter(new GLatLng(39.917, 116.397), 13);
+        map.addControl(new GLargeMapControl());
+    }
+}
+    </script>
+  </head>
+
+  <body onload="initialize()" onunload="GUnload()">
+    <div id="map_canvas" style="width: 1200px; height: 800px"></div>
+  </body>
+</html>
