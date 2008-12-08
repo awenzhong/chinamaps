@@ -17,11 +17,11 @@
     <Require feature="setprefs"/>
     <Require feature="dynamic-height" /> 
   </ModulePrefs>
-  <UserPref name="defaultLoc" display_name="默认地点" datatype="string" default_value=""/>
+  <UserPref name="defaultLocation" display_name="默认地点" datatype="string" default_value=""/>
   <UserPref name="isUsingLast" display_name="记住最新的地图位置" datatype="bool" default_value="true"/>
-  <UserPref name="currentLat" datatype="hidden" default_value=""/>
-  <UserPref name="currentLng" datatype="hidden" default_value=""/>
-  <UserPref name="currentZoom" datatype="hidden" default_value=""/>
+  <UserPref name="locaLat" datatype="hidden" default_value=""/>
+  <UserPref name="locaLng" datatype="hidden" default_value=""/>
+  <UserPref name="locaZoom" datatype="hidden" default_value=""/>
   <UserPref name="defaultTarget" datatype="hidden" default_value=""/>
   <Content type="html"><![CDATA[
 <style type="text/css">
@@ -184,7 +184,7 @@ div, p, a, span{
     }
     var apiKey = "internal-ig-mapsearch";
     function initMap(){
-      location.zoom = parseInt(prefs.getString("currentZoom")) || 10;
+      location.zoom = parseInt(prefs.getString("locaZoom")) || 10;
       location.lat = location.lat || 39.9056;
       location.lng =  location.lng || 116.3958;
       map = new GMap2($("mapContainer"));
@@ -214,14 +214,14 @@ div, p, a, span{
     }
     function getLocationByPrefs(){
       isUsingDefault = prefs.getBool("isUsingLast");
-      var lat = prefs.getString("currentLat");
-      var lng = prefs.getString("currentLng");
+      var lat = prefs.getString("locaLat");
+      var lng = prefs.getString("locaLng");
       if(isUsingDefault && lat && lng){  //  By last time info
         location.lat = parseFloat(lat);
         location.lng = parseFloat(lng);
         initMap();
       } else {  //  By default address
-        var defLoc = prefs.getString("defaultLoc");
+        var defLoc = prefs.getString("defaultLocation");
         if(defLoc){
           var geocoder = new GClientGeocoder();
           geocoder.getLocations(defLoc, function(response){
@@ -250,9 +250,9 @@ div, p, a, span{
       }
     }
     function saveMapStatus() {
-      prefs.set("currentLat", map.getCenter().lat());
-      prefs.set("currentLng", map.getCenter().lng());
-      prefs.set("currentZoom", map.getZoom());
+      prefs.set("locaLat", map.getCenter().lat());
+      prefs.set("locaLng", map.getCenter().lng());
+      prefs.set("locaZoom", map.getZoom());
     }
     function loadSearchControl(){
       var lsUrl = "http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js?hl=zh-CN&key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTA88Ja3eVS5h82c7xtCgVhRculDRS9egijnXNfT4oxbCdUc9hGjeJZ1Q&callback=DituGadget.searchLoaded";
