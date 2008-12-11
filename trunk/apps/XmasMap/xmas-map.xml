@@ -28,7 +28,7 @@ div, p{
 }
 .wrapper{
   font-size:13px;
-  height:760px;
+  height:500px;
   float:left;
 }
 .panel-head{
@@ -249,9 +249,11 @@ div, p{
       var url = chartXPinBaseUrl+"pin_star|"+typeObj[pos["type"].toLowerCase()].icon+"|FF0000";
       marker.setImage(url);
       node.className = "list-entry-highlight";
-      if(!map.getBounds().contains(marker.point)){
-        map.panTo(marker.point);
-      }
+      map.getBoundsAsync(function(bounds){
+        if(bounds.contains(marker.point)){
+          map.panTo(marker.point);
+        }
+      })
       autoScroll(node);
     }
     function unhighlightPos(marker, node, pos){
