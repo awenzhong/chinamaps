@@ -250,7 +250,7 @@ div, p{
       marker.setImage(url);
       node.className = "list-entry-highlight";
       map.getBoundsAsync(function(bounds){
-        if(bounds.contains(marker.point)){
+        if(bounds.contains(marker.point) == false){
           map.panTo(marker.point);
         }
       })
