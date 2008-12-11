@@ -80,7 +80,7 @@ div, p{
   display:none;
 }
 </style>
-  <div id="hintMsg" class="hint-msg" style="display:none"><img src="loading.gif"/>loading...</div>
+  <div id="hintMsg" class="hint-msg" style="display:none"><img src="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/loading.gif"/>loading...</div>
   <div class="wrapper">
     <div class="panel-head">
       <input type="text" value="快速搜索下面的列表" id="quickSearch" class="quick-search"/>
@@ -156,6 +156,7 @@ div, p{
     var hintDom = elem("hintMsg");
     var searchDom = elem("quickSearch");
     var tabHeadDom = elem("tabHead");
+    var baseUrl = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
     var chartPinBaseUrl = "http://www.google.com/chart?chst=d_map_pin_icon&chld=";
     var chartXPinBaseUrl = "http://www.google.com/chart?chst=d_map_xpin_icon&chld=";
     var cityObj = {
@@ -191,8 +192,8 @@ div, p{
     }
     function loadData(city, type){
       hintDom.style.display = "block";
-      var url = "data/" + getDataFileName(city, type);
-      GDownloadUrl(url, importData);
+      var url = baseUrl + "data/" + getDataFileName(city, type);
+      _IG_FetchContent(url, importData);
     }
     function importData(data){ 
       var data = eval(data);
