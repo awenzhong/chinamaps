@@ -269,7 +269,7 @@
     return {
       init : function(){
         map = new GMap2(elem("mapDiv")); 
-        map.setCenter(new GLatLng(cityObj[cur.city].lat, cityObj[cur.city].lng), 10);
+        map.setCenter(new GLatLng(cityObj[cur.city].lat, cityObj[cur.city].lng), 12);
         map.enableScrollWheelZoom();
         map.addControl(new GLargeMapControl());
         map.addControl(new GMapTypeControl());
