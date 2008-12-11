@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" href="xmas-map.css" />
+  <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhToKuCkHwzulUTwzU6LJb92tmbOKA "></script>
+  <title>Xmas Map</title>
+</head>
+<body>
+  <div id="hintMsg" class="hint-msg" style="display:none"><img src="loading.gif"/>loading...</div>
+  <div class="wrapper">
+    <div class="panel-head">
+      <input type="text" value="快速搜索下面的列表" id="quickSearch" class="quick-search"/>
+      城市：<span id="cityList"><span class="city active-tab" type="beijing">北京</span><span class="city" type="shanghai">上海</span></span>
+    </div>
+    <div class="tab-head" id="tabHead">
+      <p type="church" class="tab-item active-tab" style="border-left: solid #CCD9F2 1px;">教堂</p>
+      <p type="cinema" class="tab-item">影院</p>
+      <p type="shop" class="tab-item">商场</p>
+      <p type="bar" class="tab-item">酒吧夜店</p>
+      <p type="ktv" class="tab-item">KTV</p>
+      <p type="restaurant" class="tab-item">特色餐饮</p>
+      <p type="all" class="tab-item">全部</p>
+    </div>
+    <div class="list-container" id="listContainer">
+      <div id="beijingChurchList" class="tab-content" style="display:block"></div>
+      <div id="beijingCinemaList" class="tab-content"></div>
+      <div id="beijingShopList" class="tab-content"></div>
+      <div id="beijingBarList" class="tab-content"></div>
+      <div id="beijingKtvList" class="tab-content"></div>
+      <div id="beijingRestaurantList" class="tab-content"></div>
+      <div id="beijingAllList" class="tab-content"></div>
+      <div id="shanghaiChurchList" class="tab-content"></div>
+      <div id="shanghaiCinemaList" class="tab-content"></div>
+      <div id="shanghaiShopList" class="tab-content"></div>
+      <div id="shanghaiBarList" class="tab-content"></div>
+      <div id="shanghaiKtvList" class="tab-content"></div>
+      <div id="shanghaiRestaurantList" class="tab-content"></div>
+      <div id="shanghaiAllList" class="tab-content"></div>
+    </div>
+  </div> 
+  <div id="mapDiv"></div>
+</body>
+<script type="text/javascript" src="xmas-map.js"></script>
+</html>

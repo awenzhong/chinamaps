@@ -1,0 +1,74 @@
+div, p{
+  margin:0;
+  border:0;
+  padding:0;
+}
+#mapDiv{
+  position:absolute;
+  left:300px;
+  top:10px;
+  width:580px;
+  height:760px;
+  border:solid #999 1px;
+}
+.hint-msg{
+  position:absolute;
+  left:20px;
+  top:120px;
+  z-index:100;
+  font-weight:bolder;
+  color:#808080;
+}
+.wrapper{
+  font-size:13px;
+  height:760px;
+  float:left;
+}
+.panel-head{
+  margin:5px;
+}
+.quick-search{
+  margin:2px 10px 0 0;
+  border:solid #999999 1px;
+  color:#999999;
+}
+.city{
+  margin:3px;
+  cursor:pointer;
+}
+.list-container{
+  margin: 5px;
+  height:400px;
+  overflow:auto;
+  border-top:solid #ccc 2px;
+}
+.list-entry, .list-entry-highlight{
+  padding:3px 5px;
+  border-bottom:solid #ccc 2px;
+}
+.list-entry-highlight{
+  cursor:pointer;
+  font-weight:bolder;
+}
+
+/*tab*/
+.tab-head{
+  width:100%;
+  overflow:auto;
+  
+}
+.tab-item{
+  text-align:center;
+  float:left;
+  padding:1px 3px;
+  cursor:pointer;
+  color:#0000FF;
+  border-right: solid #CCD9F2 1px;
+}
+.active-tab{
+  font-weight:bold;
+  text-decoration:none;
+}
+.tab-content{
+  display:none;
+}
