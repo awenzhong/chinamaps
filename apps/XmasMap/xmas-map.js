@@ -45,7 +45,7 @@
     var chartXPinBaseUrl = "http://www.google.com/chart?chst=d_map_xpin_icon&chld=";
     var cityObj = {
       beijing : {name:"beijing", lat:39.9056, lng:116.3958},
-      shanghai : {name:"shanghai", lat:31.2222, lng:121.7409}
+      shanghai : {name:"shanghai", lat:31.2222, lng:121.4409}
     }
     var typeObj = {
       church : {name:"church", icon : "medical|FFFF00"},
