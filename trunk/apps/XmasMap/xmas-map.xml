@@ -134,15 +134,15 @@ div, p{
     return el;
   }
   function autoScroll(node){
-    var parent = node.parentNode;
+    var parent = node.parentNode.parentNode;
     var offset = node.offsetHeight;
     var parentTop = parent.scrollTop;
-    var nodeTop = node.offsetTop;
+    var nodeTop = node.offsetTop - node.parentNode.offsetTop;
     var curOffset = nodeTop - parentTop;
-    if (curOffset > parent.offsetHeight) {
-      parent.scrollTop = parent.scrollTop + offset;
-    } else if (curOffset < offset) {
-      parent.scrollTop = parent.scrollTop - offset;
+    if (curOffset > parent.offsetHeight) {  //scroll bar down
+      parent.scrollTop = parent.scrollTop + (curOffset - parent.clientHeight + offset);
+    } else if (curOffset < 0) {  //scroll bar up
+      parent.scrollTop = parent.scrollTop - Math.abs(curOffset);
     }
   }
   String.prototype.toInitialUpperCase = function(){
