@@ -388,7 +388,7 @@ div, p{
     return {
       init : function(){
         map = new GMap2(); 
-        map.setCenter(new GLatLng(cityObj[cur.city].lat, cityObj[cur.city].lng), 10);
+        map.setCenter(new GLatLng(cityObj[cur.city].lat, cityObj[cur.city].lng), 12);
         cur.listDom = elem(getListDomId(cur.city, cur.type));
         loadData(cur.city, cur.type);
         initTabs();
