@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="圣诞你去哪儿？"
+             author="Fei Chen"
+             author_email="chinamaps-devtools+xmasmap@google.com"
+             author_affiliation="Google China"
+             description="圣诞节信息查询"
+             screenshot=""
+             thumbnail=""
+             height="420">
+  <Require feature="sharedmap" />
+</ModulePrefs>
+
+<Content type="html"><![CDATA[
+<style>
+div, p{
+  margin:0;
+  border:0;
+  padding:0;
+}
+.hint-msg{
+  position:absolute;
+  left:20px;
+  top:120px;
+  z-index:100;
+  font-weight:bolder;
+  color:#808080;
+}
+.wrapper{
+  font-size:13px;
+  height:760px;
+  float:left;
+}
+.panel-head{
+  margin:5px;
+}
+.quick-search{
+  margin:2px 10px 0 0;
+  border:solid #999999 1px;
+  color:#999999;
+}
+.city{
+  margin:3px;
+  cursor:pointer;
+}
+.list-container{
+  margin: 5px;
+  height:400px;
+  overflow:auto;
+  border-top:solid #ccc 2px;
+}
+.list-entry, .list-entry-highlight{
+  padding:3px 5px;
+  border-bottom:solid #ccc 2px;
+}
+.list-entry-highlight{
+  cursor:pointer;
+  font-weight:bolder;
+}
+
+/*tab*/
+.tab-head{
+  width:100%;
+  overflow:auto;
+  
+}
+.tab-item{
+  text-align:center;
+  float:left;
+  padding:1px 3px;
+  cursor:pointer;
+  color:#0000FF;
+  border-right: solid #CCD9F2 1px;
+}
+.active-tab{
+  font-weight:bold;
+  text-decoration:none;
+}
+.tab-content{
+  display:none;
+}
+</style>
+  <div id="hintMsg" class="hint-msg" style="display:none"><img src="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/loading.gif"/>loading...</div>
+  <div class="wrapper">
+    <div class="panel-head">
+      <input type="text" value="快速搜索下面的列表" id="quickSearch" class="quick-search"/>
+      城市：<span id="cityList"><span class="city active-tab" type="beijing">北京</span><span class="city" type="shanghai">上海</span></span>
+    </div>
+    <div class="tab-head" id="tabHead">
+      <p type="church" class="tab-item active-tab" style="border-left: solid #CCD9F2 1px;">教堂</p>
+      <p type="cinema" class="tab-item">影院</p>
+      <p type="shop" class="tab-item">商场</p>
+      <p type="bar" class="tab-item">酒吧夜店</p>
+      <p type="ktv" class="tab-item">KTV</p>
+      <p type="restaurant" class="tab-item">特色餐饮</p>
+      <p type="all" class="tab-item">全部</p>
+    </div>
+    <div class="list-container" id="listContainer">
+      <div id="beijingChurchList" class="tab-content" style="display:block"></div>
+      <div id="beijingCinemaList" class="tab-content"></div>
+      <div id="beijingShopList" class="tab-content"></div>
+      <div id="beijingBarList" class="tab-content"></div>
+      <div id="beijingKtvList" class="tab-content"></div>
+      <div id="beijingRestaurantList" class="tab-content"></div>
+      <div id="beijingAllList" class="tab-content"></div>
+      <div id="shanghaiChurchList" class="tab-content"></div>
+      <div id="shanghaiCinemaList" class="tab-content"></div>
+      <div id="shanghaiShopList" class="tab-content"></div>
+      <div id="shanghaiBarList" class="tab-content"></div>
+      <div id="shanghaiKtvList" class="tab-content"></div>
+      <div id="shanghaiRestaurantList" class="tab-content"></div>
+      <div id="shanghaiAllList" class="tab-content"></div>
+    </div>
+  </div>
+
+<script>    
+/**
+ * @author Fei Chen
+ * Latest update: 
+ */
+ 
+(function() {
+  function elem(id) {
+    return document.getElementById(id);
+  }
+  function newEl(tag, className, prt){
+    var el = document.createElement(tag);
+    if (className) {
+      el.className = className;
+    }
+    if (prt) {
+      prt.appendChild(el);
+    }
+    return el;
+  }
+  function autoScroll(node){
+    var parent = node.parentNode;
+    var offset = node.offsetHeight;
+    var parentTop = parent.scrollTop;
+    var nodeTop = node.offsetTop;
+    var curOffset = nodeTop - parentTop;
+    if (curOffset > parent.offsetHeight) {
+      parent.scrollTop = parent.scrollTop + offset;
+    } else if (curOffset < offset) {
+      parent.scrollTop = parent.scrollTop - offset;
+    }
+  }
+  String.prototype.toInitialUpperCase = function(){
+    return this.replace(/\w/, function(letter) {    
+                return letter.toUpperCase();
+            });
+  }
+  
+  var mgr = (function(){
+    var map = null;
+    var hintDom = elem("hintMsg");
+    var searchDom = elem("quickSearch");
+    var tabHeadDom = elem("tabHead");
+    var baseUrl = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
+    var chartPinBaseUrl = "http://www.google.com/chart?chst=d_map_pin_icon&chld=";
+    var chartXPinBaseUrl = "http://www.google.com/chart?chst=d_map_xpin_icon&chld=";
+    var cityObj = {
+      beijing : {name:"beijing", lat:39.9056, lng:116.3958},
+      shanghai : {name:"shanghai", lat:31.2222, lng:121.7409}
+    }
+    var typeObj = {
+      church : {name:"church", icon : "medical|FFFF00"},
+      cinema : {name:"cinema", icon : "cinema|FFFF00"},
+      shop : {name:"shop", icon : "shoppingcart|FFFF00"},
+      bar : {name:"bar", icon : "bar|FFFF00"},
+      ktv : {name:"ktv", icon : "music|FFFF00"},
+      restaurant : {name:"restaurant", icon : "restaurant|FFFF00"},
+      all : {name:"all"}
+    }
+    var cur = {
+      city : cityObj.beijing.name,  //as default city
+      type : typeObj.church.name, // as default type list
+      listDom : null
+    };
+    var loaded = {
+      beijing : {},
+      shanghai : {}
+    }
+    function getCityDomId(city){
+      return city + "City";
+    }
+    function getListDomId(city, type){
+      return city + type.toInitialUpperCase() + "List";
+    }
+    function getDataFileName(city, type){
+      return city+"_"+type.toInitialUpperCase()+".json";
+    }
+    function loadData(city, type){
+      hintDom.style.display = "block";
+      var url = baseUrl + "data/" + getDataFileName(city, type);
+      _IG_FetchContent(url, importData);
+    }
+    function importData(data){ 
+      var data = eval(data);
+      for(var i=0, pos; pos = data[i]; i++){
+        var node = addNode(pos);
+        var marker = addMarker(pos);
+        addListener(node, marker, pos);
+        var type = pos["type"].toLowerCase();
+        if(!loaded[cur.city][type]){
+          loaded[cur.city][type] = {};
+          loaded[cur.city][type].markers = [];
+        }
+        loaded[cur.city][type].markers.push(marker);
+      }
+      hintDom.style.display = "none";
+    }
+    function addNode(pos){
+      var node = newEl("p", "list-entry", cur.listDom);
+      node.innerHTML = pos["name"];
+      return node;
+    }
+    function addMarker(pos, node){
+      var point = new GLatLng(parseFloat(pos["lat"]), parseFloat(pos["lng"]));
+      var icon = makeIcon(pos["type"].toLowerCase());
+      var marker = new GMarker(point, {icon:icon, title:pos["name"]});
+      marker.point = point;
+      map.addOverlay(marker);
+      //Debug
+      if(!typeObj[pos["type"].toLowerCase()]){
+        GLog.write(pos["name"]+"||"+pos["description"]);
+        return marker;
+      }
+      return marker;
+    }
+    function makeIcon(type){
+      var icon = new GIcon();
+      if(!typeObj[type]){GLog.write(type)}
+      icon.image = chartPinBaseUrl + typeObj[type].icon;
+      icon.iconSize = new GSize(21, 34);
+      icon.iconAnchor = new GPoint(10, 34);
+      icon.infoWindowAnchor = new GPoint(10, 6);
+      return icon;
+    }
+    function addListener(node, marker, pos){
+      GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, pos));
+      GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, node, pos));
+      GEvent.addListener(marker, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, node, pos));
+      GEvent.addDomListener(node, "click", GEvent.callbackArgs(this, openInfoWindow, marker, pos));
+      GEvent.addDomListener(node, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, node, pos));
+      GEvent.addDomListener(node, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, node, pos));
+    }
+    function highlightPos(marker, node, pos){
+      var url = chartXPinBaseUrl+"pin_star|"+typeObj[pos["type"].toLowerCase()].icon+"|FF0000";
+      marker.setImage(url);
+      node.className = "list-entry-highlight";
+      if(!map.getBounds().contains(marker.point)){
+        map.panTo(marker.point);
+      }
+      autoScroll(node);
+    }
+    function unhighlightPos(marker, node, pos){
+      var url = chartPinBaseUrl+typeObj[pos["type"].toLowerCase()].icon;
+      marker.setImage(url);
+      node.className = "list-entry";
+    }
+    function openInfoWindow(marker, pos){
+      var tabs = [];
+      var imgHtml = "<span style='font-size:13px;'>"+pos["name"]+"</span><br/><img style='width:200px' src='"+pos["images"][0]+"'/>";
+      var infoHtml = "<div style='width:200px;font-size:13px;'>"+pos["description"]+"</div>";
+      tabs.push(new GInfoWindowTab("图片", imgHtml));
+      tabs.push(new GInfoWindowTab("信息", infoHtml)); 
+      marker.openInfoWindowTabsHtml(tabs);
+    }
+    function initTabs(){
+      var tabs = tabHeadDom.childNodes;
+      for(var i = 0, tab; tab = tabs[i]; i++){
+        GEvent.addDomListener(tab, "click", onTabClick);
+        GEvent.addDomListener(tab, "mouseover", onTabMouseover);
+        GEvent.addDomListener(tab, "mouseout", onTabMouseout);
+      }
+    }
+    function onTabClick(){
+      var tabs = tabHeadDom.childNodes;
+      for (var i = 0, tab; tab = tabs[i]; i++) {
+        tab.className = "tab-item";
+      }
+      this.className = "tab-item active-tab";
+      var type = this.getAttribute("type");
+      if(type != cur.type){
+        cur.listDom.style.display = "none";
+        hideMarkers(cur.city, cur.type);
+        
+        cur.listDom = elem(getListDomId(cur.city, type));
+        cur.listDom.style.display = "block";
+        cur.type = type;
+        
+        if(!loaded[cur.city][type]){
+          loadData(cur.city, type);
+        } else {
+          showMarkers(cur.city, type);
+        }
+      }
+      var nodes = cur.listDom.childNodes;
+        for(var i = 0, node; node = nodes[i]; i++){
+          if(node.style.display == "none"){
+            node.style.display = "block";
+          }
+        }
+    }
+    function onTabMouseover(){
+      this.style.textDecoration="underline";
+    }
+    function onTabMouseout(){
+      this.style.textDecoration = 'none';
+    }
+    function hideMarkers(city, type){
+      var markers = loaded[city][type].markers;
+      for(var i = 0, marker; marker = markers[i]; i++){
+        marker.hide();
+      }
+    }
+    function showMarkers(city, type){
+      var markers = loaded[city][type].markers;
+      for(var i = 0, marker; marker = markers[i]; i++){
+        marker.show();
+      }
+    }
+    function initCity(){
+      var cityDoms = elem("cityList").childNodes;
+      for (var i = 0, city; city = cityDoms[i]; i++) {
+        GEvent.addDomListener(city, "click", onCityClick);
+        GEvent.addDomListener(city, "mouseover", onTabMouseover);
+        GEvent.addDomListener(city, "mouseout", onTabMouseout);
+      }
+    }
+    function onCityClick(){
+      var cityDoms = elem("cityList").childNodes;
+      for(var i = 0, city; city = cityDoms[i]; i++){
+        city.className = "city";
+      }
+      var city = this.getAttribute("type");
+      this.className = "city active-tab";
+      if(city != cur.city){
+        cur.listDom.style.display = "none";
+        hideMarkers(cur.city, cur.type);
+        cur.city = city;
+        cur.listDom = elem(getListDomId(cur.city, cur.type));
+        cur.listDom.style.display = "block";
+        
+        map.setCenter(new GLatLng(cityObj[city].lat, cityObj[city].lng));
+        
+        if(!loaded[cur.city][cur.type]){
+          loadData(cur.city, cur.type);
+        } else {
+          showMarkers(cur.city, cur.type);
+        }
+      }
+    }
+    function initQuickSearch(){
+      GEvent.addDomListener(searchDom, "mouseover", onSearchMouseover);
+      GEvent.addDomListener(searchDom, "blur", onSearchBlur);
+      GEvent.addDomListener(searchDom, "keyup", onSearchkeyup);
+    }
+    function onSearchMouseover(){
+      this.style.border = "solid #000 1px";
+      this.style.color = "#000";
+      this.select();
+      this.focus();
+    }
+    function onSearchBlur(){
+      this.style.border = "solid #999999 1px";
+      this.style.color = "#999999";
+      if (this.value == "") {
+        this.value = "快速搜索下面的列表";
+      }
+    }
+    function onSearchkeyup(){
+      var value = this.value;
+      if (value != "快速搜索下面的列表") {
+        var nodes = cur.listDom.childNodes;
+        for(var i = 0, node; node = nodes[i]; i++){
+          if(node.innerHTML.indexOf(value) == -1){
+            node.style.display = "none";
+          } else {
+            node.style.display = "block";
+          }
+        }
+      }
+    }
+    return {
+      init : function(){
+        map = new GMap2(); 
+        map.setCenter(new GLatLng(cityObj[cur.city].lat, cityObj[cur.city].lng), 10);
+        cur.listDom = elem(getListDomId(cur.city, cur.type));
+        loadData(cur.city, cur.type);
+        initTabs();
+        initCity();
+        initQuickSearch();
+      }
+    }
+  })();
+  window['XmasMap'] = {
+    'init' : mgr.init,
+  }
+})();
+_IG_RegisterOnloadHandler(XmasMap.init);
+</script>
+]]></Content>
+</Module>
