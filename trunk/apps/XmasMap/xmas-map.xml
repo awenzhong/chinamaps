@@ -398,7 +398,7 @@ div, p{
     }
   })();
   window['XmasMap'] = {
-    'init' : mgr.init,
+    'init' : mgr.init
   }
 })();
 _IG_RegisterOnloadHandler(XmasMap.init);
