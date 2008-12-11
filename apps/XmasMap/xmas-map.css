@@ -5,7 +5,7 @@ div, p{
 }
 #mapDiv{
   position:absolute;
-  left:300px;
+  left:400px;
   top:10px;
   width:580px;
   height:760px;
@@ -21,7 +21,7 @@ div, p{
 }
 .wrapper{
   font-size:13px;
-  height:500px;
+  height:100%;
   float:left;
 }
 .panel-head{
@@ -38,7 +38,7 @@ div, p{
 }
 .list-container{
   margin: 5px;
-  height:400px;
+  height:360px;
   overflow:auto;
   border-top:solid #ccc 2px;
 }
@@ -55,7 +55,6 @@ div, p{
 .tab-head{
   width:100%;
   overflow:auto;
-  
 }
 .tab-item{
   text-align:center;

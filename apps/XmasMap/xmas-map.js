@@ -18,15 +18,15 @@
     return el;
   }
   function autoScroll(node){
-    var parent = node.parentNode;
+    var parent = node.parentNode.parentNode;
     var offset = node.offsetHeight;
     var parentTop = parent.scrollTop;
-    var nodeTop = node.offsetTop;
+    var nodeTop = node.offsetTop - node.parentNode.offsetTop;
     var curOffset = nodeTop - parentTop;
-    if (curOffset > parent.offsetHeight) {
-      parent.scrollTop = parent.scrollTop + offset;
-    } else if (curOffset < offset) {
-      parent.scrollTop = parent.scrollTop - offset;
+    if (curOffset > parent.offsetHeight) {  //scroll bar down
+      parent.scrollTop = parent.scrollTop + (curOffset - parent.clientHeight + offset);
+    } else if (curOffset < 0) {  //scroll bar up
+      parent.scrollTop = parent.scrollTop - Math.abs(curOffset);
     }
   }
   String.prototype.toInitialUpperCase = function(){
@@ -40,6 +40,7 @@
     var hintDom = elem("hintMsg");
     var searchDom = elem("quickSearch");
     var tabHeadDom = elem("tabHead");
+    var searchTip = "快速搜索下面的列表";
     var chartPinBaseUrl = "http://www.google.com/chart?chst=d_map_pin_icon&chld=";
     var chartXPinBaseUrl = "http://www.google.com/chart?chst=d_map_xpin_icon&chld=";
     var cityObj = {
@@ -250,12 +251,12 @@
       this.style.border = "solid #999999 1px";
       this.style.color = "#999999";
       if (this.value == "") {
-        this.value = "快速搜索下面的列表";
+        this.value = searchTip;
       }
     }
     function onSearchkeyup(){
       var value = this.value;
-      if (value != "快速搜索下面的列表") {
+      if (value != searchTip) {
         var nodes = cur.listDom.childNodes;
         for(var i = 0, node; node = nodes[i]; i++){
           if(node.innerHTML.indexOf(value) == -1){
@@ -282,7 +283,7 @@
     }
   })();
   window['XmasMap'] = {
-    'init' : mgr.init,
+    'init' : mgr.init
   }
 })();
 XmasMap.init();
