@@ -21,8 +21,8 @@ div, p{
 }
 .wrapper{
   font-size:13px;
-  height:760px;
-  float:left;
+  height:500px;
+  float:left;border:solid red 1px;
 }
 .panel-head{
   margin:5px;
@@ -40,7 +40,7 @@ div, p{
   margin: 5px;
   height:400px;
   overflow:auto;
-  border-top:solid #ccc 2px;
+  border-top:solid #ccc 2px; border:solid blue 1px;
 }
 .list-entry, .list-entry-highlight{
   padding:3px 5px;
