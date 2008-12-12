@@ -27,7 +27,9 @@ div, p{
   color:#808080;
 }
 .wrapper{
-  font-size:13px;float:left;
+  font-size:13px;
+  height:500px;
+  float:left;
 }
 .panel-head{
   margin:5px;
@@ -43,6 +45,7 @@ div, p{
 }
 .list-container{
   margin: 5px;
+  height:360px;
   overflow:auto;
   border-top:solid #ccc 2px;
 }
