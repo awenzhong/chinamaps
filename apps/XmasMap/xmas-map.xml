@@ -27,7 +27,7 @@ div, p{
   color:#808080;
 }
 .wrapper{
-  font-size:13px;height:100%;float:left;
+  font-size:13px;float:left;
 }
 .panel-head{
   margin:5px;
