@@ -494,12 +494,11 @@ _IG_FetchContent(url, onTypeData);
       {
         window.all = true;
         window.idx = i;
-        $("item_all_" + window.idx).className = "over";
-        window.all = false;
-      } else if(lastTab != 0)
+          $("item_all_" + window.idx).className = "over";
+          window.all = false;
+        }
+        else if(lastTab != 0)
           $("item_" + type + "_" + i).className = "over";
-
-      //GEvent.trigger(cities[curCity].marker[type][i], 'mouseover');
     }
     window.mouseOutList = function(type, i)
     {
@@ -507,15 +506,13 @@ _IG_FetchContent(url, onTypeData);
       {
         window.all = true;
         window.idx = i;
-         $("item_all_" + window.idx).className = "";
-        window.all = false;
-
-      } else if(lastTab != 0)
+          $("item_all_" + window.idx).className = "";
+          window.all = false;
+        }
+        else if(lastTab != 0)
           $("item_" + type + "_" + i).className = "";
-
-      //GEvent.trigger(cities[curCity].marker[type][i], 'mouseout');
     }
-    var init = false;
+   var init = false;
     initCity();
     initTabs();
     var lastTab = 0;
