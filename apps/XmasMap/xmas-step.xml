@@ -2,7 +2,7 @@
 <Module> 
 <ModulePrefs title="圣诞节你去哪儿？"
 
-             author="Renwenxin "
+             author="Renwenxin, Fei Chen, Xiaoxi Wu, Wei chen"
 
              author_email="chinamaps-devtools+xmasmap@google.com"
 
@@ -10,9 +10,9 @@
 
              description="圣诞节信息查询"
 
-             screenshot=""
+             screenshot="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map.png"
 
-             thumbnail=""
+             thumbnail="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map-thm.png"
 
              height="420"> 
   <Require feature="sharedmap" /> 
