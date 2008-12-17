@@ -409,21 +409,20 @@ function $(dom)
         for(var i = 0; i < data.length; i++)
         {
           var item = data[i];
+          var type = item['type'];
+          if(lastTab == 0) type = 'all';
           if(item['name'].indexOf(key) != -1)
           {
-            str += "<li id=\"item_" + item['type'] + "_" + i + "\" " +
-            "onclick=\"selectMarker('" + item['type'] + "', " + i + ")\"" +
-            "onmouseover=\"mouseOverList('" + item['type'] + "', " + i + ")\"" +
-            "onmouseout=\"mouseOutList('" + item['type'] + "', " + i + ")\"" +
+            str += "<li id=\"item_" + type + "_" + i + "\" " +
+            "onclick=\"selectMarker('" + type + "', " + i + ")\"" +
+            "onmouseover=\"mouseOverList('" + type + "', " + i + ")\"" +
+            "onmouseout=\"mouseOutList('" + type + "', " + i + ")\"" +
             ">" + item['name'] + "</li>";
             cities[curCity].marker[types[lastTab]][i].show();
           }
         }
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
         $('listContainer').innerHTML = str;
-
-
-      
       }
       GEvent.addDomListener(search, "click", onclickSearch);
       GEvent.addDomListener(search, "keyup", window.onSearch);
