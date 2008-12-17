@@ -253,7 +253,7 @@ _IG_FetchContent(url, onTypeData);
       if((i != 0) && cities[curCity].html[types[i]])
       {
         $('listContainer').innerHTML = cities[curCity].html[types[i]];
-        if(navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)) resetHeight()
+        resetHeight();
 
         }
 
@@ -600,7 +600,7 @@ _IG_FetchContent(url, onTypeData);
         }
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
         $('listContainer').innerHTML = str;
-        if(navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)) resetHeight()
+        resetHeight();
 
       
       }

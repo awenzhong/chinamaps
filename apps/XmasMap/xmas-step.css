@@ -58,7 +58,7 @@ div, p, ul, li{
   display:none;
 }
 
-#tabHead a
+#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
 {
   display: inline-block;
   line-height: 25px;
@@ -71,7 +71,7 @@ div, p, ul, li{
   color: #000;
 }
 
-#tabHead a.selected
+#tabHead a.selected, #tabHead a.selected:link, #tabHead a.selected:visited, #tabHead a.selected:active
 {
   font-weight: bold;
   color: #ff0;

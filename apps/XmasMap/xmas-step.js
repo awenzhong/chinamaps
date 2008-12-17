@@ -23,8 +23,6 @@ function $(dom)
     
     function onImgLoaded(src, type) {
       return function() {
-
-
            tabs = [];
            if(type == 'loaded'){
            var css = "";
@@ -320,8 +318,11 @@ function $(dom)
       {
         window.all = true;
         window.idx = i;
-      }
-      GEvent.trigger(cities[curCity].marker[type][i], 'mouseover');
+          $("item_all_" + window.idx).className = "over";
+          window.all = false;
+        }
+        else if(lastTab != 0)
+          $("item_" + type + "_" + i).className = "over";
     }
     window.mouseOutList = function(type, i)
     {
@@ -329,8 +330,11 @@ function $(dom)
       {
         window.all = true;
         window.idx = i;
-      }
-      GEvent.trigger(cities[curCity].marker[type][i], 'mouseout');
+          $("item_all_" + window.idx).className = "";
+          window.all = false;
+        }
+        else if(lastTab != 0)
+          $("item_" + type + "_" + i).className = "";
     }
     var init = false;
     initCity();
