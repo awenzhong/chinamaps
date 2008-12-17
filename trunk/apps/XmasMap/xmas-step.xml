@@ -82,7 +82,7 @@ div, p, ul, li{
 {
   color: #fff;
 }
-#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
+#tabHead a
 {
   line-height: 25px;
   width: 34px;
