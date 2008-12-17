@@ -532,8 +532,10 @@ _IG_FetchContent(url, onTypeData);
       var height = 0;
       if(!(/msie/i.test(navigator.userAgent) && !is_opera))
       {
+      alert("not ie");
         return;
       }
+      alert("ie");
       if (window.innerHeight)
       {
         height = window.innerHeight;
