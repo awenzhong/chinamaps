@@ -525,7 +525,8 @@ _IG_FetchContent(url, onTypeData);
     }
     function resetHeight()
     {
-      var height = 0;
+    var height = 0;
+      var is_opera = (userAgent.indexOf('opera') != -1);
       if(!(/msie/i.test(navigator.userAgent) && !is_opera))
       {
       alert("not ie");
