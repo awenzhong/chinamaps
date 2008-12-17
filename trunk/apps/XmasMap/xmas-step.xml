@@ -84,7 +84,6 @@ div, p, ul, li{
 }
 #tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
 {
-  display: inline-block;
   line-height: 25px;
   width: 34px;
   text-decoration: none;
@@ -147,10 +146,13 @@ div, p, ul, li{
 
 #cityList a
 {
-  display: inline-block;
   line-height: 20px;
   padding: 0px 4px;
   text-decoration: none;
+  display: -moz-inline-stack; //Firefox only code
+  display: inline-block;       //some standard browsers
+  zoom: 1;                     //IE only
+  *display: inline;            //Only IE know this code (CSS Hack)
 }
 #cityList a:hover
 {
