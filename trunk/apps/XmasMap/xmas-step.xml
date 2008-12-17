@@ -80,6 +80,10 @@ div, p, ul, li{
 
 #tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
 {
+  color: #fff;
+}
+#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
+{
   display: inline-block;
   line-height: 25px;
   width: 34px;
@@ -247,7 +251,11 @@ _IG_FetchContent(url, onTypeData);
         window.checkLoading();
       }
       if((i != 0) && cities[curCity].html[types[i]])
+      {
         $('listContainer').innerHTML = cities[curCity].html[types[i]];
+resetHeight()
+
+        }
 
       if(cities[curCity].marker[types[lastTab]])
       {
@@ -513,7 +521,7 @@ _IG_FetchContent(url, onTypeData);
         else if(lastTab != 0)
           $("item_" + type + "_" + i).className = "";
     }
-    function initHeight()
+    function resetHeight()
     {
       var height = 0;
       if (window.innerHeight)
@@ -532,11 +540,11 @@ _IG_FetchContent(url, onTypeData);
       function getY(obj){  
          return (obj.offsetParent ? obj.offsetTop + getY(obj.offsetParent) : obj.y ? obj.y : 0);  
       }  
+      
       $('listContainer').style.height = height - getY($('listContainer'));
-
-
+      alert("height = " + $('listContainer').style.height);
     }
-    window.onresize = initHeight;
+    window.onresize = resetHeight;
 
    var init = false;
     initCity();
@@ -598,6 +606,7 @@ _IG_FetchContent(url, onTypeData);
         }
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
         $('listContainer').innerHTML = str;
+resetHeight()
 
 
       
