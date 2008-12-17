@@ -415,7 +415,6 @@ _IG_FetchContent(url, onTypeData);
     window.checkLoading = function()
     {
       window.checking = true;
-      var con = $('listContainer');
       for(var i = 1; i < initInfo[curCity].length; i++)
       {
         if((window.reqTab == 0) && (initInfo[curCity][i] == 0))
@@ -428,8 +427,6 @@ _IG_FetchContent(url, onTypeData);
           break;
         }
       }
-      if(cities[curCity].html['allul'] && lastTab == 0)
-      con.innerHTML = cities[curCity].html['allul'];
       window.checking = false;
       return true;
     }
@@ -529,10 +526,8 @@ _IG_FetchContent(url, onTypeData);
       var is_opera = (navigator.userAgent.indexOf('opera') != -1);
       if(!(/msie/i.test(navigator.userAgent) && !is_opera))
       {
-      alert("not ie");
         return;
       }
-      alert("ie");
       if (window.innerHeight)
       {
         height = window.innerHeight;
