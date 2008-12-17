@@ -546,7 +546,7 @@ _IG_FetchContent(url, onTypeData);
         height = 200;
       /* for margin */
       height -= 20;
-      $('listContainer').style.height = height - 180;
+      $('listContainer').style.height = height - 80;
     }
 
    var init = false;
