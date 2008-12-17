@@ -497,7 +497,9 @@ _IG_FetchContent(url, onTypeData);
         $("item_all_" + window.idx).className = "over";
         window.all = false;
 
-      }
+      } else if(lastTab != 0)
+          $("item_" + item['type'] + "_" + i).className = "over";
+
       //GEvent.trigger(cities[curCity].marker[type][i], 'mouseover');
     }
     window.mouseOutList = function(type, i)
@@ -509,7 +511,9 @@ _IG_FetchContent(url, onTypeData);
          $("item_all_" + window.idx).className = "";
         window.all = false;
 
-      }
+      } else if(lastTab != 0)
+          $("item_" + item['type'] + "_" + i).className = "";
+
       //GEvent.trigger(cities[curCity].marker[type][i], 'mouseout');
     }
     var init = false;
@@ -558,6 +562,7 @@ _IG_FetchContent(url, onTypeData);
         {
           var item = data[i];
           var type = item['type'];
+
           if(lastTab == 0) type = 'all';
           if(item['name'].indexOf(key) != -1)
           {
