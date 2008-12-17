@@ -184,10 +184,10 @@ function $(dom)
   return document.getElementById(dom);
 }
 
-    var types = ['all', 'Church', 'Cinema', 'Shop', 'Bar', 'KTV', 'Restaurant'];
+    var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
     //var typeNames = ['全部', '基督教堂', '电影院线', '商场购物', '酒吧夜店', 'KTV欢唱', '酒店餐饮'];
-    var typeNames = ['全部', '教堂', '影院', '商场', '酒吧', 'KTV', '餐饮'];
-    var tabMap = [0, 2, 3, 4, 6, 5, 1];
+    var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
+    var tabMap = [0, 4, 3, 6, 5, 1, 2];
     var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
     window.initInfo = {
       beijing:[0, 0, 0, 0, 0, 0, 0],
