@@ -537,12 +537,7 @@ _IG_FetchContent(url, onTypeData);
         height = 200;
       /* for margin */
       height -= 20;
-      function getY(obj){  
-         return (obj.offsetParent ? obj.offsetTop + getY(obj.offsetParent) : obj.y ? obj.y : 0);  
-      }  
-      
-      $('listContainer').style.height = height - getY($('listContainer'));
-      alert("height = " + $('listContainer').style.height);
+      $('listContainer').style.height = height - 180;
     }
     window.onresize = resetHeight;
 
