@@ -78,7 +78,7 @@ div, p, ul, li{
   display:none;
 }
 
-#tabHead a
+#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
 {
   display: inline-block;
   line-height: 25px;
@@ -91,11 +91,12 @@ div, p, ul, li{
   color: #000;
 }
 
-#tabHead a.selected
+#tabHead a.selected, #tabHead a.selected:link, #tabHead a.selected:visited, #tabHead a.selected:active
 {
   font-weight: bold;
   color: #ff0;
 }
+
 #tabHead a.selected:hover
 {
   color: #000;
@@ -512,6 +513,31 @@ _IG_FetchContent(url, onTypeData);
         else if(lastTab != 0)
           $("item_" + type + "_" + i).className = "";
     }
+    function initHeight()
+    {
+      var height = 0;
+      if (window.innerHeight)
+      {
+        height = window.innerHeight;
+
+      }
+      else if ((document.body) && (document.body.clientHeight))
+      {
+        height = document.body.clientHeight;
+      }
+      if(height < 200)
+        height = 200;
+      /* for margin */
+      height -= 20;
+      function getY(obj){  
+         return (obj.offsetParent ? obj.offsetTop + getY(obj.offsetParent) : obj.y ? obj.y : 0);  
+      }  
+      $('listContainer').style.height = height - getY($('listContainer'));
+
+
+    }
+    window.onresize = initHeight;
+
    var init = false;
     initCity();
     initTabs();
