@@ -1,68 +1,56 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Module> 
-<ModulePrefs title="圣诞节你去哪儿？"
-
+<ModulePrefs title="圣诞节您去哪儿？"
              author="Renwenxin, Fei Chen, Xiaoxi Wu, Wei chen"
-
              author_email="chinamaps-devtools+xmasmap@google.com"
-
              author_affiliation="Google China"
-
              description="圣诞节信息查询"
-
              screenshot="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map.png"
-
              thumbnail="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map-thm.png"
-
              height="420"> 
   <Require feature="sharedmap" /> 
 </ModulePrefs> 
  
 <Content type="html"><![CDATA[
-<style> 
-div, p, ul, li{
+<style>
+div, p, ul, li {
   margin:0;
   border:0;
   padding:0;
 }
-#map{
+#map {
   float: right;
   border:solid #999 1px;
 }
-#wrapper{
+#wrapper {
   float: left;
   font-size:13px;
   width:250px;
 }
-
 .tab-head a {
   display:block;
   color:#fff;
 }
-
 .tab-head a:hover {
   background:#FFF;
   color:#000000;
 }
-
-.quick-search
-{
+.quick-search {
   margin:2px 10px 0 0;
   border:solid #999999 1px;
   color:#999999;
   width: 14em;
   line-height: 25px;
 }
-.city{
+.city {
   margin:3px;
   cursor:pointer;
 }
 /*tab*/
-.tab-head{
+.tab-head {
   overflow:auto;
-  
 }
-.tab-item{
+.tab-item {
   text-align:center;
   float:left;
   padding:1px 3px;
@@ -70,96 +58,77 @@ div, p, ul, li{
   color:#0000FF;
   border-right: solid #CCD9F2 1px;
 }
-.active-tab{
+.active-tab {
   font-weight:bold;
   text-decoration:none;
 }
-.tab-content{
+.tab-content {
   display:none;
 }
-
-#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active
-{
+#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active {
   color: #fff;
 }
-#tabHead a
-{
+#tabHead a {
   line-height: 25px;
   width: 34px;
   text-decoration: none;
   text-align: center;
-  display: inline-block;       //some standard browsers
-  *display: inline;            //Only IE know this code (CSS Hack)
+  display: inline-block;  // Some standard browsers
+  *display: inline;  // Only IE know this code (CSS Hack)
 }
-#tabHead a:hover
-{
+#tabHead a:hover {
   color: #000;
 }
-
-#tabHead a.selected, #tabHead a.selected:link, #tabHead a.selected:visited, #tabHead a.selected:active
-{
+#tabHead a.selected, #tabHead a.selected:link, #tabHead a.selected:visited, #tabHead a.selected:active {
   font-weight: bold;
   color: #ff0;
 }
-
-#tabHead a.selected:hover
-{
+#tabHead a.selected:hover {
   color: #000;
 }
-
-#map
-{
+#map {
   width: 100%;
 }
-#listContainer
-{
+#listContainer {
   width: 100%;
   overflow: auto;
   height: 80%;
 }
-
-#listContainer ul li
-{
+#listContainer ul li {
   line-height:23px;
-	text-decoration:none;
-	color:#000;
-	display:block;
-	padding:0 0 0 25px;
-	background-image: url(http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree.png);
-	background-repeat: no-repeat;
-	background-position: left;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-	border-bottom-color: #e9e9e9;  
+  text-decoration:none;
+  color:#000;
+  display:block;
+  padding:0 0 0 25px;
+  background-image: url(http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree.png);
+  background-repeat: no-repeat;
+  background-position: left;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e9e9e9;  
 }
-#listContainer ul li.over
-{
+#listContainer ul li.over {
   font-weight: bold;
   cursor: pointer;
-	background-color: #ffe9df;
-	background-image: url(http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree0.png);
-	background-repeat: no-repeat;
-	background-position: left;
+  background-color: #ffe9df;
+  background-image: url(http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree0.png);
+  background-repeat: no-repeat;
+  background-position: left;
 }
-
-#cityList a
-{
+#cityList a {
   line-height: 20px;
   padding: 0px 4px;
   text-decoration: none;
   display: inline-block;       //some standard browsers
   *display: inline;            //Only IE know this code (CSS Hack)
 }
-#cityList a:hover
-{
+#cityList a:hover {
   color: #ff3333;
 }
-
-#cityList a.selected
-{
+#cityList a.selected {
   font-weight: bold;
-	background-color: #2244dd;
-	color: #fff;
+  background-color: #2244dd;
+  color: #fff;
 }
 
 .m3f,.m4f{font-size:1px;overflow:hidden;display:block;height:1px;}
@@ -167,29 +136,26 @@ div, p, ul, li{
 .m3f {background:#000; margin:0 2px;}
 .m2f {border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
 </style> 
-  <div id="wrapper"> 
-    <div class="panel-head"> 
-      <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/> 
-      <br/> 
+
+<div id="wrapper"> 
+  <div class="panel-head"> 
+    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/> 
+    <br/> 
     城市：<span id="cityList"></span></div> 
-		<b class="m3f"></b><b class="m4f"></b> 
-		<div class="tab-head m2f" id="tabHead"> 
-		</div> 
-		<b class="m4f"></b><b class="m3f"></b> 
-    <div class="list-container" id="listContainer"> 
-    </div> 
-    </div> 
+    <b class="m3f"></b><b class="m4f"></b> 
+    <div class="tab-head m2f" id="tabHead"></div> 
+    <b class="m4f"></b><b class="m3f"></b>
+    <div class="list-container" id="listContainer"></div> 
+  </div> 
 <script>    
 
 (function() {
-
   var msg = {};
-  msg.init = function()
-  {
-function $(dom)
-{
-  return document.getElementById(dom);
-}
+
+  msg.init = function() {
+    function $(dom) {
+      return document.getElementById(dom);
+    }
 
     var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
     var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
@@ -202,155 +168,134 @@ function $(dom)
     window.reqTab = 0;
     window.checking = false;
     
-    window.hideCity = function(city)
-    {
-      if(cities[city].marker['all'])
-      {
-        for(var j = 0; j < cities[city].marker['all'].length; j ++)
-        {
+    window.hideCity = function(city) {
+      if (cities[city].marker['all']) {
+        for(var j = 0; j < cities[city].marker['all'].length; j++) {
           cities[city].marker['all'][j].hide();
         }
       }
     }
-    window.selectType = function(i)
-    {
+
+    window.selectType = function(i) {
       $('listContainer').innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       hideCity('beijing');
       hideCity('shanghai');
       $('tab_' + lastTab).className = "";
-      if(cities[curCity].marker[types[lastTab]])
-      {
-        for(var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++)
-        {
+      
+      if (cities[curCity].marker[types[lastTab]]) {
+        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j++) {
           cities[curCity].marker[types[lastTab]][j].hide();
         }
       }
+
       $('tab_' + i).className = "selected";
       lastTab = i;
-      if(!cities[curCity].marker[types[lastTab]])
-      {
-        if((lastTab != 0) && (window.reqTab == 0))
-        {
-          if(initInfo[curCity][lastTab] == 0)
-          {
+
+      if (!cities[curCity].marker[types[lastTab]]) {
+        if (lastTab != 0 && window.reqTab == 0) {
+          if (initInfo[curCity][lastTab] == 0) {
             var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
             initInfo[curCity][lastTab] = 1;
             window.reqTab = lastTab;
-_IG_FetchContent(url, onTypeData);
+            _IG_FetchContent(url, onTypeData);
           }
           return;
-        }
-        else if(lastTab == 0)
-        {
+        } else if (lastTab == 0) {
           checkLoading();
           return;
         }
-
-      }
-      else if(lastTab == 0)
-      {
+      } else if (lastTab == 0) {
         window.checkLoading();
       }
-      if((i != 0) && cities[curCity].html[types[i]])
-      {
+
+      if ((i != 0) && cities[curCity].html[types[i]]) {
         $('listContainer').innerHTML = cities[curCity].html[types[i]];
         resetHeight();
+      }
 
-        }
-
-      if(cities[curCity].marker[types[lastTab]])
-      {
-        for(var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++)
-        {
+      if (cities[curCity].marker[types[lastTab]]) {
+        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
           cities[curCity].marker[types[lastTab]][j].show();
         }
       }
     }
-    window.onTypeData = function(data)
-    {
-      function openInfoWindow(marker, item)
-      {
-            var img = new Image();
-    img.src = item['image'];
-    img.onload = onImgLoaded(img.src, "loaded");
-    img.onerror = onImgLoaded(img.src, "error");
-            var tabs = [];
-        var imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "'><img src='"
-        + base + "loading.gif'/>&nbsp;loading...</p>";
+
+    window.onTypeData = function(data) {      
+      function openInfoWindow(marker, item) {
+        var img = new Image();
+        img.src = item['image'];
+        img.onload = onImgLoaded(img.src, "loaded");
+        img.onerror = onImgLoaded(img.src, "error");
+        var tabs = [];
+        var imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "'><img src='" + base + "loading.gif'/>&nbsp;loading...</p>";
         var infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
         tabs.push(new GInfoWindowTab("图片", imgHtml));
         tabs.push(new GInfoWindowTab("信息", infoHtml));
         marker.openInfoWindowTabsHtml(tabs);
     
-    function onImgLoaded(src, type) {
-      return function() {
+        function onImgLoaded(src, type) {
+          return function() {
+             tabs = [];
+             if (type == 'loaded') {
+               var css = "";
+               var width = img.width;
+               var height = img.height;
+               var rw = width / 200;
+               var rh = height / 250;
+               var r = 1;
+               r = (rw > rh)?rw:rh;
+               if (r < 1) r = 1;
+               img.height = height / r;
+               img.width =  width / r;
 
-
-           tabs = [];
-           if(type == 'loaded'){
-           var css = "";
-           var width = img.width;
-           var height = img.height;
-           var rw = width / 200;
-           var rh = height / 250;
-           var r = 1;
-           r = (rw > rh)?rw:rh;
-            if(r < 1) r = 1;
-            img.height = height / r;
-            img.width =  width / r;
-
-        css = 'height:' + img.height + ';width:' + img.width + ';';
-        imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 200px; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 200px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
-        infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
-        tabs.push(new GInfoWindowTab("图片", imgHtml));
-        tabs.push(new GInfoWindowTab("信息", infoHtml));
-        marker.openInfoWindowTabsHtml(tabs);
-        }
-        else {
-                  imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
-        infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
-        tabs.push(new GInfoWindowTab("图片", imgHtml));
-        tabs.push(new GInfoWindowTab("信息", infoHtml));
-        marker.openInfoWindowTabsHtml(tabs);
+               css = 'height:' + img.height + ';width:' + img.width + ';';
+               imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 200px; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 200px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
+               infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
+               tabs.push(new GInfoWindowTab("图片", imgHtml));
+               tabs.push(new GInfoWindowTab("信息", infoHtml));
+               marker.openInfoWindowTabsHtml(tabs);
+            } else {
+              imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
+              infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
+              tabs.push(new GInfoWindowTab("图片", imgHtml));
+              tabs.push(new GInfoWindowTab("信息", infoHtml));
+              marker.openInfoWindowTabsHtml(tabs);
+            }
+          }
         }
       }
-    }
-
-
-      }
+      
       function highlightPos(marker, item, i){
         var url = base + "img/" + iconType0[item['type']];
 
-        if(window.all)
-        {
+        if (window.all) {
           $("item_all_" + window.idx).className = "over";
           window.all = false;
-        }
-        else if(lastTab != 0)
+        } else if (lastTab != 0) {
           $("item_" + item['type'] + "_" + i).className = "over";
-        marker.setImage(url);
-        map.getBoundsAsync(function(bounds){
-        if(bounds.contains(marker.point) == false){
-          map.panTo(marker.point);
         }
-      });
+        marker.setImage(url);
+        map.getBoundsAsync(function(bounds) {
+          if (bounds.contains(marker.point) == false) {
+            map.panTo(marker.point);
+          }
+        });
       }
+
       function unhighlightPos(marker, item, i){
         var url = base + "img/" + iconType[item['type']];
-        if(window.all)
-        {
+        if (window.all) {
           $("item_all_" + window.idx).className = "";
           window.all = false;
-        }
-        else if(lastTab != 0)
+        } else if (lastTab != 0) {
           $("item_" + item['type'] + "_" + i).className = "";
+        }
         marker.setImage(url);
       }
  
       var data = eval(data);
-      if(!data) return;
-      if(!cities[curCity].all)
-      {
+      if (!data) return;
+      if (!cities[curCity].all) {
         cities[curCity]['all'] = [];
         cities[curCity].html['all'] = [];
         cities[curCity].marker['all'] = [];
@@ -358,8 +303,8 @@ _IG_FetchContent(url, onTypeData);
       cities[curCity][types[reqTab]] = data;
       cities[curCity].html[types[reqTab]] = [];
       cities[curCity].marker[types[reqTab]] = [];
-      for(var i = 0; i < data.length; i ++)
-      {
+
+      for (var i = 0; i < data.length; i ++) {
         var len = i;
         var type = types[reqTab];
         var item = data[i];
@@ -371,12 +316,12 @@ _IG_FetchContent(url, onTypeData);
         item['image'] = item.i;
         item['desc'] = item.d;
 
-
         cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
         "onclick=\"selectMarker('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
         "onmouseover=\"mouseOverList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
         "onmouseout=\"mouseOutList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
         ">" + item['name'] + "</li>";
+
         var point = new GLatLng(item["lat"], item["lng"]);
         var icon = new GIcon();
         icon.image = base + "img/" + iconType[item['type']];
@@ -406,44 +351,42 @@ _IG_FetchContent(url, onTypeData);
       cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
 
       reqTab = 0;
-      if(window.checking)
+      if (window.checking) {
         window.checkLoading();
-      else selectType(lastTab);
-      
+      } else {
+        selectType(lastTab);
+      }
     }
-    window.checkLoading = function()
-    {
+
+    window.checkLoading = function() {
       window.checking = true;
       var con = $('listContainer');
-      for(var i = 1; i < initInfo[curCity].length; i++)
-      {
-        if((window.reqTab == 0) && (initInfo[curCity][i] == 0))
-        {
+
+      for (var i = 1; i < initInfo[curCity].length; i++) {
+        if (window.reqTab == 0 && initInfo[curCity][i] == 0) {
           var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
           initInfo[curCity][i] = 1;
           window.reqTab = i;
-_IG_FetchContent(url, onTypeData);
+          _IG_FetchContent(url, onTypeData);
           return false;
           break;
         }
       }
-      if(cities[curCity].html['allul'] && lastTab == 0)
-      {
-      con.innerHTML = cities[curCity].html['allul'];
-      resetHeight();
+
+      if (cities[curCity].html['allul'] && lastTab == 0) {
+        con.innerHTML = cities[curCity].html['allul'];
+        resetHeight();
       }
       window.checking = false;
       return true;
     }
-    window.selectCity = function(i)
-    {
+
+    window.selectCity = function(i) {
       var con = $('listContainer');
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       $('city_' + curCity).className = "";
-      if(cities[curCity].marker[types[lastTab]])
-      {
-        for(var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++)
-        {
+      if (cities[curCity].marker[types[lastTab]]) {
+        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j++) {
           cities[curCity].marker[types[lastTab]][j].hide();
         }
       }
@@ -453,23 +396,22 @@ _IG_FetchContent(url, onTypeData);
       selectType(lastTab);
       map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng));
     }
-    function initCity()
-    {
+
+    function initCity() {
       var root = $("cityList");
       root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
       root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
     }
-    function initTabs()
-    {
+
+    function initTabs() {
       var root = $('tabHead');
-      for(var i = 0; i < types.length; i ++)
-      {
+      for (var i = 0; i < types.length; i++) {
         root.innerHTML += "<a href=\"javascript:selectType('" + i + "')\" title=\"" + typeNames[i] + "\" id=\"tab_" + i + "\">" + typeNames[i] + "</a>";
       }
       $('tab_0').className = "selected";
     }
-    var cities =
-    {
+
+    var cities = {
       beijing : {
         name:"北京",
         lat:39.9056,
@@ -492,63 +434,55 @@ _IG_FetchContent(url, onTypeData);
     var icons0 = ['', 'shoppingcart0.png', 'cinema0.png', 'bar0.png', 'music0.png', 'restaurant0.png', 'medical0.png'];
     var iconType = {};
     var iconType0 = {};
-    for(var i = 0; i < types.length; i ++)
-    {
+    for (var i = 0; i < types.length; i++) {
       iconType[types[i]] = icons[i];
       iconType0[types[i]] = icons0[i];
     }
-    window.selectMarker = function(type, i)
-    {
+
+    window.selectMarker = function(type, i) {
       GEvent.trigger(cities[curCity].marker[type][i], 'click');
     }
-    window.mouseOverList = function(type, i)
-    {
-      if(type == 'all')
-      {
+
+    window.mouseOverList = function(type, i) {
+      if (type == 'all') {
         window.all = true;
         window.idx = i;
-          $("item_all_" + window.idx).className = "over";
-          window.all = false;
-        }
-        else if(lastTab != 0)
-          $("item_" + type + "_" + i).className = "over";
+        $("item_all_" + window.idx).className = "over";
+        window.all = false;
+      } else if (lastTab != 0) {
+        $("item_" + type + "_" + i).className = "over";
+      }
     }
-    window.mouseOutList = function(type, i)
-    {
-      if(type == 'all')
-      {
+
+    window.mouseOutList = function(type, i) {
+      if(type == 'all') {
         window.all = true;
         window.idx = i;
-          $("item_all_" + window.idx).className = "";
-          window.all = false;
-        }
-        else if(lastTab != 0)
-          $("item_" + type + "_" + i).className = "";
+        $("item_all_" + window.idx).className = "";
+        window.all = false;
+      } else if (lastTab != 0) {
+        $("item_" + type + "_" + i).className = "";
+      }
     }
-    function resetHeight()
-    {
-    var height = 0;
+
+    function resetHeight() {
+      var height = 0;
       var is_opera = (navigator.userAgent.indexOf('opera') != -1);
-      if(!(/msie/i.test(navigator.userAgent) && !is_opera))
-      {
+      if (!(/msie/i.test(navigator.userAgent) && !is_opera)) {
         return;
       }
-      if (window.innerHeight)
-      {
+      if (window.innerHeight) {
         height = window.innerHeight;
-      }
-      else if ((document.body) && (document.body.clientHeight))
-      {
+      } else if ((document.body) && (document.body.clientHeight)) {
         height = document.body.clientHeight;
       }
-      if(height < 200)
-        height = 200;
+      if(height < 200) height = 200;
       /* for margin */
       height -= 20;
       $('listContainer').style.height = height - 80;
     }
 
-   var init = false;
+    var init = false;
     initCity();
     initTabs();
     var lastTab = 0;
@@ -564,25 +498,23 @@ _IG_FetchContent(url, onTypeData);
     window.map = map;
     window.page = page;
     window.limit = limit;
-     var initSearchBar = function()
-    {
+    
+    var initSearchBar = function() {
       var search = $('quickSearch');
-      var onclickSearch = function()
-      {
+      
+      var onclickSearch = function() {
         search = $('quickSearch');
-        if(search.value == '请输入搜索的内容')
-        {
+        if(search.value == '请输入搜索的内容') {
           search.value = "";
         }
         search.style.color = "#000";
       }
-      window.onSearch = function(event)
-      {
+
+      window.onSearch = function(event) {
         var search = $("quickSearch");
         var data = cities[curCity][types[lastTab]];
         var key = search.value;
-        if(!key)
-        {
+        if (!key) {
           selectType(lastTab);
           return;
         }
@@ -590,14 +522,12 @@ _IG_FetchContent(url, onTypeData);
         hideCity('beijing');
         hideCity('shanghai');
  
-        for(var i = 0; i < data.length; i++)
-        {
+        for (var i = 0; i < data.length; i++) {
           var item = data[i];
           var type = item['type'];
 
-          if(lastTab == 0) type = 'all';
-          if(item['name'].indexOf(key) != -1)
-          {
+          if (lastTab == 0) type = 'all';
+          if (item['name'].indexOf(key) != -1) {
             str += "<li id=\"item_" + type + "_" + i + "\" " +
             "onclick=\"selectMarker('" + type + "', " + i + ")\"" +
             "onmouseover=\"mouseOverList('" + type + "', " + i + ")\"" +
@@ -609,34 +539,28 @@ _IG_FetchContent(url, onTypeData);
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
         $('listContainer').innerHTML = str;
         resetHeight();
-
-      
       }
+
       GEvent.addDomListener(search, "click", onclickSearch);
       GEvent.addDomListener(search, "keyup", window.onSearch);
 
-      window.onSearchBlur = function(event)
-      {
+      window.onSearchBlur = function(event) {
         var search = $('quickSearch');
-        if(!search.value)
-        {
+        if (!search.value) {
           search.value = "请输入搜索的内容";
           search.style.color = "#999";
         }
       }
 
       GEvent.addDomListener(search, "blur", onSearchBlur);
-
     }
     initSearchBar();
   }
-  window['xmasinit'] = 
-  {
+
+  window['xmasinit'] = {
     init: msg.init()
   }
-}
-)();
-
+})();
 
 _IG_RegisterOnloadHandler(xmasinit.init);
 </script> 
