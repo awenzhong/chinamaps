@@ -192,7 +192,6 @@ function $(dom)
 }
 
     var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
-    //var typeNames = ['全部', '基督教堂', '电影院线', '商场购物', '酒吧夜店', 'KTV欢唱', '酒店餐饮'];
     var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
     var tabMap = [0, 4, 3, 6, 5, 1, 2];
     var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
@@ -489,8 +488,8 @@ _IG_FetchContent(url, onTypeData);
     var curCity = 'beijing';
     var map = new GMap2();
     map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 10);
-    var icons = ['', 'medical.png', 'cinema.png', 'shoppingcart.png', 'bar.png', 'music.png', 'restaurant.png'];
-    var icons0 = ['', 'medical0.png', 'cinema0.png', 'shoppingcart0.png', 'bar0.png', 'music0.png', 'restaurant0.png'];
+    var icons = ['', 'shoppingcart.png', 'cinema.png', 'bar.png', 'music.png', 'restaurant.png', 'medical.png'];
+    var icons0 = ['', 'shoppingcart0.png', 'cinema0.png', 'bar0.png', 'music0.png', 'restaurant0.png', 'medical0.png'];
     var iconType = {};
     var iconType0 = {};
     for(var i = 0; i < types.length; i ++)
