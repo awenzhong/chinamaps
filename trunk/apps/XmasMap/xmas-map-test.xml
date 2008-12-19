@@ -293,6 +293,8 @@ div, p, ul, li {
         marker.setImage(url);
         }
 
+        alert(data);
+
 
        /*
  
