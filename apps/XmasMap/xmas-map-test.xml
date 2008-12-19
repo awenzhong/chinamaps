@@ -12,7 +12,11 @@
 </ModulePrefs> 
  
 <Content type="html"><![CDATA[
-<style>
+  <style>
+    .hint-msg
+    {
+      color: red;
+    }
 div, p, ul, li {
   margin:0;
   border:0;
@@ -184,7 +188,7 @@ msg.init = function() {
 
   window.selectType = function(i) {
     if(checking || (reqTab != 0)) return;
-    con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
+    con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>';
     hideTab(curCity, types[lastTab]);
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
@@ -224,7 +228,7 @@ msg.init = function() {
     img.onload = onImgLoaded(img.src, "loaded");
     img.onerror = onImgLoaded(img.src, "error");
     var tabs = [];
-    var imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "'><img src='" + base + "loading.gif'/>&nbsp;loading...</p>";
+    var imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "'><img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
     var infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
     tabs.push(new GInfoWindowTab("图片", imgHtml));
     tabs.push(new GInfoWindowTab("信息", infoHtml));
@@ -426,7 +430,7 @@ msg.init = function() {
       else
       {
       var time = step + start;
-        con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>' + "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+        con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
         setTimeout('onCycleData(' + time + ')', 0);
       }
     }
@@ -454,7 +458,7 @@ msg.init = function() {
 
   window.selectCity = function(i) {
     if(checking || (reqTab != 0)) return;
-    con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
+    con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>';
     $('city_' + curCity).className = "";
     if (cities[curCity].marker[types[lastTab]]) {
       for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j++) {
