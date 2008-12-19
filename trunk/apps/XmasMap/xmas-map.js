@@ -1,5 +1,3 @@
-
-(function() {
   window.onload = function()
   {
       var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
@@ -7,6 +5,7 @@
       {
         return document.getElementById(dom);
       }
+      var con = $('listContainer');
       function openInfoWindow(marker, item, i)
       {
         var img = new Image();
@@ -104,7 +103,7 @@
     window.selectType = function(i)
     {
       
-      $('listContainer').innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
+      con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       hideCity('beijing');
       hideCity('shanghai');
       $('tab_' + lastTab).className = "";
@@ -143,7 +142,7 @@
         window.checkLoading();
       }
       if((i != 0) && cities[curCity].html[types[i]])
-        $('listContainer').innerHTML = cities[curCity].html[types[i]];
+        con.innerHTML = cities[curCity].html[types[i]];
 
       if(cities[curCity].marker[types[lastTab]])
       {
@@ -224,7 +223,6 @@
     window.checkLoading = function()
     {
       window.checking = true;
-      var con = $('listContainer');
       for(var i = 1; i < initInfo[curCity].length; i++)
       {
         if((window.reqTab == 0) && (initInfo[curCity][i] == 0))
@@ -244,8 +242,7 @@
     }
     window.selectCity = function(i)
     {
-      var con = $('listContainer');
-      con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
+      //con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       $('city_' + curCity).className = "";
       if(cities[curCity].marker[types[lastTab]])
       {
@@ -287,14 +284,14 @@
       shanghai : {
         name:"上海",
         lat:31.2222,
-        lng:111.7409,
+        lng:121.4790,
         html: [],
         marker: []
       }
     };
     var curCity = 'beijing';
     var map = new GMap2($("map"));
-    map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 10);
+    map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 12);
     map.enableScrollWheelZoom();
     map.addControl(new GLargeMapControl());
     map.addControl(new GMapTypeControl());
@@ -376,11 +373,9 @@
       /* for margin */
       height -= 20;
       $('map').style.height = height;
-      $('listContainer').style.height = height - 70;
-
+      con.style.height = height - 70;
       map.checkResize();
-
-      map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 10);
+      map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 12);
     }
     window.onresize = initHeight;
     initHeight();
@@ -426,7 +421,7 @@
           }
         }
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
-        $('listContainer').innerHTML = str;
+        con.innerHTML = str;
       }
       GEvent.addDomListener(search, "click", onclickSearch);
       GEvent.addDomListener(search, "keyup", window.onSearch);
@@ -446,6 +441,3 @@
     }
     initSearchBar();
   }
-}
-)();
-
