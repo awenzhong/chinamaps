@@ -550,10 +550,11 @@ msg.init = function() {
         search.value = "";
       }
       search.style.color = "#000";
-    }
-    window.onSearch = function(event) {
+      }
+
+    window.onSearchTimer = function()
+    {
       var search = $("quickSearch");
-      var data = cities[curCity][types[lastTab]];
       var key = search.value;
       if (!key) {
         selectType(lastTab);
@@ -569,6 +570,11 @@ msg.init = function() {
         }
       }
       resetHeight();
+    }
+    window.onSearch = function(event) {
+    clearTimeout();
+    setTimeout("onSearchTimer()", 500);
+
     }
     GEvent.addDomListener(search, "click", onclickSearch);
     GEvent.addDomListener(search, "keyup", window.onSearch);
