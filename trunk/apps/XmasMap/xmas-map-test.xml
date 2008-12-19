@@ -15,7 +15,10 @@
   <style>
     .hint-msg
     {
-      color: red;
+    color: red;
+    position: fixed;
+    top: 10px;
+    left: 10px;
     }
 div, p, ul, li {
   margin:0;
@@ -99,6 +102,7 @@ div, p, ul, li {
   width: 100%;
   overflow: auto;
   height: 80%;
+  position: relative;
 }
 #listContainer ul li {
   line-height:23px;
