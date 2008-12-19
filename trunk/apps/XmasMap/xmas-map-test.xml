@@ -183,7 +183,12 @@ msg.init = function() {
     }
   }
   window.selectType = function(i) {
-    if(checking || (reqTab != 0)) return;
+    if(checking || (reqTab != 0))
+    {
+      setTimeout("setBackcolor()", 1000);
+      hint.style.backgroundColor = "#ff0";
+      return;
+    }
     hideTab(curCity, types[lastTab]);
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
@@ -433,8 +438,17 @@ msg.init = function() {
     window.checking = false;
     return true;
   }
+  window.setBackcolor = function()
+  {
+      hint.style.backgroundColor = "#fff";
+  }
   window.selectCity = function(i) {
-    if(checking || (reqTab != 0)) return;
+    if(checking || (reqTab != 0))
+    {
+      setTimeout("setBackcolor()", 1000);
+      hint.style.backgroundColor = "#ff0";
+      return;
+    }
     $('city_' + curCity).className = "";
     if (cities[curCity].marker[types[lastTab]]) {
       for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j++) {
