@@ -434,7 +434,7 @@ div, p, ul, li {
     };
     var curCity = 'beijing';
     var map = new GMap2();
-    map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 10);
+    map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 12);
     var icons = ['', 'shoppingcart.png', 'cinema.png', 'bar.png', 'music.png', 'restaurant.png', 'medical.png'];
     var icons0 = ['', 'shoppingcart0.png', 'cinema0.png', 'bar0.png', 'music0.png', 'restaurant0.png', 'medical0.png'];
     var iconType = {};
