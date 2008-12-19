@@ -73,8 +73,10 @@ div, p, ul, li {
   width: 34px;
   text-decoration: none;
   text-align: center;
-  display: inline-block;  // Some standard browsers
-  *display: inline;  // Only IE know this code (CSS Hack)
+  display: -moz-inline-stack; 
+  display: inline-block;     
+  zoom: 1;                    
+  *display: inline;   
 }
 #tabHead a:hover {
   color: #000;
