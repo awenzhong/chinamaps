@@ -427,7 +427,7 @@ div, p, ul, li {
       shanghai : {
         name:"上海",
         lat:31.2222,
-        lng:111.7409,
+        lng:121.4790,        
         html: [],
         marker: []
       }
