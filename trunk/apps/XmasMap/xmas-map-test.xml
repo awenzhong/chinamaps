@@ -637,8 +637,7 @@ msg.init = function() {
       search.style.color = "#000";
       }
 
-    window.onSearchTimer = function()
-    {
+    window.onSearchTimer = function() {
       var search = $("quickSearch");
       var key = search.value;
       if (!key) {
@@ -657,9 +656,8 @@ msg.init = function() {
       resetHeight();
     }
     window.onSearch = function(event) {
-    clearTimeout();
-    setTimeout("onSearchTimer()", 500);
-
+      clearTimeout();
+      setTimeout("onSearchTimer()", 500);
     }
     GEvent.addDomListener(search, "click", onclickSearch);
     GEvent.addDomListener(search, "keyup", window.onSearch);
