@@ -153,14 +153,13 @@ div, p, ul, li {
     <div class="list-container" id="listContainer"></div> 
   </div> 
 <script>    
-
-(function() {
   var msg = {};
 
   msg.init = function() {
     function $(dom) {
       return document.getElementById(dom);
     }
+    var con = $('listContainer');
 
     var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
     var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
@@ -182,7 +181,7 @@ div, p, ul, li {
     }
 
     window.selectType = function(i) {
-      $('listContainer').innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
+      con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       hideCity('beijing');
       hideCity('shanghai');
       $('tab_' + lastTab).className = "";
@@ -214,7 +213,7 @@ div, p, ul, li {
       }
 
       if ((i != 0) && cities[curCity].html[types[i]]) {
-        $('listContainer').innerHTML = cities[curCity].html[types[i]];
+        con.innerHTML = cities[curCity].html[types[i]];
         resetHeight();
       }
 
@@ -240,35 +239,35 @@ div, p, ul, li {
     
         function onImgLoaded(src, type) {
           return function() {
-             tabs = [];
-             if (type == 'loaded') {
-               var css = "";
-               var width = img.width;
-               var height = img.height;
-               var rw = width / 350;
-               var rh = height / 250;
-               var r = 1;
-               r = (rw > rh)?rw:rh;
-               if (r < 1) r = 1;
-               img.height = height / r;
-               img.width =  width / r;
+            tabs = [];
+            if (type == 'loaded') {
+              var css = "";
+              var width = img.width;
+              var height = img.height;
+              var rw = width / 350;
+              var rh = height / 250;
+              var r = 1;
+              r = (rw > rh)?rw:rh;
+              if (r < 1) r = 1;
+              img.height = height / r;
+              img.width =  width / r;
 
-        css = 'height:' + img.height + ';width:' + img.width + ';';
-        imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 400px;text-align:center; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 400px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
-        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
-        tabs.push(new GInfoWindowTab("图片", imgHtml));
-        tabs.push(new GInfoWindowTab("信息", infoHtml));
-        marker.openInfoWindowTabsHtml(tabs);
+              css = 'height:' + img.height + ';width:' + img.width + ';';
+              imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 400px;text-align:center; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 400px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
+              infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
+              tabs.push(new GInfoWindowTab("图片", imgHtml));
+              tabs.push(new GInfoWindowTab("信息", infoHtml));
+              marker.openInfoWindowTabsHtml(tabs);
+            }
+            else {
+              imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
+              infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
+              tabs.push(new GInfoWindowTab("图片", imgHtml));
+              tabs.push(new GInfoWindowTab("信息", infoHtml));
+              marker.openInfoWindowTabsHtml(tabs);
+            }
+          }
         }
-        else {
-                  imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
-        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
-        tabs.push(new GInfoWindowTab("图片", imgHtml));
-        tabs.push(new GInfoWindowTab("信息", infoHtml));
-        marker.openInfoWindowTabsHtml(tabs);
-        }
-      }
-    }
 
       }
       
@@ -367,7 +366,6 @@ div, p, ul, li {
 
     window.checkLoading = function() {
       window.checking = true;
-      var con = $('listContainer');
 
       for (var i = 1; i < initInfo[curCity].length; i++) {
         if (window.reqTab == 0 && initInfo[curCity][i] == 0) {
@@ -389,7 +387,6 @@ div, p, ul, li {
     }
 
     window.selectCity = function(i) {
-      var con = $('listContainer');
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       $('city_' + curCity).className = "";
       if (cities[curCity].marker[types[lastTab]]) {
@@ -400,7 +397,7 @@ div, p, ul, li {
       $('city_' + i).className = "selected";
       curCity = i;
       if(init)
-      selectType(lastTab);
+        selectType(lastTab);
       map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng));
     }
 
@@ -487,7 +484,7 @@ div, p, ul, li {
       if(height < 200) height = 200;
       /* for margin */
       height -= 20;
-      $('listContainer').style.height = height - 80;
+      con.style.height = height - 80;
     }
 
     var init = false;
@@ -545,7 +542,7 @@ div, p, ul, li {
           }
         }
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
-        $('listContainer').innerHTML = str;
+        con.innerHTML = str;
         resetHeight();
       }
 
@@ -568,9 +565,9 @@ div, p, ul, li {
   window['xmasinit'] = {
     init: msg.init()
   }
-})();
 
 _IG_RegisterOnloadHandler(xmasinit.init);
+
 </script> 
 ]]></Content> 
 </Module> 
