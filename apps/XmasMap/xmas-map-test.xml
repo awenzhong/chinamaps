@@ -183,6 +183,7 @@ msg.init = function() {
   }
 
   window.selectType = function(i) {
+    if(checking || (reqTab != 0)) return;
     con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
     hideTab(curCity, types[lastTab]);
     $('tab_' + lastTab).className = "";
@@ -399,6 +400,7 @@ msg.init = function() {
   }
 
   window.selectCity = function(i) {
+    if(checking || (reqTab != 0)) return;
     con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
     $('city_' + curCity).className = "";
     if (cities[curCity].marker[types[lastTab]]) {
