@@ -217,8 +217,6 @@ div, p, ul, li {
         }
       }
     }
-
-    window.onTypeData = function(data) {      
       function openInfoWindow(marker, item) {
         var img = new Image();
         img.src = item['image'];
@@ -293,38 +291,18 @@ div, p, ul, li {
         marker.setImage(url);
       }
  
-      var data = eval(data);
-      if (!data) return;
-      if (!cities[curCity].all) {
-        cities[curCity]['all'] = [];
-        cities[curCity].html['all'] = [];
-        cities[curCity].marker['all'] = [];
-      }
-      cities[curCity][types[reqTab]] = data;
-      cities[curCity].html[types[reqTab]] = [];
-      cities[curCity].marker[types[reqTab]] = [];
-
-      for (var i = 0; i < data.length; i ++) {
+    window.setMarker = function(city, type)
+    {
+      var data = cities[city][type];
+      for(var i = 0; i < data.length; i ++)
+      {
         var len = i;
         var type = types[reqTab];
         var item = data[i];
-        item['type'] = types[reqTab];
-        var g = item.g.split(",");
-        item['lat'] = parseFloat(g[1]);
-        item['lng'] = parseFloat(g[0]);
-        item['name'] = item.n;
-        item['image'] = item.i;
-        item['desc'] = item.d;
-
-        cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
-        "onclick=\"selectMarker('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
-        "onmouseover=\"mouseOverList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
-        "onmouseout=\"mouseOutList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
-        ">" + item['name'] + "</li>";
 
         var point = new GLatLng(item["lat"], item["lng"]);
         var icon = new GIcon();
-        icon.image = base + "img/" + iconType[item['type']];
+        icon.image = "img/" + iconType[item['type']];
         icon.iconSize = new GSize(36, 51);
         icon.iconAnchor = new GPoint(18, 51);
         icon.infoWindowAnchor = new GPoint(10, 6);
@@ -347,15 +325,55 @@ div, p, ul, li {
         cities[curCity]['all'].push(item);
         cities[curCity].marker['all'].push(marker);
       }
+      reqTab = 0;
+      if(window.checking)
+        window.checkLoading();
+      else selectType(lastTab);
+
+    }
+    window.onTypeData = function(data)
+    {
+ 
+      var data = eval(data);
+      if(!data) return;
+      if(!cities[curCity].all)
+      {
+        cities[curCity]['all'] = [];
+        cities[curCity].html['all'] = [];
+        cities[curCity].marker['all'] = [];
+      }
+
+      var type = types[reqTab];
+
+      cities[curCity][types[reqTab]] = data;
+      cities[curCity].html[types[reqTab]] = [];
+      cities[curCity].marker[types[reqTab]] = [];
+      for(var i = 0; i < data.length; i ++)
+      {
+        var len = i;
+        var type = types[reqTab];
+        var item = data[i];
+        item['type'] = types[reqTab];
+        var g = item.g.split(",");
+        item['lat'] = parseFloat(g[1]);
+        item['lng'] = parseFloat(g[0]);
+        item['name'] = item.n;
+        item['image'] = item.i;
+        item['desc'] = item.d;
+
+
+        cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
+        "onclick=\"selectMarker('" + item['type'] + "', " + len + ")\"" +
+        "onmouseover=\"mouseOverList('" + item['type'] + "', " + len + ")\"" +
+        "onmouseout=\"mouseOutList('" + item['type'] + "', " + len + ")\"" +
+        ">" + item['name'] + "</li>";
+
+      }
       cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
       cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
 
-      reqTab = 0;
-      if (window.checking) {
-        window.checkLoading();
-      } else {
-        selectType(lastTab);
-      }
+      setTimeout('setMarker("' + curCity + '", "' + type + '")', 50);
+      
     }
 
     window.checkLoading = function() {
