@@ -160,7 +160,6 @@ div, p, ul, li {
       return document.getElementById(dom);
     }
     var con = $('listContainer');
-    var isLoading = false;
 
     var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
     var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
@@ -184,8 +183,6 @@ div, p, ul, li {
     }
 
     window.selectType = function(i) {
-    if(isLoading == true) return;
-    isLoading = true;
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       hideTab(curCity, types[lastTab]);
       $('tab_' + lastTab).className = "";
@@ -219,7 +216,6 @@ div, p, ul, li {
           cities[curCity].marker[types[lastTab]][j].show();
         }
       }
-    isLoading = false;
     }
 
     window.onTypeData = function(data) {      
@@ -295,8 +291,8 @@ div, p, ul, li {
           $("item_" + item['type'] + "_" + i).className = "";
         }
         marker.setImage(url);
-        }
-
+      }
+ 
       var data = eval(data);
       if (!data) return;
       if (!cities[curCity].all) {
@@ -359,7 +355,7 @@ div, p, ul, li {
         window.checkLoading();
       } else {
         selectType(lastTab);
-        }
+      }
     }
 
     window.checkLoading = function() {
