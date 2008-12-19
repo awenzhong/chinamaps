@@ -334,7 +334,7 @@ msg.init = function() {
         ">" + item['name'] + "</li>";
         var point = new GLatLng(item["lat"], item["lng"]);
         var icon = new GIcon();
-        icon.image = "img/" + iconType[item['type']];
+        icon.image = base + "img/" + iconType[item['type']];
         icon.iconSize = new GSize(36, 51);
         icon.iconAnchor = new GPoint(18, 51);
         icon.infoWindowAnchor = new GPoint(10, 6);
