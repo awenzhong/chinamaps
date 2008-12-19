@@ -430,7 +430,10 @@ msg.init = function() {
       else
       {
       var time = step + start;
-        con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+      if(reqTab != 0)
+      con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+      else 
+            con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
         setTimeout('onCycleData(' + time + ')', 0);
       }
     }
@@ -477,7 +480,7 @@ msg.init = function() {
     var root = $("cityList");
     root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
     root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 1.15</span>";
+    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 1.16</span>";
   }
 
   function initTabs() {
