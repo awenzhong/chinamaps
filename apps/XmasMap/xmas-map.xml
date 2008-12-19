@@ -186,13 +186,6 @@ div, p, ul, li {
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       hideTab(curCity, types[lastTab]);
       $('tab_' + lastTab).className = "";
-      
-      if (cities[curCity].marker[types[lastTab]]) {
-        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j++) {
-          cities[curCity].marker[types[lastTab]][j].hide();
-        }
-      }
-
       $('tab_' + i).className = "selected";
       lastTab = i;
 
@@ -526,8 +519,6 @@ div, p, ul, li {
           return;
         }
         var str = "";
-        hideTab(curCity, types[lastTab]);
- 
         for (var i = 0; i < data.length; i++) {
           var item = data[i];
           var type = item['type'];
@@ -539,7 +530,6 @@ div, p, ul, li {
             "onmouseover=\"mouseOverList('" + type + "', " + i + ")\"" +
             "onmouseout=\"mouseOutList('" + type + "', " + i + ")\"" +
             ">" + item['name'] + "</li>";
-            cities[curCity].marker[types[lastTab]][i].show();
           }
         }
         str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
