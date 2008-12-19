@@ -102,7 +102,7 @@ div, p, ul, li {
   color:#000;
   display:block;
   padding:0 0 0 25px;
-  background-image: url(http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree.png);
+  background-image: url('http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree.png');
   background-repeat: no-repeat;
   background-position: left;
   border-bottom-width: 1px;
@@ -113,7 +113,7 @@ div, p, ul, li {
   font-weight: bold;
   cursor: pointer;
   background-color: #ffe9df;
-  background-image: url(http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree0.png);
+  background-image: url('http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree0.png');
   background-repeat: no-repeat;
   background-position: left;
 }
