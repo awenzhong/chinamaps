@@ -422,7 +422,6 @@ msg.init = function() {
       cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
       cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
 
-      reqTab = 0;
       if(window.checking)
         window.checkLoading();
       else selectType(lastTab);
@@ -433,13 +432,15 @@ msg.init = function() {
       if(reqTab != 0){
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
       } else {
+        alert('type = 0');
        con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
        }
        setTimeout('onCycleData(' + time + ')', 0);
       }
     }
   window.checkLoading = function() {
-    window.checking = true;
+  window.checking = true;
+  reqTab = 0;
 
     for (var i = 1; i < initInfo[curCity].length; i++) {
       if (window.reqTab == 0 && initInfo[curCity][i] == 0) {
