@@ -2,21 +2,21 @@
 (function() {
   window.onload = function()
   {
-  var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
-function $(dom)
-{
-  return document.getElementById(dom);
-}
+      var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
+      function $(dom)
+      {
+        return document.getElementById(dom);
+      }
       function openInfoWindow(marker, item, i)
       {
-            var img = new Image();
-    img.src = item['image'];
-    img.onload = onImgLoaded(img.src, "loaded");
-    img.onerror = onImgLoaded(img.src, "error");
-            var tabs = [];
+        var img = new Image();
+        img.src = item['image'];
+        img.onload = onImgLoaded(img.src, "loaded");
+        img.onerror = onImgLoaded(img.src, "error");
+        var tabs = [];
         var imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "'><img src='"
         + base + "loading.gif'/>&nbsp;loading...</p>";
-        var infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
+        var infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
         tabs.push(new GInfoWindowTab("图片", imgHtml));
         tabs.push(new GInfoWindowTab("信息", infoHtml));
         marker.openInfoWindowTabsHtml(tabs);
@@ -28,8 +28,8 @@ function $(dom)
            var css = "";
            var width = img.width;
            var height = img.height;
-           var rw = width / 200;
-           var rh = height / 250;
+           var rw = width / 300;
+           var rh = height / 400;
            var r = 1;
            r = (rw > rh)?rw:rh;
             if(r < 1) r = 1;
@@ -37,15 +37,15 @@ function $(dom)
             img.width =  width / r;
 
         css = 'height:' + img.height + ';width:' + img.width + ';';
-        imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 200px; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 200px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
-        infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
+        imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 400px;text-align:center; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 400px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
+        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
         tabs.push(new GInfoWindowTab("图片", imgHtml));
         tabs.push(new GInfoWindowTab("信息", infoHtml));
         marker.openInfoWindowTabsHtml(tabs);
         }
         else {
                   imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
-        infoHtml = "<div style='width:200px;font-size:13px;'>"+item["desc"]+"</div>";
+        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
         tabs.push(new GInfoWindowTab("图片", imgHtml));
         tabs.push(new GInfoWindowTab("信息", infoHtml));
         marker.openInfoWindowTabsHtml(tabs);
