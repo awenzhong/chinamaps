@@ -519,21 +519,14 @@ div, p, ul, li {
           return;
         }
         var str = "";
-        for (var i = 0; i < data.length; i++) {
-          var item = data[i];
-          var type = item['type'];
-
-          if (lastTab == 0) type = 'all';
-          if (item['name'].indexOf(key) != -1) {
-            str += "<li id=\"item_" + type + "_" + i + "\" " +
-            "onclick=\"selectMarker('" + type + "', " + i + ")\"" +
-            "onmouseover=\"mouseOverList('" + type + "', " + i + ")\"" +
-            "onmouseout=\"mouseOutList('" + type + "', " + i + ")\"" +
-            ">" + item['name'] + "</li>";
+        var nodes = con.childNodes[0].childNodes;
+        for(var i = 0, node; node = nodes[i]; i++){
+          if(node.innerHTML.indexOf(key) == -1){
+            node.style.display = "none";
+          } else {
+            node.style.display = "block";
           }
         }
-        str = "<ul id=\"ul_" + curCity + "_" + types[lastTab] + "\">" + str + "</ul>";
-        con.innerHTML = str;
         resetHeight();
       }
 
