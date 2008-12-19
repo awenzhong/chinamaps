@@ -194,7 +194,6 @@ msg.init = function() {
   window.selectType = function(i) {
   if(checking || (reqTab != 0)) return;
 
-  hint.style.display = "block";
     hideTab(curCity, types[lastTab]);
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
@@ -373,8 +372,8 @@ msg.init = function() {
         window.checkLoading();
         } else {
         
-        hint.style.display = "none";
         selectType(lastTab);
+        hint.style.display = "none";
       }
 
     }
@@ -436,8 +435,8 @@ msg.init = function() {
       }
         else
         {
-         hint.style.display = "none";
         selectType(lastTab);
+         hint.style.display = "none";
         }
       }
       else
