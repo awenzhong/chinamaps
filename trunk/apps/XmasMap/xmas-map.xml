@@ -171,19 +171,20 @@ div, p, ul, li {
     };
     window.reqTab = 0;
     window.checking = false;
-    
-    window.hideCity = function(city) {
-      if (cities[city].marker['all']) {
-        for(var j = 0; j < cities[city].marker['all'].length; j++) {
-          cities[city].marker['all'][j].hide();
+    window.hideTab = function(city, type)
+    {
+      if(cities[city].marker[type])
+      {
+        for(var j = 0; j < cities[city].marker[type].length; j ++)
+        {
+          cities[city].marker[type][j].hide();
         }
       }
     }
 
     window.selectType = function(i) {
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
-      hideCity('beijing');
-      hideCity('shanghai');
+      hideTab(curCity, types[lastTab]);
       $('tab_' + lastTab).className = "";
       
       if (cities[curCity].marker[types[lastTab]]) {
