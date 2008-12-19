@@ -89,14 +89,13 @@
     };
     window.reqTab = 0;
     window.checking = false;
-    
-    window.hideCity = function(city)
+    window.hideTab = function(city, type)
     {
-      if(cities[city].marker['all'])
+      if(cities[city].marker[type])
       {
-        for(var j = 0; j < cities[city].marker['all'].length; j ++)
+        for(var j = 0; j < cities[city].marker[type].length; j ++)
         {
-          cities[city].marker['all'][j].hide();
+          cities[city].marker[type][j].hide();
         }
       }
     }
@@ -104,8 +103,7 @@
     {
       
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
-      hideCity('beijing');
-      hideCity('shanghai');
+      hideTab(curCity, types[lastTab]);
       $('tab_' + lastTab).className = "";
       if(cities[curCity].marker[types[lastTab]])
       {
@@ -252,6 +250,7 @@
         }
       }
       $('city_' + i).className = "selected";
+      hideTab(curCity, types[lastTab]);
       curCity = i;
       if(init)
       selectType(lastTab);
@@ -402,9 +401,7 @@
           return;
         }
         var str = "";
-        hideCity('beijing');
-        hideCity('shanghai');
- 
+        hideTab(curCity, types[lastTab]);
         for(var i = 0; i < data.length; i++)
         {
           var item = data[i];

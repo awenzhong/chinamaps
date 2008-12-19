@@ -395,6 +395,7 @@ div, p, ul, li {
         }
       }
       $('city_' + i).className = "selected";
+      hideTab(curCity, types[lastTab]);
       curCity = i;
       if(init)
         selectType(lastTab);
@@ -405,7 +406,6 @@ div, p, ul, li {
       var root = $("cityList");
       root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
       root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-      root.innerHTML += "<span style=\"color:#fff\" version 1.2</span>";
     }
 
     function initTabs() {
@@ -524,8 +524,7 @@ div, p, ul, li {
           return;
         }
         var str = "";
-        hideCity('beijing');
-        hideCity('shanghai');
+        hideTab(curCity, types[lastTab]);
  
         for (var i = 0; i < data.length; i++) {
           var item = data[i];
