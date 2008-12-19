@@ -160,6 +160,7 @@ div, p, ul, li {
       return document.getElementById(dom);
     }
     var con = $('listContainer');
+    var isLoading = false;
 
     var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
     var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
@@ -183,6 +184,8 @@ div, p, ul, li {
     }
 
     window.selectType = function(i) {
+    if(isLoading == true) return;
+    isLoading = true;
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;loading...</div>';
       hideTab(curCity, types[lastTab]);
       $('tab_' + lastTab).className = "";
@@ -216,6 +219,7 @@ div, p, ul, li {
           cities[curCity].marker[types[lastTab]][j].show();
         }
       }
+    isLoading = false;
     }
 
     window.onTypeData = function(data) {      
@@ -296,8 +300,6 @@ div, p, ul, li {
         alert(data);
 
 
-       /*
- 
       var data = eval(data);
       if (!data) return;
       if (!cities[curCity].all) {
@@ -361,7 +363,6 @@ div, p, ul, li {
       } else {
         selectType(lastTab);
         }
-        */
     }
 
     window.checkLoading = function() {
@@ -406,7 +407,7 @@ div, p, ul, li {
       var root = $("cityList");
       root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
       root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-      root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 1.3</span>";
+      root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 1.4</span>";
     }
 
     function initTabs() {
