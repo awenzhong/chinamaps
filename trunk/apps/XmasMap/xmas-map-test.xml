@@ -430,11 +430,12 @@ msg.init = function() {
       else
       {
       var time = step + start;
-      if(reqTab != 0)
+      if(reqTab != 0){
       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
-      else 
-            con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
-        setTimeout('onCycleData(' + time + ')', 0);
+      } else {
+       con.innerHTML = '<div class="hint-msg"><img src="' + base + 'loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>' + "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+       }
+       setTimeout('onCycleData(' + time + ')', 0);
       }
     }
   window.checkLoading = function() {
