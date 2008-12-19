@@ -176,7 +176,7 @@ share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","tex
       <img src="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>
     <div class="list-container" id="listContainer">
     </div> 
-    <br/><br/>
+    <br/>
     <div id="share_button"></div>
   </div> 
 <script>   
