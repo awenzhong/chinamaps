@@ -253,6 +253,40 @@ msg.init = function() {
       }
     }
   }
+
+  window.onSelectTypeIE = function(i)
+  {
+    hideTab(curCity, types[lastTab]);
+    $('tab_' + lastTab).className = "";
+    $('tab_' + i).className = "selected";
+    lastTab = i;
+    if (!cities[curCity].marker[types[lastTab]]) {
+      if (lastTab != 0 && window.reqTab == 0) {
+        if (initInfo[curCity][lastTab] == 0) {
+          var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+          initInfo[curCity][lastTab] = 1;
+          window.reqTab = lastTab;
+          hint.style.display = "block";
+          _IG_FetchContent(url, onTypeData);
+        }
+        return;
+      } else if (lastTab == 0) {
+        checkLoading();
+        return;
+      }
+    } else if (lastTab == 0) {
+      window.checkLoading();
+    }
+    if ((i != 0) && cities[curCity].html[types[i]]) {
+      con.innerHTML = cities[curCity].html[types[i]];
+      resetHeight();
+    }
+    if (cities[curCity].marker[types[lastTab]]) {
+      for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
+        cities[curCity].marker[types[lastTab]][j].show();
+      }
+    }
+  }
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
     {
@@ -260,6 +294,14 @@ msg.init = function() {
       hint.style.backgroundColor = "#ff0";
       return;
     }
+    var is_opera = (navigator.userAgent.indexOf('opera') != -1);
+    if (/msie/i.test(navigator.userAgent) && !is_opera) {
+      setTimeout("onSelectTypeIE(" + i + ")", 0);
+      return;
+    }
+    onSelectTypeIE(i);
+    return;
+
     hideTab(curCity, types[lastTab]);
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
