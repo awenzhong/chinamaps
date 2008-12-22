@@ -242,6 +242,7 @@ msg.init = function() {
   var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
   var tabMap = [0, 4, 3, 6, 5, 1, 2];
   var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
+  var tree
   window.initInfo = {
     beijing:[0, 0, 0, 0, 0, 0, 0],
     shanghai:[0, 0, 0, 0, 0, 0, 0]
@@ -263,9 +264,7 @@ msg.init = function() {
 
   window.onSelectTypeIE = function(i)
   {
-    $D("before hideTab " + (new Date).getTime());
     hideTab(curCity, types[lastTab]);
-    $D("after hideTab " + (new Date).getTime());
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
