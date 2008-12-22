@@ -254,6 +254,7 @@ msg.init = function() {
   };
   window.reqTab = 0;
   window.checking = false;
+  window.selecting = false;
   window.hideIETab = function(city, type, i, newTab)
   {
      if (cities[city].marker[type]) {
@@ -336,10 +337,12 @@ msg.init = function() {
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
     {
-      setTimeout("setBackcolor()", 0);
+      setTimeout("setBackcolor()", 1000);
       hint.style.backgroundColor = "#ff0";
       return;
     }
+    if(selecting) return;
+    selecting = true;
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
       setTimeout("onSelectTypeIE(" + i + ")", 0);
@@ -375,6 +378,7 @@ msg.init = function() {
         cities[curCity].marker[types[lastTab]][j].show();
       }
     }
+    selecting = false;
   }
   function openInfoWindow(marker, item) {
     var img = new Image();
@@ -504,6 +508,7 @@ msg.init = function() {
     if (window.checking) {
       window.checkLoading();
     } else {
+      selecting = false;
       selectType(lastTab);
       hint.style.display = "none";
     }
