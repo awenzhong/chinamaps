@@ -253,6 +253,11 @@ msg.init = function() {
       }
     }
   }
+  window.showMarker = function(i)
+  {
+    reqTab = i;
+    setTimeout("onCycleData('" + 0 + "')", 100);
+  }
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
     {
@@ -287,14 +292,14 @@ msg.init = function() {
       }
     } else if (lastTab == 0) {
       window.checkLoading();
+      return;
     }
     if ((i != 0) && cities[curCity].html[types[i]]) {
       con.innerHTML = cities[curCity].html[types[i]];
       resetHeight();
     }
     if(isIE){
-      
-      
+        showMarker(i);
     } else {
       if (cities[curCity].marker[types[lastTab]]) {
         for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
