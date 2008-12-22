@@ -23,12 +23,7 @@ div, p, ul, li {
   border:0;
   padding:0;
 }
-#map {
-  float: right;
-  border:solid #999 1px;
-}
 #wrapper {
-  float: left;
   font-size:13px;
   width:250px;
 }
@@ -499,9 +494,9 @@ msg.init = function() {
        i = reqTab;
         if ((i != 0) && cities[curCity].html[types[i]]) {
           con.innerHTML = cities[curCity].html[types[i]];
-          _IG_AdjustIFrameHeight();
         }
         hint.style.display = "none";
+        _IG_AdjustIFrameHeight();
       }
     } else {
       var time = step + start;
@@ -522,6 +517,7 @@ msg.init = function() {
         initInfo[curCity][i] = 1;
         window.reqTab = i;
         hint.style.display = "block";
+        _IG_AdjustIFrameHeight();
         _IG_FetchContent(url, onTypeData);
         return false;
         break;
@@ -529,9 +525,9 @@ msg.init = function() {
     }
     if (cities[curCity].html['allul'] && lastTab == 0) {
       con.innerHTML = cities[curCity].html['allul'];
-       _IG_AdjustIFrameHeight();
     }
     hint.style.display = "none";
+    _IG_AdjustIFrameHeight();
     window.checking = false;
     return true;
   }
