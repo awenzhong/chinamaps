@@ -263,6 +263,49 @@ msg.init = function() {
         i++;
         setTimeout("hideIETab('" + city + "', '" + type + "', " + i + ")", 0);
       }
+      else if(i != 0)
+      {
+        $('tab_' + lastTab).className = "";
+        $('tab_' + i).className = "selected";
+        lastTab = i;
+        if (!cities[curCity].marker[types[lastTab]]) {
+          if (lastTab != 0 && window.reqTab == 0) {
+            if (initInfo[curCity][lastTab] == 0) {
+              var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+              initInfo[curCity][lastTab] = 1;
+              window.reqTab = lastTab;
+              hint.style.display = "block";
+        $D("before fetch");
+              _IG_FetchContent(url, onTypeData);
+        $D("after fetch");
+            }
+            return;
+          } else if (lastTab == 0) {
+        $D("before checking");
+            checkLoading();
+        $D("after checking");
+            return;
+          }
+        } else if (lastTab == 0) {
+        $D("before checking");
+          window.checkLoading();
+        $D("after checking");
+        }
+        if ((i != 0) && cities[curCity].html[types[i]]) {
+          con.innerHTML = cities[curCity].html[types[i]];
+        $D("before resetHeight");
+          resetHeight();
+        $D("before resetHeight");
+        }
+        $D("before show");
+        if (cities[curCity].marker[types[lastTab]]) {
+          for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
+            cities[curCity].marker[types[lastTab]][j].show();
+          }
+        }
+        $D("before show");
+
+      }
     }
     
   }
@@ -292,45 +335,6 @@ msg.init = function() {
     $D("lastTab = " + lastTab + ", type = " + types[lastTab]);
     hideTab(curCity, types[lastTab]);
     $D("after hide");
-    $('tab_' + lastTab).className = "";
-    $('tab_' + i).className = "selected";
-    lastTab = i;
-    if (!cities[curCity].marker[types[lastTab]]) {
-      if (lastTab != 0 && window.reqTab == 0) {
-        if (initInfo[curCity][lastTab] == 0) {
-          var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
-          initInfo[curCity][lastTab] = 1;
-          window.reqTab = lastTab;
-          hint.style.display = "block";
-    $D("before fetch");
-          _IG_FetchContent(url, onTypeData);
-    $D("after fetch");
-        }
-        return;
-      } else if (lastTab == 0) {
-    $D("before checking");
-        checkLoading();
-    $D("after checking");
-        return;
-      }
-    } else if (lastTab == 0) {
-    $D("before checking");
-      window.checkLoading();
-    $D("after checking");
-    }
-    if ((i != 0) && cities[curCity].html[types[i]]) {
-      con.innerHTML = cities[curCity].html[types[i]];
-    $D("before resetHeight");
-      resetHeight();
-    $D("before resetHeight");
-    }
-    $D("before show");
-    if (cities[curCity].marker[types[lastTab]]) {
-      for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
-        cities[curCity].marker[types[lastTab]][j].show();
-      }
-    }
-    $D("before show");
   }
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
