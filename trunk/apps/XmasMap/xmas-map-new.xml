@@ -273,11 +273,13 @@ msg.init = function() {
       hint.style.backgroundColor = "#ff0";
       return;
     }
-    if (isIE) {
+   // if (isIE) {
       map.clearOverlays();
-    } else {
+   /*
+   } else {
       hideTab(curCity, types[lastTab]);
     }
+    */
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
