@@ -497,7 +497,11 @@ msg.init = function() {
       if(window.checking) {
         window.checkLoading();
       } else {
-        selectType(lastTab);
+       i = reqTab;
+        if ((i != 0) && cities[curCity].html[types[i]]) {
+          con.innerHTML = cities[curCity].html[types[i]];
+          resetHeight();
+        }
         hint.style.display = "none";
       }
     } else {
