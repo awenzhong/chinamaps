@@ -496,7 +496,7 @@ msg.init = function() {
         window.checkLoading();
       } else {
        i = reqTab;
-       showMarker(i);
+      // showMarker(i);
         if ((i != 0) && cities[curCity].html[types[i]]) {
           con.innerHTML = cities[curCity].html[types[i]];
           resetHeight();
