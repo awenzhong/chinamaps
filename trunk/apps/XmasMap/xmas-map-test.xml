@@ -256,28 +256,22 @@ msg.init = function() {
   window.checking = false;
   window.hideIETab = function(city, type, i, newTab)
   {
-     alert("hideIETab 1, i = " + i + ", newTab = " + newTab);
      if (cities[city].marker[type]) {
-     alert("hideIETab 2");
       if( i < cities[city].marker[type].length)
       {
-     alert("hideIETab 3");
         cities[city].marker[type][i].hide();
         i++;
-        alert("i = " + i);
-        var str = "hideIETab('" + city + "', '" + type + "', " + i + ")";
+        var str = "hideIETab('" + city + "', '" + type + "', " + i + ", " + newTab + ")";
         alert('str = ' + str);
         setTimeout(str, 0);
         return;
       }
       }
-      alert('newTab = ' + newTab);
       i = newTab;
       $('tab_' + lastTab).className = "";
       $('tab_' + i).className = "selected";
 
       lastTab = newTab;
-      alert('newTab = 1' + newTab);
       if (!cities[curCity].marker[types[lastTab]]) {
         if (lastTab != 0 && window.reqTab == 0) {
           if (initInfo[curCity][lastTab] == 0) {
@@ -286,9 +280,7 @@ msg.init = function() {
             window.reqTab = lastTab;
             hint.style.display = "block";
       $D("before fetch");
-      alert('newTab = 2' + newTab);
             _IG_FetchContent(url, onTypeData);
-      alert('newTab = 3' + newTab);
       $D("after fetch");
           }
           return;
@@ -356,7 +348,6 @@ msg.init = function() {
       setTimeout("onSelectTypeIE(" + i + ")", 1000);
       return;
     }
-    alert('after');
     hideTab(curCity, types[lastTab], i);
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
