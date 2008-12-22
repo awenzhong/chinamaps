@@ -260,7 +260,13 @@ msg.init = function() {
       hint.style.backgroundColor = "#ff0";
       return;
     }
-    hideTab(curCity, types[lastTab]);
+    var isOpera = (navigator.userAgent.indexOf('opera') != -1);
+    var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
+    if (isIE) {
+      map.clearOverlays();
+    } else {
+      hideTab(curCity, types[lastTab]);
+    }
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
@@ -285,9 +291,14 @@ msg.init = function() {
       con.innerHTML = cities[curCity].html[types[i]];
       resetHeight();
     }
-    if (cities[curCity].marker[types[lastTab]]) {
-      for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
-        cities[curCity].marker[types[lastTab]][j].show();
+    if(isIE)
+    {
+    }
+    {
+      if (cities[curCity].marker[types[lastTab]]) {
+        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
+          cities[curCity].marker[types[lastTab]][j].show();
+        }
       }
     }
   }
