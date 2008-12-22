@@ -619,7 +619,7 @@ msg.init = function() {
       }
     }
     $('city_' + i).className = "selected";
-    hideTab(curCity, types[lastTab]);
+    if(!init) hideTab(curCity, types[lastTab], lastTab);
     curCity = i;
     if(init) selectType(lastTab);
     map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng));
