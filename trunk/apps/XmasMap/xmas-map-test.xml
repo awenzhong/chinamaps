@@ -351,7 +351,8 @@ msg.init = function() {
       setTimeout("onSelectTypeIE(" + i + ")", 1000);
       return;
     }
-    hideTab(curCity, types[lastTab]);
+    alert('after');
+    hideTab(curCity, types[lastTab], i);
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
