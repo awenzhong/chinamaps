@@ -273,13 +273,11 @@ msg.init = function() {
       hint.style.backgroundColor = "#ff0";
       return;
     }
-   // if (isIE) {
+    if (isIE) {
       map.clearOverlays();
-   /*
-   } else {
+    } else {
       hideTab(curCity, types[lastTab]);
     }
-    */
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
@@ -305,16 +303,15 @@ msg.init = function() {
       con.innerHTML = cities[curCity].html[types[i]];
       resetHeight();
     }
-    //if(isIE){
+    if(isIE){
         showMarker(i);
-    /*} else {
+    } else {
       if (cities[curCity].marker[types[lastTab]]) {
         for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
           cities[curCity].marker[types[lastTab]][j].show();
         }
       }
     }
-    */
   }
   function openInfoWindow(marker, item) {
     var img = new Image();
@@ -393,13 +390,11 @@ msg.init = function() {
     cities[curCity][types[reqTab]] = data;
     cities[curCity].html[types[reqTab]] = [];
     cities[curCity].marker[types[reqTab]] = [];
-    /*
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
       setTimeout("onCycleData('" + 0 + "')", 100);
       return;
     }
-    */
     for (var i = 0; i < data.length; i ++) {
       var len = i;
       var type = types[reqTab];
@@ -427,6 +422,7 @@ msg.init = function() {
         title: item["name"]
       });
       marker.point = point;
+      map.addOverlay(marker);
       cities[curCity].marker[item['type']].push(marker);
       GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, item, len));
       GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, item, len));
@@ -493,7 +489,6 @@ msg.init = function() {
       cities[curCity].marker['all'].push(marker);
     }
     if(i == data.length) {
-     alert('end');
       cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
       cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
       reqTab = 0;
@@ -501,7 +496,7 @@ msg.init = function() {
         window.checkLoading();
       } else {
        i = reqTab;
-      // showMarker(i);
+      showMarker(i);
         if ((i != 0) && cities[curCity].html[types[i]]) {
           con.innerHTML = cities[curCity].html[types[i]];
           resetHeight();
