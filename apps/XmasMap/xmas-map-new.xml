@@ -489,6 +489,7 @@ msg.init = function() {
       cities[curCity].marker['all'].push(marker);
     }
     if(i == data.length) {
+     alert('end');
       cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
       cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
       reqTab = 0;
