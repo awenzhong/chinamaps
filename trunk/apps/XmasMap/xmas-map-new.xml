@@ -253,10 +253,15 @@ msg.init = function() {
       }
     }
   }
-  window.showMarker = function(i)
+  window.onShowMarker = functioin(city, type, i)
   {
-    reqTab = i;
-    setTimeout("onCycleData('" + 0 + "')", 100);
+  }
+  window.showMarker = function(t)
+  {
+    for(var i = 0; i < cities[curCity].marker[types[t]].length; i++)
+    {
+      map.addOverlay(cities[curCity].marker[types[t]][i]);
+    }
   }
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
