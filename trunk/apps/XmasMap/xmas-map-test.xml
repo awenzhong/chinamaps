@@ -596,7 +596,7 @@ msg.init = function() {
       } else if(reqTab != 0){
         con.innerHTML = "<ul id=\"ul_" + city + "_" + types[reqTab] + "\">" + cities[city].html[types[reqTab]] + "</ul>";
       }
-      setTimeout("onCycleData(" + time + "," + tab + ", '" + city + "')', 0);
+      setTimeout("onCycleDataEx(" + time + "," + tab + ", '" + city + "')'", 0);
     }
   }
   
