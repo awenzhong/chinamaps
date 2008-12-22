@@ -17,9 +17,6 @@
     .hint-msg
     {
     color: red;
-    position:fixed;
-    left:10px;
-    top:30px;
     display: none;
     }
 div, p, ul, li {
@@ -30,7 +27,6 @@ div, p, ul, li {
 #wrapper {
   font-size:13px;
   width:250px;
-  position:relative;
 }
 .tab-head a {
   display:block;
@@ -659,7 +655,7 @@ msg.init = function() {
     }
     window.onSearch = function(event) {
       clearTimeout();
-      setTimeout("onSearchTimer()", 0);
+      setTimeout("onSearchTimer()", 1000);
     }
     GEvent.addDomListener(search, "click", onclickSearch);
     if (isIE) {
