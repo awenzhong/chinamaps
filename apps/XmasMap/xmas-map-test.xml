@@ -331,7 +331,34 @@ msg.init = function() {
 
   window.onSelectTypeIE = function(newTab)
   {
-    hideTab(curCity, types[lastTab], newTab);
+    $('tab_' + lastTab).className = "";
+    $('tab_' + i).className = "selected";
+    lastTab = i;
+    map.clearOverlay();
+    if (cities[curCity][types[lastTab]]) {
+      if (lastTab == 0) {
+        window.checkLoading();
+        return;
+      }
+      else
+      {
+        setTimeout("onCycleDataEx(" + 0 + ", " + lastTab + ", '" + curCity + "')", 0);
+      }
+    } else {
+      if (lastTab != 0 && window.reqTab == 0) {
+        if (initInfo[curCity][lastTab] == 0) {
+          var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+          initInfo[curCity][lastTab] = 1;
+          window.reqTab = lastTab;
+          hint.style.display = "block";
+          _IG_FetchContent(url, onTypeData);
+        }
+        return;
+      } else if (lastTab == 0) {
+        checkLoading();
+        return;
+      }
+    }
   }
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
@@ -508,6 +535,71 @@ msg.init = function() {
       hint.style.display = "none";
     }
   }
+   window.onCycleDataEx = function(start, tab, city) {
+    var data = cities[city][types[reqTab]];
+    var step = 2;
+    start = parseInt(start);
+    for (var i = start; i < data.length && i < start + step; i ++) {
+      var len = i;
+      var type = types[reqTab];
+      var item = data[i];
+      item['type'] = types[reqTab];
+      var g = item.g.split(",");
+      item['lat'] = parseFloat(g[1]);
+      item['lng'] = parseFloat(g[0]);
+      item['name'] = item.n;
+      item['image'] = item.i;
+      item['desc'] = item.d;
+      cities[city].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
+      "onclick=\"selectMarker('" + item['type'] + "', " + len + ")\"" +
+      "onmouseover=\"mouseOverList('" + item['type'] + "', " + len + ")\"" +
+      "onmouseout=\"mouseOutList('" + item['type'] + "', " + len + ")\"" +
+      ">" + item['name'] + "</li>";
+      var point = new GLatLng(item["lat"], item["lng"]);
+      var icon = new GIcon();
+      icon.image = base + "img/" + iconType[item['type']];
+      icon.iconSize = new GSize(36, 51);
+      icon.iconAnchor = new GPoint(18, 51);
+      icon.infoWindowAnchor = new GPoint(10, 6);
+      var marker = new GMarker(point, {
+        icon: icon,
+        title: item["name"]
+      });
+      marker.point = point;
+      map.addOverlay(marker);
+      cities[city].marker[item['type']].push(marker);
+      GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, item, len));
+      GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, item, len));
+      GEvent.addListener(marker, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, item, len));
+      cities[city].html['all'] += "<li id=\"item_all_" + cities[city]['all'].length + "\"" +
+      "onclick=\"selectMarker('all', " + cities[city].marker['all'].length + ")\"" +
+      "onmouseover=\"mouseOverList('all', " + cities[city].marker['all'].length + ")\"" +
+      "onmouseout=\"mouseOutList('all', " + cities[city].marker['all'].length + ")\"" +
+      ">" + item['name'] + "</li>";
+      cities[city]['all'].push(item);
+      cities[city].marker['all'].push(marker);
+    }
+    if(i == data.length) {
+      cities[city].html[types[reqTab]] = "<ul id=\"ul_" + city + "_" + types[reqTab] + "\">" + cities[city].html[types[reqTab]] + "</ul>";
+      cities[city].html['allul'] = "<ul id=\"ul_" + city + "_all\">" + cities[city].html['all'] + "</ul>";
+      reqTab = 0;
+      if(window.checking) {
+        window.checkLoading();
+      } else {
+        selectType(tab);
+        hint.style.display = "none";
+      }
+    } else {
+      var time = step + start;
+      if(checking) {
+        con.innerHTML = "<ul id=\"ul_" + city + "_all\">" + cities[city].html['all'] + "</ul>";
+      } else if(reqTab != 0){
+        con.innerHTML = "<ul id=\"ul_" + city + "_" + types[reqTab] + "\">" + cities[city].html[types[reqTab]] + "</ul>";
+      }
+      setTimeout("onCycleData(" + time + "," + tab + ", '" + city + "')', 0);
+    }
+  }
+  
   window.onCycleData = function(start) {
     var data = cities[curCity][types[reqTab]];
     var step = 2;
