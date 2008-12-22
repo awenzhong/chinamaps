@@ -660,7 +660,9 @@ msg.init = function() {
     GEvent.addDomListener(search, "click", onclickSearch);
     if (isIE) {
       var msg = new _IG_MiniMessage(__MODULE_ID__);
-      msg.createDismissibleMessage("建议您改用其他非IE浏览器（比如火狐浏览器）或升级你当前的IE6浏览器，以获得更佳的速度和体验！");
+      var tip = msg.createDismissibleMessage("为获得更佳的速度和体验，建议您改用其他非IE浏览器（比如火狐浏览器）或把您的浏览器升级到IE7.0及以上版本！");
+      tip.style.fontSize = "12px";
+      tip.style.fontWeight = "normal";
       var searchBtn = $('seachBtn');
       searchBtn.style.display = "";
       GEvent.addDomListener(searchBtn, "click", window.onSearch);
