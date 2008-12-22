@@ -231,9 +231,10 @@ function _un(str){
 
 
 var msg = {};
+var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
 msg.init = function() {
   var isOpera = (navigator.userAgent.indexOf('opera') != -1);
-  var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
+  
   if (isIE) {
     document.execCommand('BackgroundImageCache', false, true);
   }
