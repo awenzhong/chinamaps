@@ -643,8 +643,6 @@ msg.init = function() {
   window.page = page;
   window.limit = limit;
   var initSearchBar = function() {
-
-    
     var search = $('quickSearch');
     var onclickSearch = function() {
       search = $('quickSearch');
@@ -676,16 +674,8 @@ msg.init = function() {
       clearTimeout();
       setTimeout("onSearchTimer()", 1000);
     }
-    if(isIE)
-    {
-      $('searchBtn').style.display = "block";
-      GEvent.addDomListener($('searchBtn'), "click", window.onSearch);
-    }
-    else
-    {
-      GEvent.addDomListener(search, "keyup", window.onSearch);
-    }
     GEvent.addDomListener(search, "click", onclickSearch);
+    GEvent.addDomListener(search, "keyup", window.onSearch);
     window.onSearchBlur = function(event) {
       var search = $('quickSearch');
       if (!search.value) {
