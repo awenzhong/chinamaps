@@ -268,53 +268,49 @@ msg.init = function() {
         var str = "hideIETab('" + city + "', '" + type + "', " + i + ")";
         alert('str = ' + str);
         setTimeout(str, 0);
+        return;
       }
-      else if(i == cities[city].marker[type].length)
-      {
-        $('tab_' + lastTab).className = "";
-        $('tab_' + i).className = "selected";
-        lastTab = i;
-        if (!cities[curCity].marker[types[lastTab]]) {
-          if (lastTab != 0 && window.reqTab == 0) {
-            if (initInfo[curCity][lastTab] == 0) {
-              var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
-              initInfo[curCity][lastTab] = 1;
-              window.reqTab = lastTab;
-              hint.style.display = "block";
-        $D("before fetch");
-              _IG_FetchContent(url, onTypeData);
-        $D("after fetch");
-            }
-            return;
-          } else if (lastTab == 0) {
-        $D("before checking");
-            checkLoading();
-        $D("after checking");
-            return;
+      }
+      $('tab_' + lastTab).className = "";
+      $('tab_' + i).className = "selected";
+      lastTab = i;
+      if (!cities[curCity].marker[types[lastTab]]) {
+        if (lastTab != 0 && window.reqTab == 0) {
+          if (initInfo[curCity][lastTab] == 0) {
+            var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+            initInfo[curCity][lastTab] = 1;
+            window.reqTab = lastTab;
+            hint.style.display = "block";
+      $D("before fetch");
+            _IG_FetchContent(url, onTypeData);
+      $D("after fetch");
           }
+          return;
         } else if (lastTab == 0) {
-        $D("before checking");
-          window.checkLoading();
-        $D("after checking");
+      $D("before checking");
+          checkLoading();
+      $D("after checking");
+          return;
         }
-        if ((i != 0) && cities[curCity].html[types[i]]) {
-          con.innerHTML = cities[curCity].html[types[i]];
-        $D("before resetHeight");
-          resetHeight();
-        $D("before resetHeight");
-        }
-        $D("before show");
-        if (cities[curCity].marker[types[lastTab]]) {
-          for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
-            cities[curCity].marker[types[lastTab]][j].show();
-          }
-        }
-        $D("before show");
-
+      } else if (lastTab == 0) {
+      $D("before checking");
+        window.checkLoading();
+      $D("after checking");
       }
-    }
-    
-  }
+      if ((i != 0) && cities[curCity].html[types[i]]) {
+        con.innerHTML = cities[curCity].html[types[i]];
+      $D("before resetHeight");
+        resetHeight();
+      $D("before resetHeight");
+      }
+      $D("before show");
+      if (cities[curCity].marker[types[lastTab]]) {
+        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
+          cities[curCity].marker[types[lastTab]][j].show();
+        }
+      }
+      $D("before show");
+}
   window.hideTab = function(city, type) {
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
