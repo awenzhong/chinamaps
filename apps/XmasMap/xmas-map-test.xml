@@ -257,17 +257,62 @@ msg.init = function() {
   window.hideIETab = function(city, type, i, newTab)
   {
      if (cities[city].marker[type]) {
-        cities[city].marker[type] = []
-        setTimeout("onCycleData('" + 0 + "')", 0);
+      if( i < cities[city].marker[type].length)
+      {
+        cities[city].marker[type][i].hide();
+        i++;
+        var str = "hideIETab('" + city + "', '" + type + "', " + i + ", " + newTab + ")";
+        $D('str = ' + str);
+        setTimeout(str, 0);
+        return;
       }
-     $D("before show");
+      }
+      i = newTab;
+      $('tab_' + lastTab).className = "";
+      $('tab_' + i).className = "selected";
+
+      lastTab = newTab;
+      if (!cities[curCity].marker[types[lastTab]]) {
+        if (lastTab != 0 && window.reqTab == 0) {
+          if (initInfo[curCity][lastTab] == 0) {
+            var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+            initInfo[curCity][lastTab] = 1;
+            window.reqTab = lastTab;
+            hint.style.display = "block";
+      $D("before fetch");
+            _IG_FetchContent(url, onTypeData);
+      $D("after fetch");
+          }
+          return;
+        } else if (lastTab == 0) {
+      $D("before checking");
+          checkLoading();
+      $D("after checking");
+          return;
+        }
+      } else if (lastTab == 0) {
+      $D("before checking");
+        window.checkLoading();
+      $D("after checking");
+      }
+      if ((i != 0) && cities[curCity].html[types[i]]) {
+        con.innerHTML = cities[curCity].html[types[i]];
+      $D("before resetHeight");
+        resetHeight();
+      $D("before resetHeight");
+      }
+      $D("before show");
+      if (cities[curCity].marker[types[lastTab]]) {
+        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
+          cities[curCity].marker[types[lastTab]][j].show();
+        }
+      }
+      $D("before show");
 }
   window.hideTab = function(city, type, newTab) {
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
       //$D("hide city = " + city + ", type = " + type);
-      reqTab = newTab;
-      if(newTab == 0) checking = true;
       hideIETab(city, type, 0, newTab);
       return;
     }
@@ -320,7 +365,6 @@ msg.init = function() {
       }
     } else if (lastTab == 0) {
       window.checkLoading();
-      return;
     }
     if ((i != 0) && cities[curCity].html[types[i]]) {
       con.innerHTML = cities[curCity].html[types[i]];
@@ -459,7 +503,6 @@ msg.init = function() {
     reqTab = 0;
     if (window.checking) {
       window.checkLoading();
-      return;
     } else {
       selectType(lastTab);
       hint.style.display = "none";
