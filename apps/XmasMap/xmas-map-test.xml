@@ -254,7 +254,7 @@ msg.init = function() {
   };
   window.reqTab = 0;
   window.checking = false;
-  window.hideIETab = function(city, type, i)
+  window.hideIETab = function(city, type, i, newTab)
   {
      alert("hideIETab 1");
      if (cities[city].marker[type]) {
@@ -273,7 +273,7 @@ msg.init = function() {
       }
       $('tab_' + lastTab).className = "";
       $('tab_' + i).className = "selected";
-      lastTab = i;
+      lastTab = newTab;
       if (!cities[curCity].marker[types[lastTab]]) {
         if (lastTab != 0 && window.reqTab == 0) {
           if (initInfo[curCity][lastTab] == 0) {
@@ -311,11 +311,11 @@ msg.init = function() {
       }
       $D("before show");
 }
-  window.hideTab = function(city, type) {
+  window.hideTab = function(city, type, newTab) {
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
       //$D("hide city = " + city + ", type = " + type);
-      hideIETab(city, type, 0);
+      hideIETab(city, type, 0, newTab);
       return;
     }
  
@@ -331,11 +331,11 @@ msg.init = function() {
     $('debug').innerHTML += str + ":" + (new Date).getTime() +  "<br/>";
   }
 
-  window.onSelectTypeIE = function(i)
+  window.onSelectTypeIE = function(newTab)
   {
     //$D("before hide");
     //$D("lastTab = " + lastTab + ", type = " + types[lastTab]);
-    hideTab(curCity, types[lastTab]);
+    hideTab(curCity, types[lastTab], newTab);
     //$D("after hide");
   }
   window.selectType = function(i) {
