@@ -133,6 +133,12 @@ div, p, ul, li {
   background-color: #2244dd;
   color: #fff;
 }
+
+#searchBtn
+{
+  display: none;
+}
+
 .m3f,.m4f{font-size:1px;overflow:hidden;display:block;height:1px;}
 .m4f {margin:0 1px; border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
 .m3f {background:#000; margin:0 2px;}
@@ -160,7 +166,7 @@ share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","tex
 
 <div id="wrapper"> 
   <div class="panel-head"> 
-    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/> 
+    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/>&nbsp;<input type="button" id="seachBtn" value="搜索"/>
     <br/> 
     </div>
     <p id="cityList"> 城市：</p>
@@ -637,6 +643,8 @@ msg.init = function() {
   window.page = page;
   window.limit = limit;
   var initSearchBar = function() {
+
+    
     var search = $('quickSearch');
     var onclickSearch = function() {
       search = $('quickSearch');
@@ -668,8 +676,16 @@ msg.init = function() {
       clearTimeout();
       setTimeout("onSearchTimer()", 1000);
     }
+    if(isIE)
+    {
+      $('searchBtn').display = "block";
+      GEvent.addDomListener($('searchBtn'), "click", window.onSearch);
+    }
+    else
+    {
+      GEvent.addDomListener(search, "keyup", window.onSearch);
+    }
     GEvent.addDomListener(search, "click", onclickSearch);
-    GEvent.addDomListener(search, "keyup", window.onSearch);
     window.onSearchBlur = function(event) {
       var search = $('quickSearch');
       if (!search.value) {
