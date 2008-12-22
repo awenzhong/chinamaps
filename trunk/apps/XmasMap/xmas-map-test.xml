@@ -138,11 +138,6 @@ div, p, ul, li {
   background-color: #2244dd;
   color: #fff;
 }
-#debug
-{
-  height: 40px;
-  overflow: auto;
-}
 .m3f,.m4f{font-size:1px;overflow:hidden;display:block;height:1px;}
 .m4f {margin:0 1px; border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
 .m3f {background:#000; margin:0 2px;}
@@ -173,7 +168,6 @@ share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","tex
     <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/> 
     <br/> 
     </div>
-    <p id="debug"></p>
     <p id="cityList"> 城市：</p>
     <b class="m3f"></b><b class="m4f"></b> 
     <div class="tab-head m2f" id="tabHead"></div> 
@@ -237,7 +231,6 @@ function _un(str){
 
 var msg = {};
 msg.init = function() {
-  
   function $(dom) {
     return document.getElementById(dom);
   }
@@ -247,7 +240,6 @@ msg.init = function() {
   var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
   var tabMap = [0, 4, 3, 6, 5, 1, 2];
   var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
-  var tree
   window.initInfo = {
     beijing:[0, 0, 0, 0, 0, 0, 0],
     shanghai:[0, 0, 0, 0, 0, 0, 0]
@@ -693,7 +685,7 @@ msg.init = function() {
   window.selectCity = function(i) {
     if(checking || (reqTab != 0))
     {
-      setTimeout("setBackcolor()", 0);
+      setTimeout("setBackcolor()", 1000);
       hint.style.backgroundColor = "#ff0";
       return;
     }
