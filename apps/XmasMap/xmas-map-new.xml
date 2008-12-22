@@ -661,12 +661,11 @@ msg.init = function() {
       var searchBtn = $('seachBtn');
       searchBtn.style.display = "";
       GEvent.addDomListener(searchBtn, "click", window.onSearch);
-      GEvent.addDomListener(document, "keydown", function(e){
+      GEvent.addDomListener(search, "keydown", function(e){
         e = e || window.event;
-        var elem = e.target || e.srcElement;
         var keyCode = e.keyCode || e.which || e.charCode;
-        if(elem.id && elem.id == 'seachBtn' && keyCode == 13)
-          window.onSearch
+        if(keyCode == 13)
+          window.onSearch();
       });
     } else {
       GEvent.addDomListener(search, "keyup", window.onSearch);
