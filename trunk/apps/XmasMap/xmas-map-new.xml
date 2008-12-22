@@ -274,7 +274,6 @@ msg.init = function() {
       return;
     }
     if (isIE) {
-      document.execCommand('BackgroundImageCache', false, true);
       map.clearOverlays();
     } else {
       hideTab(curCity, types[lastTab]);
@@ -305,7 +304,7 @@ msg.init = function() {
       resetHeight();
     }
     if(isIE){
- //       showMarker(i);
+        showMarker(i);
     } else {
       if (cities[curCity].marker[types[lastTab]]) {
         for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
