@@ -256,10 +256,12 @@ msg.init = function() {
   window.checking = false;
   window.hideIETab = function(city, type, i)
   {
-     alert("hideIETab");
+     alert("hideIETab 1");
      if (cities[city].marker[type]) {
+     alert("hideIETab 2");
       if( i < cities[city].marker[type].length)
       {
+     alert("hideIETab 3");
         cities[city].marker[type][i].hide();
         i++;
         alert("i = " + i);
