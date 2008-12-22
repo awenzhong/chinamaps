@@ -268,11 +268,11 @@ msg.init = function() {
       hint.style.backgroundColor = "#ff0";
       return;
     }
-    if (isIE) {
+    //if (isIE) {
       map.clearOverlays();
-    } else {
-      hideTab(curCity, types[lastTab]);
-    }
+    //} else {
+    //  hideTab(curCity, types[lastTab]);
+   // }
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
@@ -298,15 +298,16 @@ msg.init = function() {
       con.innerHTML = cities[curCity].html[types[i]];
       _IG_AdjustIFrameHeight();
     }
-    if(isIE){
+   // if(isIE){
         showMarker(i);
-    } else {
+/*    } else {
       if (cities[curCity].marker[types[lastTab]]) {
         for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
           cities[curCity].marker[types[lastTab]][j].show();
         }
       }
     }
+    */
   }
   function openInfoWindow(marker, item) {
     var img = new Image();
@@ -385,11 +386,13 @@ msg.init = function() {
     cities[curCity][types[reqTab]] = data;
     cities[curCity].html[types[reqTab]] = [];
     cities[curCity].marker[types[reqTab]] = [];
+/*
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
+    */
       setTimeout("onCycleData('" + 0 + "')", 100);
       return;
-    }
+    //}
     for (var i = 0; i < data.length; i ++) {
       var len = i;
       var type = types[reqTab];
