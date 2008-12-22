@@ -262,8 +262,10 @@ msg.init = function() {
       {
         cities[city].marker[type][i].hide();
         i++;
-        setTimeout("hideIETab('" + city + "', '" + type + "', " + i + ")", 0);
-        $D("i = " + i);
+        alert("i = " + i);
+        var str = "hideIETab('" + city + "', '" + type + "', " + i + ")";
+        alert('str = ' + str);
+        setTimeout(str, 0);
       }
       else if(i == cities[city].marker[type].length)
       {
