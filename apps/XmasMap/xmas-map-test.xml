@@ -272,9 +272,12 @@ msg.init = function() {
       }
       }
       alert('newTab = ' + newTab);
+      i = newTab;
       $('tab_' + lastTab).className = "";
       $('tab_' + i).className = "selected";
+
       lastTab = newTab;
+      alert('newTab = 1' + newTab);
       if (!cities[curCity].marker[types[lastTab]]) {
         if (lastTab != 0 && window.reqTab == 0) {
           if (initInfo[curCity][lastTab] == 0) {
@@ -283,7 +286,9 @@ msg.init = function() {
             window.reqTab = lastTab;
             hint.style.display = "block";
       $D("before fetch");
+      alert('newTab = 2' + newTab);
             _IG_FetchContent(url, onTypeData);
+      alert('newTab = 3' + newTab);
       $D("after fetch");
           }
           return;
