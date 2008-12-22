@@ -168,6 +168,7 @@ share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","tex
     <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/> 
     <br/> 
     </div>
+    <p id="debug"></p>
     <p id="cityList"> 城市：</p>
     <b class="m3f"></b><b class="m4f"></b> 
     <div class="tab-head m2f" id="tabHead"></div> 
@@ -231,6 +232,7 @@ function _un(str){
 
 var msg = {};
 msg.init = function() {
+  
   function $(dom) {
     return document.getElementById(dom);
   }
@@ -254,9 +256,16 @@ msg.init = function() {
     }
   }
 
+  var $D = function(str)
+  {
+    $('debug').innerHTML += str + "<br/>";
+  }
+
   window.onSelectTypeIE = function(i)
   {
+    $D("before hideTab " + (new Date).getTime());
     hideTab(curCity, types[lastTab]);
+    $D("after hideTab " + (new Date).getTime());
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
@@ -296,7 +305,7 @@ msg.init = function() {
     }
     var is_opera = (navigator.userAgent.indexOf('opera') != -1);
     if (/msie/i.test(navigator.userAgent) && !is_opera) {
-      setTimeout("onSelectTypeIE(" + i + ")", 0);
+      setTimeout("onSelectTypeIE(" + i + ")", 1000);
       return;
     }
     onSelectTypeIE(i);
