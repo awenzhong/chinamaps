@@ -254,7 +254,25 @@ msg.init = function() {
   };
   window.reqTab = 0;
   window.checking = false;
+  window.hideIETab = function(city, type, i)
+  {
+     if (cities[city].marker[type]) {
+      if( i < cities[city].marker[type].length)
+      {
+        cities[city].marker[type][i].hide();
+        i++;
+        setTimeout("hideIETab('" + city + "', '" + type + "', " + i + ")", 1000);
+      }
+    }
+    
+  }
   window.hideTab = function(city, type) {
+    var is_opera = (navigator.userAgent.indexOf('opera') != -1);
+    if (/msie/i.test(navigator.userAgent) && !is_opera) {
+      hideIETab(city, type, 0);
+      return;
+    }
+ 
     if (cities[city].marker[type]) {
       for (var j = 0; j < cities[city].marker[type].length; j++) {
         cities[city].marker[type][j].hide();
