@@ -231,9 +231,9 @@ function _un(str){
 
 
 var msg = {};
-var isOpera = (navigator.userAgent.indexOf('opera') != -1);
-var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
 msg.init = function() {
+  var isOpera = (navigator.userAgent.indexOf('opera') != -1);
+  var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
   if (isIE) {
     document.execCommand('BackgroundImageCache', false, true);
   }
@@ -657,12 +657,12 @@ msg.init = function() {
       setTimeout("onSearchTimer()", 1000);
     }
     GEvent.addDomListener(search, "click", onclickSearch);
-    if(isIE){
-      GEvent.addDomListener(search, "keyup", window.onSearch);
-    } else {
+    if (isIE) {
       var searchBtn = $('seachBtn');
       searchBtn.style.display = "";
       GEvent.addDomListener(searchBtn, "click", window.onSearch);
+    } else {
+      GEvent.addDomListener(search, "keyup", window.onSearch);
     }
     
     window.onSearchBlur = function(event) {
