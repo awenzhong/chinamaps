@@ -262,8 +262,9 @@ msg.init = function() {
         cities[city].marker[type][i].hide();
         i++;
         setTimeout("hideIETab('" + city + "', '" + type + "', " + i + ")", 0);
+        $D("i = " + i);
       }
-      else if(i != 0)
+      else if(i == cities[city].marker[type].length)
       {
         $('tab_' + lastTab).className = "";
         $('tab_' + i).className = "selected";
