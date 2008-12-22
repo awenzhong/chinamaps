@@ -8,6 +8,7 @@
              screenshot="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map.png"
              thumbnail="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map-thm.png"
              height="420"> 
+  <Require feature="dynamic-height" />
   <Require feature="sharedmap" /> 
 </ModulePrefs> 
 <Content type="html"><![CDATA[
@@ -301,7 +302,7 @@ msg.init = function() {
     }
     if ((i != 0) && cities[curCity].html[types[i]]) {
       con.innerHTML = cities[curCity].html[types[i]];
-      resetHeight();
+      _IG_AdjustIFrameHeight();
     }
     if(isIE){
         showMarker(i);
@@ -499,7 +500,7 @@ msg.init = function() {
        i = reqTab;
         if ((i != 0) && cities[curCity].html[types[i]]) {
           con.innerHTML = cities[curCity].html[types[i]];
-          resetHeight();
+          _IG_AdjustIFrameHeight();
         }
         hint.style.display = "none";
       }
@@ -529,7 +530,7 @@ msg.init = function() {
     }
     if (cities[curCity].html['allul'] && lastTab == 0) {
       con.innerHTML = cities[curCity].html['allul'];
-      resetHeight();
+       _IG_AdjustIFrameHeight();
     }
     hint.style.display = "none";
     window.checking = false;
@@ -621,22 +622,6 @@ msg.init = function() {
       $("item_" + type + "_" + i).className = "";
     }
   }
-  function resetHeight() {
-    var height = 0;
-    var is_opera = (navigator.userAgent.indexOf('opera') != -1);
-    if (!(/msie/i.test(navigator.userAgent) && !is_opera)) {
-      return;
-    }
-    if (window.innerHeight) {
-      height = window.innerHeight;
-    } else if ((document.body) && (document.body.clientHeight)) {
-      height = document.body.clientHeight;
-    }
-    if(height < 200) height = 200;
-    /* for margin */
-    height -= 20;
-    con.style.height = height - 80;
-  }
   var init = false;
   initCity();
   initTabs();
@@ -679,7 +664,7 @@ msg.init = function() {
           node.style.display = "block";
         }
       }
-      resetHeight();
+      _IG_AdjustIFrameHeight();
     }
     window.onSearch = function(event) {
       clearTimeout();
