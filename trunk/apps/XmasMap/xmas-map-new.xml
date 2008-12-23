@@ -654,10 +654,8 @@ msg.init = function() {
       _IG_AdjustIFrameHeight();
     }
     window.onSearch = function(event) {
-      if(search.value && search.value != '请输入搜索的内容') {
-        clearTimeout();
-        setTimeout("onSearchTimer()", 1000);
-      }
+      clearTimeout();
+      setTimeout("onSearchTimer()", 1000);
     }
     GEvent.addDomListener(search, "click", onclickSearch);
     if (isIE) {
@@ -671,7 +669,11 @@ msg.init = function() {
       
       var searchBtn = $('seachBtn');
       searchBtn.style.display = "";
-      GEvent.addDomListener(searchBtn, "click", window.onSearch);
+      GEvent.addDomListener(searchBtn, "click", function(){
+        if(search.value && search.value != '请输入搜索的内容') {
+          window.onSearch();
+        }
+      });
       GEvent.addDomListener(search, "keydown", function(e){
         e = e || window.event;
         var keyCode = e.keyCode || e.which || e.charCode;
