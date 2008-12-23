@@ -8,6 +8,8 @@
              screenshot="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map.png"
              thumbnail="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map-thm.png"
              height="420"> 
+  <Require feature="dynamic-height" />
+  <Require feature="minimessage"/>
   <Require feature="sharedmap" /> 
 </ModulePrefs> 
 <Content type="html"><![CDATA[
@@ -22,12 +24,7 @@ div, p, ul, li {
   border:0;
   padding:0;
 }
-#map {
-  float: right;
-  border:solid #999 1px;
-}
 #wrapper {
-  float: left;
   font-size:13px;
   width:250px;
 }
@@ -98,7 +95,6 @@ div, p, ul, li {
 #listContainer {
   width: 100%;
   overflow: auto;
-  height: 80%;
 }
 #listContainer ul li {
   line-height:23px;
@@ -138,6 +134,12 @@ div, p, ul, li {
   background-color: #2244dd;
   color: #fff;
 }
+
+#searchBtn
+{
+  display: none;
+}
+
 .m3f,.m4f{font-size:1px;overflow:hidden;display:block;height:1px;}
 .m4f {margin:0 1px; border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
 .m3f {background:#000; margin:0 2px;}
@@ -162,12 +164,12 @@ share.SharingWidget[$$PROP_prototype].f=function(a,b,c){if(this.b==0){var d=GLOB
 share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","text/css");if(a.styleSheet)a.styleSheet.cssText=b;else{var c=GLOBAL_document[$$PROP_createTextNode](b);a[$$PROP_appendChild](c)}};share.SharingWidget[$$PROP_prototype].e=function(a,b){var c=GLOBAL_document.getElementsByTagName("head")[0];c?c[$$PROP_appendChild](b):a[$$PROP_appendChild](b)};share.ShareWidget=share.SharingWidget;share.SharingButton=share.SharingWidget;
  })();
 </script>
-
-<div id="wrapper"> 
-  <div class="panel-head"> 
-    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/> 
+<div class="panel-head"> 
+    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/>&nbsp;<input type="button" id="seachBtn" value="搜索" style="display:none"/>&nbsp;<input type="button" id="resetBtn" value="还原" style="display:none"/>
     <br/> 
     </div>
+<div id="wrapper"> 
+  
     <p id="cityList"> 城市：</p>
     <b class="m3f"></b><b class="m4f"></b> 
     <div class="tab-head m2f" id="tabHead"></div> 
@@ -231,6 +233,12 @@ function _un(str){
 
 var msg = {};
 msg.init = function() {
+  var isOpera = (navigator.userAgent.indexOf('opera') != -1);
+  var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
+  if (isIE) {
+    document.execCommand('BackgroundImageCache', false, true);
+  }
+
   function $(dom) {
     return document.getElementById(dom);
   }
@@ -253,6 +261,13 @@ msg.init = function() {
       }
     }
   }
+  window.showMarker = function(t)
+  {
+    for(var i = 0; i < cities[curCity].marker[types[t]].length; i++)
+    {
+      map.addOverlay(cities[curCity].marker[types[t]][i]);
+    }
+  }
   window.selectType = function(i) {
     if(checking || (reqTab != 0))
     {
@@ -260,13 +275,7 @@ msg.init = function() {
       hint.style.backgroundColor = "#ff0";
       return;
     }
-    var isOpera = (navigator.userAgent.indexOf('opera') != -1);
-    var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
-    if (isIE) {
-      map.clearOverlays();
-    } else {
-      hideTab(curCity, types[lastTab]);
-    }
+    map.clearOverlays();
     $('tab_' + lastTab).className = "";
     $('tab_' + i).className = "selected";
     lastTab = i;
@@ -286,21 +295,13 @@ msg.init = function() {
       }
     } else if (lastTab == 0) {
       window.checkLoading();
+      return;
     }
     if ((i != 0) && cities[curCity].html[types[i]]) {
       con.innerHTML = cities[curCity].html[types[i]];
-      resetHeight();
+      _IG_AdjustIFrameHeight();
     }
-    if(isIE)
-    {
-    }
-    {
-      if (cities[curCity].marker[types[lastTab]]) {
-        for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j ++) {
-          cities[curCity].marker[types[lastTab]][j].show();
-        }
-      }
-    }
+    showMarker(i);
   }
   function openInfoWindow(marker, item) {
     var img = new Image();
@@ -379,64 +380,12 @@ msg.init = function() {
     cities[curCity][types[reqTab]] = data;
     cities[curCity].html[types[reqTab]] = [];
     cities[curCity].marker[types[reqTab]] = [];
-    var is_opera = (navigator.userAgent.indexOf('opera') != -1);
-    if (/msie/i.test(navigator.userAgent) && !is_opera) {
-      setTimeout("onCycleData('" + 0 + "')", 100);
-      return;
-    }
-    for (var i = 0; i < data.length; i ++) {
-      var len = i;
-      var type = types[reqTab];
-      var item = data[i];
-      item['type'] = types[reqTab];
-      var g = item.g.split(",");
-      item['lat'] = parseFloat(g[1]);
-      item['lng'] = parseFloat(g[0]);
-      item['name'] = item.n;
-      item['image'] = item.i;
-      item['desc'] = item.d;
-      cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
-      "onclick=\"selectMarker('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
-      "onmouseover=\"mouseOverList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
-      "onmouseout=\"mouseOutList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
-      ">" + item['name'] + "</li>";
-      var point = new GLatLng(item["lat"], item["lng"]);
-      var icon = new GIcon();
-      icon.image = base + "img/" + iconType[item['type']];
-      icon.iconSize = new GSize(36, 51);
-      icon.iconAnchor = new GPoint(18, 51);
-      icon.infoWindowAnchor = new GPoint(10, 6);
-      var marker = new GMarker(point, {
-        icon: icon,
-        title: item["name"]
-      });
-      marker.point = point;
-      map.addOverlay(marker);
-      cities[curCity].marker[item['type']].push(marker);
-      GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, item, len));
-      GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, item, len));
-      GEvent.addListener(marker, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, item, len));
-      cities[curCity].html['all'] += "<li id=\"item_all_" + cities[curCity]['all'].length + "\"" +
-      "onclick=\"selectMarker('all', " + cities[curCity].marker['all'].length + ")\"" +
-      "onmouseover=\"mouseOverList('all', " + cities[curCity].marker['all'].length + ")\"" +
-      "onmouseout=\"mouseOutList('all', " + cities[curCity].marker['all'].length + ")\"" +
-      ">" + item['name'] + "</li>";
-      cities[curCity]['all'].push(item);
-      cities[curCity].marker['all'].push(marker);
-    }
-    cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
-    cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
-    reqTab = 0;
-    if (window.checking) {
-      window.checkLoading();
-    } else {
-      selectType(lastTab);
-      hint.style.display = "none";
-    }
+    setTimeout("onCycleData('" + 0 + "')", 100);
+    return;
   }
   window.onCycleData = function(start) {
     var data = cities[curCity][types[reqTab]];
-    var step = 2;
+    var step = 1;
     start = parseInt(start);
     for (var i = start; i < data.length && i < start + step; i ++) {
       var len = i;
@@ -485,8 +434,12 @@ msg.init = function() {
       if(window.checking) {
         window.checkLoading();
       } else {
-        selectType(lastTab);
+       i = reqTab;
+        if ((i != 0) && cities[curCity].html[types[i]]) {
+          con.innerHTML = cities[curCity].html[types[i]];
+        }
         hint.style.display = "none";
+        _IG_AdjustIFrameHeight();
       }
     } else {
       var time = step + start;
@@ -507,6 +460,7 @@ msg.init = function() {
         initInfo[curCity][i] = 1;
         window.reqTab = i;
         hint.style.display = "block";
+        _IG_AdjustIFrameHeight();
         _IG_FetchContent(url, onTypeData);
         return false;
         break;
@@ -514,9 +468,9 @@ msg.init = function() {
     }
     if (cities[curCity].html['allul'] && lastTab == 0) {
       con.innerHTML = cities[curCity].html['allul'];
-      resetHeight();
     }
     hint.style.display = "none";
+    _IG_AdjustIFrameHeight();
     window.checking = false;
     return true;
   }
@@ -547,7 +501,7 @@ msg.init = function() {
     var root = $("cityList");
     root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
     root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 1.17</span>";
+    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 1.23</span>";
   }
   function initTabs() {
     var root = $('tabHead');
@@ -606,22 +560,6 @@ msg.init = function() {
       $("item_" + type + "_" + i).className = "";
     }
   }
-  function resetHeight() {
-    var height = 0;
-    var is_opera = (navigator.userAgent.indexOf('opera') != -1);
-    if (!(/msie/i.test(navigator.userAgent) && !is_opera)) {
-      return;
-    }
-    if (window.innerHeight) {
-      height = window.innerHeight;
-    } else if ((document.body) && (document.body.clientHeight)) {
-      height = document.body.clientHeight;
-    }
-    if(height < 200) height = 200;
-    /* for margin */
-    height -= 20;
-    con.style.height = height - 80;
-  }
   var init = false;
   initCity();
   initTabs();
@@ -664,14 +602,47 @@ msg.init = function() {
           node.style.display = "block";
         }
       }
-      resetHeight();
+      _IG_AdjustIFrameHeight();
     }
     window.onSearch = function(event) {
       clearTimeout();
       setTimeout("onSearchTimer()", 1000);
     }
     GEvent.addDomListener(search, "click", onclickSearch);
-    GEvent.addDomListener(search, "keyup", window.onSearch);
+    if (isIE) {
+      var version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+      if(version == 6){
+        var msg = new _IG_MiniMessage(__MODULE_ID__);
+        var tip = msg.createDismissibleMessage("为获得更佳的速度和体验，建议把您当前的浏览器升级到IE7.0及以上版本，或者改用其他非IE浏览器（比如<a target='_blank' href='http://www.mozillaonline.com/'>火狐浏览器</a>或者<a target='_blank' href='http://www.google.com/chrome/index.html?hl=zh_cn'>谷歌浏览器</a>）。");
+        tip.style.fontSize = "12px";
+        tip.style.fontWeight = "normal";
+      }
+      
+      var searchBtn = $('seachBtn');
+      searchBtn.style.display = "";
+      GEvent.addDomListener(searchBtn, "click", function(){
+        if(search.value && search.value != '请输入搜索的内容') {
+          window.onSearch();
+        }
+      });
+      GEvent.addDomListener(search, "keydown", function(e){
+        e = e || window.event;
+        var keyCode = e.keyCode || e.which || e.charCode;
+        if(keyCode == 13)
+          window.onSearch();
+      });
+      var resetBtn = $('resetBtn');
+      resetBtn.style.display = "";
+      GEvent.addDomListener(resetBtn, "click", function(){
+        if(search.value && search.value != '请输入搜索的内容') {
+          search.value = "";
+          window.onSearch();
+        }
+      });
+    } else {
+      GEvent.addDomListener(search, "keyup", window.onSearch);
+    }
+    
     window.onSearchBlur = function(event) {
       var search = $('quickSearch');
       if (!search.value) {
