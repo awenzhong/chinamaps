@@ -520,6 +520,7 @@ msg.init = function() {
     if (cities[curCity].html['allul'] && lastTab == 0) {
       con.innerHTML = cities[curCity].html['allul'];
     }
+    showMarker(0);
     hint.style.display = "none";
     _IG_AdjustIFrameHeight();
     window.checking = false;
