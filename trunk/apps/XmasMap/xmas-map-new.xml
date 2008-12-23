@@ -639,10 +639,8 @@ msg.init = function() {
       var resetBtn = $('resetBtn');
       resetBtn.style.display = "";
       GEvent.addDomListener(resetBtn, "click", function(){
-        if(search.value && search.value != '请输入搜索的内容') {
-          search.value = "";
-          window.onSearch();
-        }
+        search.value = "";
+        window.onSearch();
       });
     } else {
       GEvent.addDomListener(search, "keyup", window.onSearch);
