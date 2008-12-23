@@ -164,12 +164,12 @@ share.SharingWidget[$$PROP_prototype].f=function(a,b,c){if(this.b==0){var d=GLOB
 share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","text/css");if(a.styleSheet)a.styleSheet.cssText=b;else{var c=GLOBAL_document[$$PROP_createTextNode](b);a[$$PROP_appendChild](c)}};share.SharingWidget[$$PROP_prototype].e=function(a,b){var c=GLOBAL_document.getElementsByTagName("head")[0];c?c[$$PROP_appendChild](b):a[$$PROP_appendChild](b)};share.ShareWidget=share.SharingWidget;share.SharingButton=share.SharingWidget;
  })();
 </script>
-
-<div id="wrapper"> 
-  <div class="panel-head"> 
-    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/>&nbsp;<input type="button" id="seachBtn" value="搜索" style="display:none"/>
+<div class="panel-head"> 
+    <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/>&nbsp;<input type="button" id="seachBtn" value="搜索" style="display:none"/>&nbsp;<input type="button" id="resetBtn" value="还原" style="display:none"/>
     <br/> 
     </div>
+<div id="wrapper"> 
+  
     <p id="cityList"> 城市：</p>
     <b class="m3f"></b><b class="m4f"></b> 
     <div class="tab-head m2f" id="tabHead"></div> 
@@ -675,6 +675,12 @@ msg.init = function() {
         var keyCode = e.keyCode || e.which || e.charCode;
         if(keyCode == 13)
           window.onSearch();
+      });
+      var resetBtn = $('resetBtn');
+      resetBtn.style.display = "";
+      GEvent.addDomListener(resetBtn, "click", function(){
+        search.value = "";
+        window.onSearch();
       });
     } else {
       GEvent.addDomListener(search, "keyup", window.onSearch);
