@@ -380,12 +380,63 @@ msg.init = function() {
     cities[curCity][types[reqTab]] = data;
     cities[curCity].html[types[reqTab]] = [];
     cities[curCity].marker[types[reqTab]] = [];
-    setTimeout("onCycleData('" + 0 + "')", 100);
-    return;
+    if(isIE) {
+      setTimeout("onCycleData('" + 0 + "')", 100);
+      return;
+    }
+    for (var i = 0; i < data.length; i ++) {
+      var len = i;
+      var type = types[reqTab];
+      var item = data[i];
+      item['type'] = types[reqTab];
+      var g = item.g.split(",");
+      item['lat'] = parseFloat(g[1]);
+      item['lng'] = parseFloat(g[0]);
+      item['name'] = item.n;
+      item['image'] = item.i;
+      item['desc'] = item.d;
+      cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
+      "onclick=\"selectMarker('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
+      "onmouseover=\"mouseOverList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
+      "onmouseout=\"mouseOutList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
+      ">" + item['name'] + "</li>";
+      var point = new GLatLng(item["lat"], item["lng"]);
+      var icon = new GIcon();
+      icon.image = base + "img/" + iconType[item['type']];
+      icon.iconSize = new GSize(36, 51);
+      icon.iconAnchor = new GPoint(18, 51);
+      icon.infoWindowAnchor = new GPoint(10, 6);
+      var marker = new GMarker(point, {
+        icon: icon,
+        title: item["name"]
+      });
+      marker.point = point;
+      map.addOverlay(marker);
+      cities[curCity].marker[item['type']].push(marker);
+      GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, item, len));
+      GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, item, len));
+      GEvent.addListener(marker, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, item, len));
+      cities[curCity].html['all'] += "<li id=\"item_all_" + cities[curCity]['all'].length + "\"" +
+      "onclick=\"selectMarker('all', " + cities[curCity].marker['all'].length + ")\"" +
+      "onmouseover=\"mouseOverList('all', " + cities[curCity].marker['all'].length + ")\"" +
+      "onmouseout=\"mouseOutList('all', " + cities[curCity].marker['all'].length + ")\"" +
+      ">" + item['name'] + "</li>";
+      cities[curCity]['all'].push(item);
+      cities[curCity].marker['all'].push(marker);
+    }
+    cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+    cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+    reqTab = 0;
+    if (window.checking) {
+      window.checkLoading();
+    } else {
+      selectType(lastTab);
+      hint.style.display = "none";
+    }
   }
   window.onCycleData = function(start) {
     var data = cities[curCity][types[reqTab]];
-    var step = 1;
+    var step = 2;
     start = parseInt(start);
     for (var i = start; i < data.length && i < start + step; i ++) {
       var len = i;
@@ -469,6 +520,7 @@ msg.init = function() {
     if (cities[curCity].html['allul'] && lastTab == 0) {
       con.innerHTML = cities[curCity].html['allul'];
     }
+    showMarker(0);
     hint.style.display = "none";
     _IG_AdjustIFrameHeight();
     window.checking = false;
@@ -501,7 +553,7 @@ msg.init = function() {
     var root = $("cityList");
     root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
     root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.0</span>";
+    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.2</span>";
   }
   function initTabs() {
     var root = $('tabHead');
