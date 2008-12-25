@@ -3,7 +3,7 @@
 <ModulePrefs title="圣诞节您去哪儿？"
              author="Renwenxin, Fei Chen, Xiaoxi Wu, Wei chen"
              author_email="chinamaps-devtools+xmasmap@google.com"
-             author_affiliation="Google China"
+             author_affiliation="谷歌"
              description="圣诞节信息查询"
              screenshot="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map.png"
              thumbnail="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map-thm.png"
@@ -13,12 +13,11 @@
   <Require feature="sharedmap" /> 
 </ModulePrefs> 
 <Content type="html"><![CDATA[
-  <style>
-    .hint-msg
-    {
-    color: red;
-    display: none;
-    }
+<style>
+.hint-msg {
+  color: red;
+  display: none;
+}
 div, p, ul, li {
   margin:0;
   border:0;
@@ -134,9 +133,7 @@ div, p, ul, li {
   background-color: #2244dd;
   color: #fff;
 }
-
-#searchBtn
-{
+#searchBtn {
   display: none;
 }
 
@@ -242,6 +239,7 @@ msg.init = function() {
   function $(dom) {
     return document.getElementById(dom);
   }
+
   var con = $('listContainer');
   var hint = $('hintMsg');
   var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
@@ -254,6 +252,7 @@ msg.init = function() {
   };
   window.reqTab = 0;
   window.checking = false;
+  
   window.hideTab = function(city, type) {
     if (cities[city].marker[type]) {
       for (var j = 0; j < cities[city].marker[type].length; j++) {
@@ -261,16 +260,16 @@ msg.init = function() {
       }
     }
   }
-  window.showMarker = function(t)
-  {
+  
+  window.showMarker = function(t) {
     for(var i = 0; i < cities[curCity].marker[types[t]].length; i++)
     {
       map.addOverlay(cities[curCity].marker[types[t]][i]);
     }
   }
+  
   window.selectType = function(i) {
-    if(checking || (reqTab != 0))
-    {
+    if (checking || (reqTab != 0)) {
       setTimeout("setBackcolor()", 1000);
       hint.style.backgroundColor = "#ff0";
       return;
@@ -304,26 +303,22 @@ msg.init = function() {
     showMarker(i);
   }
 
-  function getImgHtml(city, type, item){
-
-  }
   function openInfoWindow(marker, item) {
     var img = new Image();
     img.src = item['image'];
     img.onload = onImgLoaded(img.src, "loaded");
     img.onerror = onImgLoaded(img.src, "error");
     var tabs = [];
+    var local = '';
+    var imgHtml = '';
     if(item['type'] == 'Cinema'){
-      if(curCity == 'beijing')
-      {
-        var local = "北京";
-      }
-      else
-      {
-        var local = "上海";
+      if(curCity == 'beijing') {
+        local = '北京';
+      } else {
+        local = '上海';
       }
       var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
-      var imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
+      imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
         "<p style='width: 400px;display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
         "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
         "查看最新放映电影时间表 " + 
@@ -332,17 +327,19 @@ msg.init = function() {
         "</p>" + 
         "<p id='demoimg_" + item['type'] + "_" + i + "' style='font-size: 12px; color: red;'>" + 
         " <img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
- 
-   } else {
-    var imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "' style='font-size: 12px; color: red;'><img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
+    } else {
+      imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "' style='font-size: 12px; color: red;'><img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
     }
     var infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
     tabs.push(new GInfoWindowTab("图片", imgHtml));
     tabs.push(new GInfoWindowTab("信息", infoHtml));
     marker.openInfoWindowTabsHtml(tabs);
+
     function onImgLoaded(src, type) {
       return function() {
         tabs = [];
+        var local = '';
+        var imgHtml = '';
         if (type == 'loaded') {
           var css = "";
           var width = img.width;
@@ -356,13 +353,10 @@ msg.init = function() {
           img.width =  width / r;
           css = 'height:' + img.height + ';width:' + img.width + ';';
           if(item['type'] == 'Cinema') {
-            if(curCity == 'beijing')
-            {
-              var local = "北京";
-            }
-            else
-            {
-              var local = "上海";
+            if(curCity == 'beijing') {
+              local = '北京';
+            } else {
+              local = '上海';
             }
             var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
             imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
@@ -379,13 +373,10 @@ msg.init = function() {
          }
         } else {
           if(item['type'] == 'Cinema') {
-            if(curCity == 'beijing')
-            {
-              var local = "北京";
-            }
-            else
-            {
-              var local = "上海";
+            if(curCity == 'beijing') {
+              local = '北京';
+            } else {
+              local = '上海';
             }
             var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
             imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
@@ -396,8 +387,8 @@ msg.init = function() {
               "<a href='" + img.src + "' alt='点击查看原图'  style='display:block;width: 200px;float:right;text-align:center;' target = '_blank' >请点击查看原图</a>" + 
               "</p>" + 
               "<span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
-         } else {
-           imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
+          } else {
+            imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
           }
         }
         infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
@@ -407,6 +398,7 @@ msg.init = function() {
       }
     }
   }
+
   function highlightPos(marker, item, i){
     var url = base + "img/" + iconType0[item['type']];
     if (window.all) {
@@ -422,6 +414,7 @@ msg.init = function() {
       }
     });
   }
+
   function unhighlightPos(marker, item, i){
     var url = base + "img/" + iconType[item['type']];
     if (window.all) {
@@ -432,6 +425,7 @@ msg.init = function() {
     }
     marker.setImage(url);
   }
+
   window.onTypeData = function(data) {
     var data = eval(data);
     if(!data) return;
@@ -497,6 +491,7 @@ msg.init = function() {
       hint.style.display = "none";
     }
   }
+
   window.onCycleData = function(start) {
     var data = cities[curCity][types[reqTab]];
     var step = 2;
@@ -565,6 +560,7 @@ msg.init = function() {
       setTimeout('onCycleData(' + time + ')', 0);
     }
   }
+
   window.checkLoading = function() {
     window.checking = true;
     reqTab = 0;
@@ -589,13 +585,13 @@ msg.init = function() {
     window.checking = false;
     return true;
   }
-  window.setBackcolor = function()
-  {
+  
+  window.setBackcolor = function() {
       hint.style.backgroundColor = "#fff";
   }
+
   window.selectCity = function(i) {
-    if(checking || (reqTab != 0))
-    {
+    if(checking || (reqTab != 0)) {
       setTimeout("setBackcolor()", 1000);
       hint.style.backgroundColor = "#ff0";
       return;
@@ -612,12 +608,14 @@ msg.init = function() {
     if(init) selectType(lastTab);
     map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng));
   }
+
   function initCity() {
     var root = $("cityList");
     root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
     root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
     root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.2</span>";
   }
+
   function initTabs() {
     var root = $('tabHead');
     for (var i = 0; i < types.length; i++) {
@@ -625,6 +623,7 @@ msg.init = function() {
     }
     $('tab_0').className = "selected";
   }
+
   var cities = {
     beijing : {
       name:"北京",
@@ -652,9 +651,11 @@ msg.init = function() {
     iconType[types[i]] = icons[i];
     iconType0[types[i]] = icons0[i];
   }
+
   window.selectMarker = function(type, i) {
     GEvent.trigger(cities[curCity].marker[type][i], 'click');
   }
+
   window.mouseOverList = function(type, i) {
     if (type == 'all') {
       window.all = true;
@@ -665,6 +666,7 @@ msg.init = function() {
       $("item_" + type + "_" + i).className = "over";
     }
   }
+
   window.mouseOutList = function(type, i) {
     if(type == 'all') {
       window.all = true;
@@ -724,10 +726,12 @@ msg.init = function() {
       }
       _IG_AdjustIFrameHeight();
     }
+
     window.onSearch = function(event) {
       clearTimeout();
       setTimeout("onSearchTimer()", 1000);
     }
+
     GEvent.addDomListener(search, "click", onclickSearch);
     if (isIE) {
       var version = parseFloat(navigator.appVersion.split("MSIE")[1]);
@@ -773,6 +777,7 @@ msg.init = function() {
   initSearchBar();
   makeShareButton();
 }
+
 window['xmasinit'] = {
   init: msg.init()
 }
