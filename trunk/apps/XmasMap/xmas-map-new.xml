@@ -322,7 +322,7 @@ msg.init = function() {
       {
         var local = "上海";
       }
-      var url = "http://www.google.cn/movies?q=" + item['name'].replace(/\s/gi, "") + "&hl=zh-CN&near=" + local;
+      var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
       var imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
         "<p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
         "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
@@ -364,7 +364,7 @@ msg.init = function() {
             {
               var local = "上海";
             }
-            var url = "http://www.google.cn/movies?q=" + item['name'].replace(/\s/gi, "") + "&hl=zh-CN&near=" + local;
+            var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
             imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
               "<p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
               "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
@@ -387,7 +387,7 @@ msg.init = function() {
             {
               var local = "上海";
             }
-            var url = "http://www.google.cn/movies?q=" + item['name'].replace(/\s/gi, "") + "&hl=zh-CN&near=" + local;
+            var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
             imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
               "<p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
               "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
