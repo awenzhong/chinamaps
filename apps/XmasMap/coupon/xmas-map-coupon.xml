@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Module> 
 <ModulePrefs title="圣诞节您去哪儿？"
              author="Renwenxin, Fei Chen, Xiaoxi Wu, Wei chen"
@@ -279,7 +279,7 @@ msg.init = function() {
     if (!cities[curCity].marker[types[lastTab]]) {
       if (lastTab != 0 && window.reqTab == 0) {
         if (initInfo[curCity][lastTab] == 0) {
-          var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+          var url = base + "data/" + curCity + "_" + tabMap[i] + ".json?nocache=1";
           initInfo[curCity][lastTab] = 1;
           window.reqTab = lastTab;
           hint.style.display = "block";
