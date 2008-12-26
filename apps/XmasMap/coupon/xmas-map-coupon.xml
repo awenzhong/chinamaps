@@ -244,7 +244,7 @@ msg.init = function() {
   var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
   var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
   var tabMap = [0, 4, 3, 6, 5, 1, 2];
-  var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/coupon";
+  var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/coupon/";
   window.initInfo = {
     beijing:[0, 0, 0, 0, 0, 0, 0],
     shanghai:[0, 0, 0, 0, 0, 0, 0]
