@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module> 
+<ModulePrefs title="圣诞节您去哪儿？"
+             author="Renwenxin, Fei Chen, Xiaoxi Wu, Wei chen"
+             author_email="chinamaps-devtools+xmasmap@google.com"
+             author_affiliation="谷歌"
+             description="圣诞节信息查询"
+             screenshot="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map.png"
+             thumbnail="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/xmas-map-thm.png"
+             height="420"> 
+  <Require feature="dynamic-height" />
+  <Require feature="minimessage"/>
+  <Require feature="sharedmap" /> 
+</ModulePrefs> 
+<Content type="html"><![CDATA[
+<style>
+.hint-msg {
+  color: red;
+  display: none;
+}
+div, p, ul, li {
+  margin:0;
+  border:0;
+  padding:0;
+}
+#wrapper {
+  font-size:13px;
+  width:250px;
+}
+.tab-head a {
+  display:block;
+  color:#fff;
+}
+.tab-head a:hover {
+  background:#FFF;
+  color:#000000;
+}
+.quick-search {
+  margin:2px 10px 0 0;
+  border:solid #999999 1px;
+  color:#999999;
+  width: 14em;
+  line-height: 25px;
+}
+.city {
+  margin:3px;
+  cursor:pointer;
+}
+/*tab*/
+.tab-head {
+  overflow:auto;
+}
+.tab-item {
+  text-align:center;
+  float:left;
+  padding:1px 3px;
+  cursor:pointer;
+  color:#0000FF;
+  border-right: solid #CCD9F2 1px;
+}
+.active-tab {
+  font-weight:bold;
+  text-decoration:none;
+}
+.tab-content {
+  display:none;
+}
+#tabHead a, #tabHead a:link, #tabHead a:visited, #tabHead a:active {
+  color: #fff;
+}
+#tabHead a {
+  line-height: 25px;
+  width: 34px;
+  text-decoration: none;
+  text-align: center;
+  display: -moz-inline-stack; 
+  display: inline-block;     
+  zoom: 1;                    
+  *display: inline;   
+}
+#tabHead a:hover {
+  color: #000;
+}
+#tabHead a.selected, #tabHead a.selected:link, #tabHead a.selected:visited, #tabHead a.selected:active {
+  font-weight: bold;
+  color: #ff0;
+}
+#tabHead a.selected:hover {
+  color: #000;
+}
+#map {
+  width: 100%;
+}
+#listContainer {
+  width: 100%;
+  overflow: auto;
+}
+#listContainer ul li {
+  line-height:23px;
+  text-decoration:none;
+  color:#000;
+  display:block;
+  padding:0 0 0 25px;
+  background-image: url('http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree.png');
+  background-repeat: no-repeat;
+  background-position: left;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e9e9e9;  
+}
+#listContainer ul li.over {
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #ffe9df;
+  background-image: url('http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/img/tree0.png');
+  background-repeat: no-repeat;
+  background-position: left;
+}
+#cityList a {
+  line-height: 20px;
+  padding: 0px 4px;
+  text-decoration: none;
+  display: -moz-inline-stack; 
+  display: inline-block;      
+  zoom: 1;                     
+  *display: inline;            
+}
+#cityList a:hover {
+  color: #ff3333;
+}
+#cityList a.selected {
+  font-weight: bold;
+  background-color: #2244dd;
+  color: #fff;
+}
+#searchBtn {
+  display: none;
+}
+
+.m3f,.m4f{font-size:1px;overflow:hidden;display:block;height:1px;}
+.m4f {margin:0 1px; border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
+.m3f {background:#000; margin:0 2px;}
+.m2f {border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
+</style> 
+<script type="text/javascript">window.serverBase="http://www.google.ca";window.apiKey="";window.locale="zh_CN";window.js_messages={'Email':'\u7535\u5b50\u90ae\u4ef6','Please add your email address to the From: field':'\u8bf7\u5c06\u60a8\u7684\u7535\u5b50\u90ae\u4ef6\u5730\u5740\u6dfb\u52a0\u5230\u201c\u5bc4\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5','Oops! A popup blocker is preventing the bookmarklet from opening. Try holding the Shift key and clicking on the bookmarklet again.':'\u7cdf\u7cd5\uff01\u5f39\u51fa\u7a97\u53e3\u963b\u6b62\u7a0b\u5e8f\u963b\u6b62\u4e66\u7b7e\u6253\u5f00\u3002\u8bf7\u5c1d\u8bd5\u6309\u4f4f Shift \u952e\u518d\u6b21\u70b9\u51fb\u4e66\u7b7e\u3002','Google - Email / Share':'Google - \u7535\u5b50\u90ae\u4ef6/\u5171\u4eab','Edit this shared item':'\u7f16\u8f91\u6b64\u5171\u4eab\u9879\u76ee','Please enter valid email addresses in the To: field':'\u8bf7\u5728\u201c\u6536\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5\u8f93\u5165\u6709\u6548\u7684\u7535\u5b50\u90ae\u4ef6\u5730\u5740','Are you sure you want to remove this shared item?':'\u786e\u5b9e\u8981\u5220\u9664\u8be5\u5171\u4eab\u9879\u76ee\u5417\uff1f','Please enter a valid email address in the From: field':'\u8bf7\u5728\u201c\u5bc4\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5\u8f93\u5165\u6709\u6548\u7684\u7535\u5b50\u90ae\u4ef6\u5730\u5740','Share':'\u5171\u4eab','Oops! We seem to be experiencing network problems. Please check your connection and try again.':'\u7cdf\u7cd5\uff01\u6211\u4eec\u4f3c\u4e4e\u9047\u5230\u4e86\u7f51\u7edc\u95ee\u9898\u3002\u8bf7\u68c0\u67e5\u60a8\u7684\u8fde\u63a5\u5e76\u91cd\u8bd5\u3002','%1 does not exist!':'%1 \u4e0d\u5b58\u5728\uff01','Add a comment...':'\u6dfb\u52a0\u8bc4\u8bba...','Please add recipients to the To: field':'\u8bf7\u5c06\u6536\u4ef6\u4eba\u6dfb\u52a0\u5230\u201c\u6536\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5'};(function() { 
+var GLOBAL_document=document,$$PROP_appendChild="appendChild",$$PROP_prototype="prototype",$$PROP_createTextNode="createTextNode",$$PROP_createElement="createElement";function replaceAll(a,b,c){if(b.length==0)return a;var d=a.indexOf(b);while(d>-1){a=a.replace(b,c);d=a.indexOf(b)}return a}var messages=window.js_messages;function formatMessage(a,b){a=getMsg(a);if(b&&b.length)for(var c=0;c<b.length;c++)a=replaceAll(a,"%"+(c+1),b[c]);return a}
+function getMsg(a){if(messages&&messages[a])return messages[a];return a};var win=window,getElid;getElid=GLOBAL_document.getElementById?function(a){return GLOBAL_document.getElementById(a)}:GLOBAL_document.all?function(a){return GLOBAL_document.all[a]}:function(){return undefined};elid=function(a){return typeof a=="string"?getElid(a):a};if(!win.google)win.google={};var google=win.google;if(!google.share)google.share={};share=google.share;google.sharing=share;var serverBase=win.serverBase,key=win.apiKey,locale=win.locale;
+share.SharingWidget=function(a,b){this.m=GLOBAL_document.location.href;this.o=1;this.l=this.d=null;this.a={};this.b=this.h=0;if(b){this.a=b;if(this.a.googleinternal==true)this.h=1;if(this.a.specifiedPageViewed==true&&this.a.url){var c=new Image;c.src=serverBase+"/s2/sharing/share?pub_action=vi&url ="+encodeURIComponent(this.a.url)+"&key="+key}if(this.a.defaultTab=="email")this.b=1}this.a.isEmbedded=true;var d=elid(a);if(d==null){var e=formatMessage("%1 does not exist!",[a]);alert(e)}else this.k(d)};
+var fullBase=serverBase+"/s2/sharing/resources/",BRANDED_WIDGET_HTML='<img src="'+fullBase+'static/images/email_share_button.png"/>',UNBRANDED_WIDGET_HTML=BRANDED_WIDGET_HTML.replace(".png","_unbranded.png"),LINK_ONLY_TEXT=[getMsg("Share"),getMsg("Email")],LINK_TITLE=[getMsg("Share"),getMsg("Email")],LINK_STYLE_CLASS=["google-share-l","google-email-l"],BUTTON_STYLE_CLASS=["google-share-b","google-email-b"],SHARE_BUTTON_STYLE_SUFFIX=";width:16px;height:16px;margin:-1px 0 0 1px;//margin:-2px 3px -1px -18px;//position:absolute;background:url("+
+fullBase+"static/images/icon_share.gif) no-repeat left center;} html>body span.google-share-b-icon{background-image:url("+fullBase+"static/images/icon_share.png);margin:-1px 3px 0px -19px;position:absolute;}",EMAIL_BUTTON_STYLE="a.google-email-b{font-family:arial,sans-serif;display:-moz-inline-box;display:inline-block;position:relative;padding:1px 5px 1px 18px;margin:2px 0 0;font-size:10px;text-decoration:none;color:#03c;background:#fff url("+fullBase+"static/images/icon_email.gif) no-repeat 1px center;border:1px solid #999;} a.google-email-b:hover{border:1px solid #666;background-color:#eee;text-decoration:none;}",
+SHARE_LINK_AND_ICON_STYLE="a.google-share-l{height:16px;padding:2px 4px 0 18px;background:url("+fullBase+"static/images/icon_share.gif) no-repeat left center;} html>body a.google-share-l{background-image:url("+fullBase+"static/images/icon_share.png);}",EMAIL_LINK_AND_ICON_STYLE="a.google-email-l{height:16px;padding:2px 4px 0 18px;background:url("+fullBase+"static/images/icon_email.gif) no-repeat left center;}",LINK_AND_ICON_STYLE=[SHARE_LINK_AND_ICON_STYLE,EMAIL_LINK_AND_ICON_STYLE];
+share.SharingWidget[$$PROP_prototype].j=function(a){if(a==0){var b="";b=typeof opera=="undefined"&&navigator.userAgent.indexOf("WebKit")==-1&&navigator.product=="Gecko"?"float:none":"float:left";return"a.google-share-b{font-family:arial,sans-serif;display:-moz-inline-box;display:inline-block;position:relative;padding:1px 3px 0 0;margin:0;font-size:10px;text-decoration:none;//padding:1px 3px 0 10px;//margin:0 0 0 10px;color:#03c;background:#fff;border:1px solid #999;} html>body a.google-share-b{margin:0 0 0 7px;padding:0 3px 0 10px;} a.google-share-b:hover{border:1px solid #666;background:#eee;text-decoration:none;} span.google-share-b-icon{"+
+b+SHARE_BUTTON_STYLE_SUFFIX}else return EMAIL_BUTTON_STYLE};
+share.SharingWidget[$$PROP_prototype].i=function(){if(this.d)return true;if(share.EmailWidget){this.d=new share.EmailWidget(this.a);return true}if(!this.l){var a=GLOBAL_document[$$PROP_createElement]("link");a.rel="stylesheet";a.href=fullBase+"static/html/ShareWidgetStyle.css";GLOBAL_document.getElementsByTagName("head")[0][$$PROP_appendChild](a);var b=GLOBAL_document[$$PROP_createElement]("script");b.src=serverBase+"/s2/sharing/js?script=socialsharing&key="+key+"&hl="+locale;GLOBAL_document.body[$$PROP_appendChild](b);
+this.l=b}return false};
+share.SharingWidget[$$PROP_prototype].c=function(a){a||(a=0);if(this.a.popup){if(this.d&&this.d.isVisible()){win.focus&&this.a.altWindow.focus();return}var b=0,c=0;if(win.outerWidth){b=win.screenX+(win.outerWidth-762)/2;c=win.screenY+(win.outerHeight-402)/2}else{b=win.screenLeft+(GLOBAL_document.body.clientWidth-742)/2;c=win.screenTop+(GLOBAL_document.body.clientHeight-402)/2}this.a.altWindow=win.open("","_blank","height=390px,width=740px,toolbar=no,directories=no,left="+b+",top="+c+",status=no,menubar=no,scrollbars=no,resizable=1");
+this.a.popup=false}if(this.i())this.d.display();else if(a>20){var d=getMsg("Oops!  We seem to be experiencing network problems.\nPlease check your connection and try again.");win.alert(d)}else{var e=this,f=Math.min(1<<a,1000);win.setTimeout(function(){e.c(a+1)},f)}};
+share.SharingWidget[$$PROP_prototype].k=function(a){this.n=a;if(a!=null)if(this.a.retain_div_contents){var b=this;a.onclick=function(){b.c()}}else{var c=GLOBAL_document[$$PROP_createElement]("style"),d=GLOBAL_document[$$PROP_createElement]("a");d.title=LINK_TITLE[this.b];d.href=this.a.link_href=="void"?"javascript:void(0);":"#";var b=this;share.display_now=function(){b.c()};d.onclick=function(){share.display_now();return false};var e=this.a.linkText?this.a.linkText:LINK_ONLY_TEXT[this.b];if(this.h==
+1){a.innerHTML=UNBRANDED_WIDGET_HTML;a.style.cursor="pointer";a.onclick=function(){b.c()}}else if(this.a.buttonStyle)if(this.a.buttonStyle=="link"){d[$$PROP_appendChild](GLOBAL_document[$$PROP_createTextNode](e));a[$$PROP_appendChild](d)}else if(this.a.buttonStyle=="linkAndIcon"){d[$$PROP_appendChild](GLOBAL_document[$$PROP_createTextNode](e));d.className=LINK_STYLE_CLASS[this.b];this.g(c,LINK_AND_ICON_STYLE[this.b]);this.e(a,c);a[$$PROP_appendChild](d)}else this.f(a,c,d);else this.f(a,c,d)}};
+share.SharingWidget[$$PROP_prototype].f=function(a,b,c){if(this.b==0){var d=GLOBAL_document[$$PROP_createElement]("span");d.className="google-share-b-icon";c[$$PROP_appendChild](d);c[$$PROP_appendChild](GLOBAL_document[$$PROP_createTextNode](LINK_ONLY_TEXT[0]))}else c[$$PROP_appendChild](GLOBAL_document[$$PROP_createTextNode](LINK_ONLY_TEXT[1]));c.className=BUTTON_STYLE_CLASS[this.b];this.g(b,this.j(this.b));this.e(a,b);a[$$PROP_appendChild](c)};
+share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","text/css");if(a.styleSheet)a.styleSheet.cssText=b;else{var c=GLOBAL_document[$$PROP_createTextNode](b);a[$$PROP_appendChild](c)}};share.SharingWidget[$$PROP_prototype].e=function(a,b){var c=GLOBAL_document.getElementsByTagName("head")[0];c?c[$$PROP_appendChild](b):a[$$PROP_appendChild](b)};share.ShareWidget=share.SharingWidget;share.SharingButton=share.SharingWidget;
+ })();
+</script>
+<div class="panel-head">
+  <input type="text" value="请输入搜索的内容" id="quickSearch" class="quick-search"/>&nbsp;<input type="button" id="seachBtn" value="搜索" style="display:none"/>&nbsp;<input type="button" id="resetBtn" value="还原" style="display:none"/>
+  <br/> 
+</div>
+<div id="wrapper">
+  <p id="cityList"> 城市：</p>
+  <b class="m3f"></b><b class="m4f"></b> 
+  <div class="tab-head m2f" id="tabHead"></div> 
+  <b class="m4f"></b><b class="m3f"></b>
+  <div class="hint-msg" id="hintMsg" >
+    <img src="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>
+  <div class="list-container" id="listContainer"></div> 
+  <div id="share_button" style="margin-top: 6px;"></div>
+</div> 
+<script>   
+
+function _un(str){
+  return str.replace(/&([^;]+);/g, function(s, entity){
+    switch (entity) {
+      case 'amp':
+        return '&';
+      case 'lt':
+        return '<';
+      case 'gt':
+        return '>';
+      case 'quot':
+        return '"';
+      default:
+        if (entity.charAt(0) == '#') {
+          var n = Number('0' + entity.substr(1));
+            if (!isNaN(n)) {
+              return String.fromCharCode(n);
+            }
+        }
+        return s;
+    }
+  });
+};
+
+
+function makeShareButton(){
+  if (!google || !google.share || !google.share.SharingWidget) {
+    GLog.write("failure");
+    return;
+  }
+
+  // TODO: refine the text here !!!!
+  var g = {
+    'linkText': '将此地图分享给朋友',
+    'url': 'http://ditu.google.cn/maps/mpl?moduleurl=http://www.google.cn/mapfiles/mapplets/ditu/xmas/xmas-map.xml',
+    'title': '地图--圣诞你去哪儿？',
+    'image': 'http://ditu.google.cn/intl/zh-CN_cn/images/maps_logo_beta_small.png',
+    'subject_template': _un('{FROM}邀请您一起去谷歌地图找找圣诞去哪儿？'),
+    'comments_template': _un('圣诞去哪儿呢？不用费心了，您的朋友（{FROM}）在谷歌地图上已经找到了很多好玩的地方，来看看吧 :) '),
+    'description': '圣诞去哪儿呢？不用费心了，我们已经在地图上都给你找出来了，快来看看吧。',
+    'buttonStyle': 'link',
+    'tabs': 'email,email',
+    'popup': true,
+    'nopreview': true,
+    'noaddto': true,
+    'noThumbnail': true
+  };
+  new google.share.SharingWidget("share_button", g);
+};
+
+
+var msg = {};
+msg.init = function() {
+  var isOpera = (navigator.userAgent.indexOf('opera') != -1);
+  var isIE = /msie/i.test(navigator.userAgent) && !isOpera;
+  if (isIE) {
+    document.execCommand('BackgroundImageCache', false, true);
+  }
+
+  function $(dom) {
+    return document.getElementById(dom);
+  }
+
+  var con = $('listContainer');
+  var hint = $('hintMsg');
+  var types = ['all', 'Shop', 'Cinema', 'Bar', 'KTV', 'Restaurant', 'Church'];
+  var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
+  var tabMap = [0, 4, 3, 6, 5, 1, 2];
+  var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/coupon";
+  window.initInfo = {
+    beijing:[0, 0, 0, 0, 0, 0, 0],
+    shanghai:[0, 0, 0, 0, 0, 0, 0]
+  };
+  window.reqTab = 0;
+  window.checking = false;
+  
+  window.hideTab = function(city, type) {
+    if (cities[city].marker[type]) {
+      for (var j = 0; j < cities[city].marker[type].length; j++) {
+        cities[city].marker[type][j].hide();
+      }
+    }
+  }
+  
+  window.showMarker = function(t) {
+    for (var i = 0; i < cities[curCity].marker[types[t]].length; i++) {
+      map.addOverlay(cities[curCity].marker[types[t]][i]);
+    }
+  }
+  
+  window.selectType = function(i) {
+    if (checking || (reqTab != 0)) {
+      setTimeout("setBackcolor()", 1000);
+      hint.style.backgroundColor = "#ff0";
+      return;
+    }
+    map.clearOverlays();
+    $('tab_' + lastTab).className = "";
+    $('tab_' + i).className = "selected";
+    lastTab = i;
+    if (!cities[curCity].marker[types[lastTab]]) {
+      if (lastTab != 0 && window.reqTab == 0) {
+        if (initInfo[curCity][lastTab] == 0) {
+          var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+          initInfo[curCity][lastTab] = 1;
+          window.reqTab = lastTab;
+          hint.style.display = "block";
+          _IG_FetchContent(url, onTypeData);
+        }
+        return;
+      } else if (lastTab == 0) {
+        checkLoading();
+        return;
+      }
+    } else if (lastTab == 0) {
+      window.checkLoading();
+      return;
+    }
+    if ((i != 0) && cities[curCity].html[types[i]]) {
+      con.innerHTML = cities[curCity].html[types[i]];
+      _IG_AdjustIFrameHeight();
+    }
+    showMarker(i);
+  }
+
+  function openInfoWindow(marker, item) {
+    var img = new Image();
+    img.src = item['image'];
+    img.onload = onImgLoaded(img.src, "loaded");
+    img.onerror = onImgLoaded(img.src, "error");
+    var tabs = [];
+    var local = '';
+    var imgHtml = '';
+    if(item['type'] == 'Cinema'){
+      if(curCity == 'beijing') {
+        local = '北京';
+      } else {
+        local = '上海';
+      }
+      var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
+      imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
+        "<p style='width: 400px;display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
+        "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
+        "查看最新放映电影时间表 " + 
+        "  </a>" +
+        "<a href='" + img.src + "' alt='点击查看原图'  style='display:block;width: 200px;float:right;text-align:center;' target = '_blank' >请点击查看原图</a>" + 
+        "</p>" + 
+        "<p id='demoimg_" + item['type'] + "_" + i + "' style='font-size: 12px; color: red;'>" + 
+        " <img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
+    } else {
+      imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "' style='font-size: 12px; color: red;'><img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
+    }
+    var infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
+    tabs.push(new GInfoWindowTab("图片", imgHtml));
+    tabs.push(new GInfoWindowTab("信息", infoHtml));
+    marker.openInfoWindowTabsHtml(tabs);
+
+    function onImgLoaded(src, type) {
+      return function() {
+        tabs = [];
+        var local = '';
+        var imgHtml = '';
+        if (type == 'loaded') {
+          var css = "";
+          var width = img.width;
+          var height = img.height;
+          var rw = width / 350;
+          var rh = height / 250;
+          var r = 1;
+          r = (rw > rh)?rw:rh;
+          if (r < 1) r = 1;
+          img.height = height / r;
+          img.width =  width / r;
+          css = 'height:' + img.height + ';width:' + img.width + ';';
+          if(item['type'] == 'Cinema') {
+            if(curCity == 'beijing') {
+              local = '北京';
+            } else {
+              local = '上海';
+            }
+            var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
+            imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
+              "<p style='width: 400px;display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
+              "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
+              "查看最新放映电影时间表 " + 
+              "  </a>" +
+              "<a href='" + img.src + "' alt='点击查看原图'  style='display:block;width: 200px;float:right;text-align:center;' target = '_blank' >请点击查看原图</a>" + 
+              "</p>" + 
+              "<div style='width: 400px;text-align:center; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 400px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
+       
+         } else {
+          imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:center;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击图片查看原图</a></p><div style='width: 400px;text-align:center; height:250px;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' ><img style='padding:0;margin:0;border:0;width: 400px;" + css + "' alt='preview' src='" + img.src + "'/></a></div>";
+         }
+        } else {
+          if(item['type'] == 'Cinema') {
+            if(curCity == 'beijing') {
+              local = '北京';
+            } else {
+              local = '上海';
+            }
+            var url = "http://www.google.cn/movies?q=" + encodeURIComponent(item['name']) + "&hl=zh-CN&near=" + encodeURIComponent(local);
+            imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/>" + 
+              "<p style='width: 400px;display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'>" + 
+              "  <a href='" + url + "' alt='查看影院信息' style='display:block;width: 200px;float:left;text-align:center;' target = '_blank'>" + 
+              "查看最新放映电影时间表 " + 
+              "  </a>" +
+              "<a href='" + img.src + "' alt='点击查看原图'  style='display:block;width: 200px;float:right;text-align:center;' target = '_blank' >请点击查看原图</a>" + 
+              "</p>" + 
+              "<span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
+          } else {
+            imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
+          }
+        }
+        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
+        tabs.push(new GInfoWindowTab("图片", imgHtml));
+        tabs.push(new GInfoWindowTab("信息", infoHtml));
+        marker.openInfoWindowTabsHtml(tabs);
+      }
+    }
+  }
+
+  function highlightPos(marker, item, i){
+    var url = base + "img/" + iconType0[item['type']];
+    if (window.all) {
+      $("item_all_" + window.idx).className = "over";
+      window.all = false;
+    } else if (lastTab != 0) {
+      $("item_" + item['type'] + "_" + i).className = "over";
+    }
+    marker.setImage(url);
+    map.getBoundsAsync(function(bounds) {
+      if (bounds.contains(marker.point) == false) {
+        map.panTo(marker.point);
+      }
+    });
+  }
+
+  function unhighlightPos(marker, item, i){
+    var url = base + "img/" + iconType[item['type']];
+    if (window.all) {
+      $("item_all_" + window.idx).className = "";
+      window.all = false;
+    } else if (lastTab != 0) {
+      $("item_" + item['type'] + "_" + i).className = "";
+    }
+    marker.setImage(url);
+  }
+
+  window.onTypeData = function(data) {
+    var data = eval(data);
+    if(!data) return;
+    if (!cities[curCity].all) {
+      cities[curCity]['all'] = [];
+      cities[curCity].html['all'] = [];
+      cities[curCity].marker['all'] = [];
+    }
+    cities[curCity][types[reqTab]] = data;
+    cities[curCity].html[types[reqTab]] = [];
+    cities[curCity].marker[types[reqTab]] = [];
+    if(isIE) {
+      setTimeout("onCycleData('" + 0 + "')", 100);
+      return;
+    }
+    for (var i = 0; i < data.length; i ++) {
+      var len = i;
+      var type = types[reqTab];
+      var item = data[i];
+      item['type'] = types[reqTab];
+      var g = item.g.split(",");
+      item['lat'] = parseFloat(g[1]);
+      item['lng'] = parseFloat(g[0]);
+      item['name'] = item.n;
+      item['image'] = item.i;
+      item['desc'] = item.d;
+      cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
+      "onclick=\"selectMarker('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
+      "onmouseover=\"mouseOverList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
+      "onmouseout=\"mouseOutList('" + item['type'] + "', " + cities[curCity].marker[item['type']].length + ")\"" +
+      ">" + item['name'] + "</li>";
+      var point = new GLatLng(item["lat"], item["lng"]);
+      var icon = new GIcon();
+      icon.image = base + "img/" + iconType[item['type']];
+      icon.iconSize = new GSize(36, 51);
+      icon.iconAnchor = new GPoint(18, 51);
+      icon.infoWindowAnchor = new GPoint(10, 6);
+      var marker = new GMarker(point, {
+        icon: icon,
+        title: item["name"]
+      });
+      marker.point = point;
+      map.addOverlay(marker);
+      cities[curCity].marker[item['type']].push(marker);
+      GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, item, len));
+      GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, item, len));
+      GEvent.addListener(marker, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, item, len));
+      cities[curCity].html['all'] += "<li id=\"item_all_" + cities[curCity]['all'].length + "\"" +
+      "onclick=\"selectMarker('all', " + cities[curCity].marker['all'].length + ")\"" +
+      "onmouseover=\"mouseOverList('all', " + cities[curCity].marker['all'].length + ")\"" +
+      "onmouseout=\"mouseOutList('all', " + cities[curCity].marker['all'].length + ")\"" +
+      ">" + item['name'] + "</li>";
+      cities[curCity]['all'].push(item);
+      cities[curCity].marker['all'].push(marker);
+    }
+    cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+    cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+    reqTab = 0;
+    if (window.checking) {
+      window.checkLoading();
+    } else {
+      selectType(lastTab);
+      hint.style.display = "none";
+    }
+  }
+
+  window.onCycleData = function(start) {
+    var data = cities[curCity][types[reqTab]];
+    var step = 2;
+    start = parseInt(start);
+    for (var i = start; i < data.length && i < start + step; i ++) {
+      var len = i;
+      var type = types[reqTab];
+      var item = data[i];
+      item['type'] = types[reqTab];
+      var g = item.g.split(",");
+      item['lat'] = parseFloat(g[1]);
+      item['lng'] = parseFloat(g[0]);
+      item['name'] = item.n;
+      item['image'] = item.i;
+      item['desc'] = item.d;
+      cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
+      "onclick=\"selectMarker('" + item['type'] + "', " + len + ")\"" +
+      "onmouseover=\"mouseOverList('" + item['type'] + "', " + len + ")\"" +
+      "onmouseout=\"mouseOutList('" + item['type'] + "', " + len + ")\"" +
+      ">" + item['name'] + "</li>";
+      var point = new GLatLng(item["lat"], item["lng"]);
+      var icon = new GIcon();
+      icon.image = base + "img/" + iconType[item['type']];
+      icon.iconSize = new GSize(36, 51);
+      icon.iconAnchor = new GPoint(18, 51);
+      icon.infoWindowAnchor = new GPoint(10, 6);
+      var marker = new GMarker(point, {
+        icon: icon,
+        title: item["name"]
+      });
+      marker.point = point;
+      map.addOverlay(marker);
+      cities[curCity].marker[item['type']].push(marker);
+      GEvent.addListener(marker, "click", GEvent.callbackArgs(this, openInfoWindow, marker, item, len));
+      GEvent.addListener(marker, "mouseover", GEvent.callbackArgs(this,highlightPos, marker, item, len));
+      GEvent.addListener(marker, "mouseout", GEvent.callbackArgs(this,unhighlightPos, marker, item, len));
+      cities[curCity].html['all'] += "<li id=\"item_all_" + cities[curCity]['all'].length + "\"" +
+      "onclick=\"selectMarker('all', " + cities[curCity].marker['all'].length + ")\"" +
+      "onmouseover=\"mouseOverList('all', " + cities[curCity].marker['all'].length + ")\"" +
+      "onmouseout=\"mouseOutList('all', " + cities[curCity].marker['all'].length + ")\"" +
+      ">" + item['name'] + "</li>";
+      cities[curCity]['all'].push(item);
+      cities[curCity].marker['all'].push(marker);
+    }
+    if(i == data.length) {
+      cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+      cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+      reqTab = 0;
+      if(window.checking) {
+        window.checkLoading();
+      } else {
+       i = reqTab;
+        if ((i != 0) && cities[curCity].html[types[i]]) {
+          con.innerHTML = cities[curCity].html[types[i]];
+        }
+        hint.style.display = "none";
+        _IG_AdjustIFrameHeight();
+      }
+    } else {
+      var time = step + start;
+      if(checking) {
+        con.innerHTML = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+      } else if(reqTab != 0){
+        con.innerHTML = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
+      }
+      setTimeout('onCycleData(' + time + ')', 0);
+    }
+  }
+
+  window.checkLoading = function() {
+    window.checking = true;
+    reqTab = 0;
+    for (var i = 1; i < initInfo[curCity].length; i++) {
+      if (window.reqTab == 0 && initInfo[curCity][i] == 0) {
+        var url = base + "data/" + curCity + "_" + tabMap[i] + ".json";
+        initInfo[curCity][i] = 1;
+        window.reqTab = i;
+        hint.style.display = "block";
+        _IG_AdjustIFrameHeight();
+        _IG_FetchContent(url, onTypeData);
+        return false;
+        break;
+      }
+    }
+    if (cities[curCity].html['allul'] && lastTab == 0) {
+      con.innerHTML = cities[curCity].html['allul'];
+    }
+    showMarker(0);
+    hint.style.display = "none";
+    _IG_AdjustIFrameHeight();
+    window.checking = false;
+    return true;
+  }
+  
+  window.setBackcolor = function() {
+      hint.style.backgroundColor = "#fff";
+  }
+
+  window.selectCity = function(i) {
+    if(checking || (reqTab != 0)) {
+      setTimeout("setBackcolor()", 1000);
+      hint.style.backgroundColor = "#ff0";
+      return;
+    }
+    $('city_' + curCity).className = "";
+    if (cities[curCity].marker[types[lastTab]]) {
+      for (var j = 0; j < cities[curCity].marker[types[lastTab]].length; j++) {
+        cities[curCity].marker[types[lastTab]][j].hide();
+      }
+    }
+    $('city_' + i).className = "selected";
+    if(init) hideTab(curCity, types[lastTab]);
+    curCity = i;
+    if(init) selectType(lastTab);
+    map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng));
+  }
+
+  function initCity() {
+    var root = $("cityList");
+    root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
+    root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
+    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.2</span>";
+  }
+
+  function initTabs() {
+    var root = $('tabHead');
+    for (var i = 0; i < types.length; i++) {
+      root.innerHTML += "<a href=\"javascript:selectType('" + i + "')\" title=\"" + typeNames[i] + "\" id=\"tab_" + i + "\">" + typeNames[i] + "</a>";
+    }
+    $('tab_0').className = "selected";
+  }
+
+  var cities = {
+    beijing : {
+      name:"北京",
+      lat:39.9056,
+      lng:116.3958,
+      html: [],
+      marker: []
+    },
+    shanghai : {
+      name:"上海",
+      lat:31.2222,
+      lng:121.4790,
+      html: [],
+      marker: []
+    }
+  };
+  var curCity = 'beijing';
+  var map = new GMap2();
+  map.setCenter(new GLatLng(cities[curCity].lat, cities[curCity].lng), 12);
+  var icons = ['', 'shoppingcart.png', 'cinema.png', 'bar.png', 'music.png', 'restaurant.png', 'medical.png'];
+  var icons0 = ['', 'shoppingcart0.png', 'cinema0.png', 'bar0.png', 'music0.png', 'restaurant0.png', 'medical0.png'];
+  var iconType = {};
+  var iconType0 = {};
+  for (var i = 0; i < types.length; i++) {
+    iconType[types[i]] = icons[i];
+    iconType0[types[i]] = icons0[i];
+  }
+
+  window.selectMarker = function(type, i) {
+    GEvent.trigger(cities[curCity].marker[type][i], 'click');
+  }
+
+  window.mouseOverList = function(type, i) {
+    if (type == 'all') {
+      window.all = true;
+      window.idx = i;
+      $("item_all_" + window.idx).className = "over";
+      window.all = false;
+    } else if (lastTab != 0) {
+      $("item_" + type + "_" + i).className = "over";
+    }
+  }
+
+  window.mouseOutList = function(type, i) {
+    if(type == 'all') {
+      window.all = true;
+      window.idx = i;
+      $("item_all_" + window.idx).className = "";
+      window.all = false;
+    } else if (lastTab != 0) {
+      $("item_" + type + "_" + i).className = "";
+    }
+  }
+
+  var init = false;
+  initCity();
+  initTabs();
+  var lastTab = 0;
+  var page = 0;
+  var limit = 20;
+  selectCity('beijing');
+  selectType(1);
+  init = true;
+  window.cities = cities;
+  window.types = types;
+  window.curCity = curCity;
+  window.lastTab = lastTab;
+  window.map = map;
+  window.page = page;
+  window.limit = limit;
+
+  var initSearchBar = function() {
+    var search = $('quickSearch');
+    var onclickSearch = function() {
+      search = $('quickSearch');
+      if(search.value == '请输入搜索的内容') {
+        search.value = "";
+      }
+      search.style.color = "#000";
+      }
+
+    window.onSearchTimer = function() {
+      var search = $("quickSearch");
+      var key = search.value;
+      if (!key) {
+        if ((i != 0) && cities[curCity].html[types[i]]) {
+          con.innerHTML = cities[curCity].html[types[i]];
+        } else {
+          con.innerHTML = cities[curCity].html['allul'];
+        }
+        _IG_AdjustIFrameHeight();
+        return;
+      }
+      var str = "";
+      var nodes = con.childNodes[0].childNodes;
+      for(var i = 0, node; node = nodes[i]; i++){
+        if(node.innerHTML.indexOf(key) == -1){
+          node.style.display = "none";
+        } else {
+          node.style.display = "block";
+        }
+      }
+      _IG_AdjustIFrameHeight();
+    }
+
+    window.onSearch = function(event) {
+      clearTimeout();
+      setTimeout("onSearchTimer()", 1000);
+    }
+
+    GEvent.addDomListener(search, "click", onclickSearch);
+    if (isIE) {
+      var version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+      if(version == 6){
+        var msg = new _IG_MiniMessage(__MODULE_ID__);
+        var tip = msg.createDismissibleMessage("为获得更佳的速度和体验，建议把您当前的浏览器升级到IE7.0及以上版本，或者改用其他非IE浏览器（比如<a target='_blank' href='http://www.mozillaonline.com/'>火狐浏览器</a>或者<a target='_blank' href='http://www.google.com/chrome/index.html?hl=zh_cn'>谷歌浏览器</a>）。");
+        tip.style.fontSize = "12px";
+        tip.style.fontWeight = "normal";
+      }
+      
+      var searchBtn = $('seachBtn');
+      searchBtn.style.display = "";
+      GEvent.addDomListener(searchBtn, "click", function(){
+        if(search.value && search.value != '请输入搜索的内容') {
+          window.onSearch();
+        }
+      });
+      GEvent.addDomListener(search, "keydown", function(e){
+        e = e || window.event;
+        var keyCode = e.keyCode || e.which || e.charCode;
+        if(keyCode == 13)
+          window.onSearch();
+      });
+      var resetBtn = $('resetBtn');
+      resetBtn.style.display = "";
+      GEvent.addDomListener(resetBtn, "click", function(){
+        search.value = "";
+        window.onSearch();
+      });
+    } else {
+      GEvent.addDomListener(search, "keyup", window.onSearch);
+    }
+    
+    window.onSearchBlur = function(event) {
+      var search = $('quickSearch');
+      if (!search.value) {
+        search.value = "请输入搜索的内容";
+        search.style.color = "#999";
+      }
+    }
+    GEvent.addDomListener(search, "blur", onSearchBlur);
+  }
+  initSearchBar();
+  makeShareButton();
+}
+
+window['xmasinit'] = {
+  init: msg.init()
+}
+_IG_RegisterOnloadHandler(xmasinit.init);
+</script> 
+]]></Content> 
+</Module> 
