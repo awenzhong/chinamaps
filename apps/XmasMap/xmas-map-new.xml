@@ -311,6 +311,7 @@ msg.init = function() {
 
   function equal(str1, str2)
   {
+    debug("inside equal");
     debug(str1 + "长度:" + strl.length + ", " + str2 + "长度:" + str2.length);
     debug('str1.indexOf(str2)' + str1.indexOf(str2));
     if((str1.length == str2.length) && (str1.indexOf(str2) != -1)) return true;
@@ -324,6 +325,7 @@ msg.init = function() {
         var shop = cities[discountCity]['Shop'];
         if (!shop) return;
         for (var n = 0; n < shop.length; n++) {
+        debug("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
         debug("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
         if (equal(shop[n]['name'], data[k]['n'])) {
                 alert("find data");
