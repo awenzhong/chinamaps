@@ -599,7 +599,7 @@ msg.init = function() {
       if(types[reqTab] == 'Shop'){
         if ( !cities[curCity]['discount'] && !discountCity) {
           var disUrl = base + "data/" + curCity + "_discount.json";
-          alert(disUrl);
+          debug(disUrl);
           discountCity = curCity;
           _IG_FetchContent(disUrl, onGetDiscount);
         }
