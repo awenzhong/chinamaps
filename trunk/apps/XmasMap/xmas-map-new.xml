@@ -308,9 +308,7 @@ msg.init = function() {
         var shop = cities[discountCity]['Shop'];
         if (!shop) return;
         for (var n = 0; n < shop.length; n++) {
-        alert("shop[n]['name'] = " + shop[n]['name'] + ", length = " + shop[n]['name'].length + " data[k]['n'] = " + data[k]['n'] + ", length = " + data[k]['n'].length);
         if (shop[n]['name'] === data[k]['n']) {
-                alert("find data");
             shop[n]['discount'] = data[k]['c'];
           }
         }
@@ -517,7 +515,6 @@ msg.init = function() {
     if(types[reqTab] == 'Shop'){
       if ( !cities[curCity]['discount'] && !discountCity) {
         var disUrl = base + "data/" + curCity + "_discount.json";
-        alert("url = " + disUrl);
         discountCity = curCity;
         _IG_FetchContent(disUrl, onGetDiscount);
       }
@@ -543,7 +540,7 @@ msg.init = function() {
       var g = item.g.split(",");
       item['lat'] = parseFloat(g[1]);
       item['lng'] = parseFloat(g[0]);
-      item['name'] = item.n;
+      item['name'] = item.n.replace(/\s/ig, '');
       item['image'] = item.i;
       item['desc'] = item.d;
       cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
@@ -581,7 +578,6 @@ msg.init = function() {
       if(types[reqTab] == 'Shop'){
         if ( !cities[curCity]['discount'] && !discountCity) {
           var disUrl = base + "data/" + curCity + "_discount.json";
-          alert(disUrl);
           discountCity = curCity;
           _IG_FetchContent(disUrl, onGetDiscount);
         }
