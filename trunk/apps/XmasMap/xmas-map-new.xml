@@ -306,7 +306,7 @@ msg.init = function() {
   function debug(str)
   {
     var dg = $('debug');
-    db.innerHTML += str + '<br/>';
+    dg.innerHTML += str + '<br/>';
   }
 
   function equal(str1, str2)
@@ -533,7 +533,7 @@ msg.init = function() {
     if(types[reqTab] == 'Shop'){
       if ( !cities[curCity]['discount'] && !discountCity) {
         var disUrl = base + "data/" + curCity + "_discount.json";
-        alert("url = " + disUrl);
+        debug("url = " + disUrl);
         discountCity = curCity;
         _IG_FetchContent(disUrl, onGetDiscount);
       }
