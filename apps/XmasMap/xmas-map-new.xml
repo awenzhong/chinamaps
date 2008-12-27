@@ -307,9 +307,9 @@ msg.init = function() {
       data = eval(data);
       for (var k = 0; k < data.length; k++) {
         var shop = cities[discountCity]['Shop'];
-        alert("shop = " + shop);
         if (!shop) return;
         for (var n = 0; n < shop.length; n++) {
+        alert("shop[n]['name'] = " + shop[n]['name'] + "data[k]['n'] = " + data[k]['n']);
         if (shop[n]['name'] == data[k]['n']) {
                 alert("find data");
             shop[n]['discount'] = data[k]['c'];
