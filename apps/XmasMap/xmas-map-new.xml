@@ -309,12 +309,12 @@ msg.init = function() {
     dg.innerHTML += str + '<br/>';
   }
 
-  function equal(str1, str2)
+  function equal(left, right)
   {
     debug("inside equal");
-    debug(str1 + "长度:" + strl.length + ", " + str2 + "长度:" + str2.length);
-    debug('str1.indexOf(str2)' + str1.indexOf(str2));
-    if((str1.length == str2.length) && (str1.indexOf(str2) != -1)) return true;
+    debug(left + "长度:" + left.length + ", " + right + "长度:" + right.length);
+    debug('str1.indexOf(str2)' + left.indexOf(right));
+    if((left.length == right.length) && (left.indexOf(right) != -1)) return true;
     return false;
   }
 
