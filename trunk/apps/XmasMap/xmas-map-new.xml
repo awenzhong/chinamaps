@@ -353,9 +353,9 @@ msg.init = function() {
     var discount = '';
     var dis = item['discount']?item['discount']:false;
     if (dis) {
-      discount = "<br/><br/><h5>促销信息<h5>";
+      discount = "<br/><br/><h4>促销信息<h4>";
       for (var m = 0; m < dis.length; m++) {
-        discount += "<a href='" + dis[m].u + "' target='_blank'>" + dis[m].t + "</a><br/>";
+        discount += "<a style="font-size: 14px;" href='" + dis[m].u + "' target='_blank'>" + dis[m].t + "</a><br/>";
       }
     }
     var infoHtml = "<div style='width:400px;font-size:13px;'>" + item["desc"] + discount + "</div>";
