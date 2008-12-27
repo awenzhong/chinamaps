@@ -170,7 +170,6 @@ share.SharingWidget[$$PROP_prototype].g=function(a,b){a.setAttribute("type","tex
   <b class="m3f"></b><b class="m4f"></b> 
   <div class="tab-head m2f" id="tabHead"></div> 
   <b class="m4f"></b><b class="m3f"></b>
-  <div id="debug"></div>
   <div class="hint-msg" id="hintMsg" >
     <img src="http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/loading.gif"/>&nbsp;正在加载中,请耐心等待...</div>
   <div class="list-container" id="listContainer"></div> 
@@ -301,23 +300,7 @@ msg.init = function() {
       _IG_AdjustIFrameHeight();
     }
     showMarker(i);
-    }
-
-  function debug(str)
-  {
-    var dg = $('debug');
-    dg.innerHTML += str + '<br/>';
   }
-
-  function equal(left, right)
-  {
-    debug("inside equal");
-    debug(left + "长度:" + left.length + ", " + right + "长度:" + right.length);
-    debug('str1.indexOf(str2)' + left.indexOf(right));
-    if((left.length == right.length) && (left.indexOf(right) != -1)) return true;
-    return false;
-  }
-
   function onGetDiscount(data) {
     try{
       data = eval(data);
@@ -325,10 +308,8 @@ msg.init = function() {
         var shop = cities[discountCity]['Shop'];
         if (!shop) return;
         for (var n = 0; n < shop.length; n++) {
-        debug("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
-        debug("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
-        if (equal(shop[n]['name'], data[k]['n'])) {
-                debug("find data");
+        if (shop[n]['name'] == data[k]['n']) {
+                alert("find data");
             shop[n]['discount'] = data[k]['c'];
           }
         }
@@ -535,7 +516,7 @@ msg.init = function() {
     if(types[reqTab] == 'Shop'){
       if ( !cities[curCity]['discount'] && !discountCity) {
         var disUrl = base + "data/" + curCity + "_discount.json";
-        debug("url = " + disUrl);
+        alert("url = " + disUrl);
         discountCity = curCity;
         _IG_FetchContent(disUrl, onGetDiscount);
       }
@@ -599,7 +580,7 @@ msg.init = function() {
       if(types[reqTab] == 'Shop'){
         if ( !cities[curCity]['discount'] && !discountCity) {
           var disUrl = base + "data/" + curCity + "_discount.json";
-          debug(disUrl);
+          alert(disUrl);
           discountCity = curCity;
           _IG_FetchContent(disUrl, onGetDiscount);
         }
