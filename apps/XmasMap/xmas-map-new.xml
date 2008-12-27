@@ -301,6 +301,13 @@ msg.init = function() {
     }
     showMarker(i);
   }
+
+  function equal(str1, str2)
+  {
+    if((str1.length == str2.length) && (str1.indexOf(str2) != -1)) return true;
+    return false;
+  }
+
   function onGetDiscount(data) {
     alert("data = " + data);
     try{
@@ -309,8 +316,8 @@ msg.init = function() {
         var shop = cities[discountCity]['Shop'];
         if (!shop) return;
         for (var n = 0; n < shop.length; n++) {
-        alert("shop[n]['name'] = " + shop[n]['name'] + "data[k]['n'] = " + data[k]['n']);
-        if (shop[n]['name'] == data[k]['n']) {
+        alert("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
+        if (equal(shop[n]['name'] == data[k]['n'])) {
                 alert("find data");
             shop[n]['discount'] = data[k]['c'];
           }
