@@ -302,6 +302,7 @@ msg.init = function() {
     showMarker(i);
   }
   function onGetDiscount(data) {
+    alert("data = " + data);
     try{
       data = eval(data);
       for (var k = 0; k < data.length; k++) {
@@ -515,6 +516,7 @@ msg.init = function() {
     if(types[reqTab] == 'Shop'){
       if ( !cities[curCity]['discount'] && !discountCity) {
         var disUrl = base + "data/" + curCity + "_discount.json";
+        alert("url = " + disUrl);
         discountCity = curCity;
         _IG_FetchContent(disUrl, onGetDiscount);
       }
@@ -578,6 +580,7 @@ msg.init = function() {
       if(types[reqTab] == 'Shop'){
         if ( !cities[curCity]['discount'] && !discountCity) {
           var disUrl = base + "data/" + curCity + "_discount.json";
+          alert(disUrl);
           discountCity = curCity;
           _IG_FetchContent(disUrl, onGetDiscount);
         }
@@ -656,7 +659,7 @@ msg.init = function() {
     var root = $("cityList");
     root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
     root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.2</span>";
+    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.3</span>";
   }
 
   function initTabs() {
