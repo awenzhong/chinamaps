@@ -328,7 +328,7 @@ msg.init = function() {
         debug("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
         debug("shop[n]['name'] = '" + shop[n]['name'] + "', data[k]['n'] = '" + data[k]['n'] + "'");
         if (equal(shop[n]['name'], data[k]['n'])) {
-                alert("find data");
+                debug("find data");
             shop[n]['discount'] = data[k]['c'];
           }
         }
