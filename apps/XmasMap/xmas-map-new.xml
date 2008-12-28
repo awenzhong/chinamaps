@@ -353,7 +353,7 @@ msg.init = function() {
     var discount = '';
     var dis = item['discount']?item['discount']:false;
     if (dis) {
-      discount = "<br/><br/>促销信息<br/>";
+      discount = "<br/><br/>最新活动<br/>";
       for (var m = 0; m < dis.length; m++) {
         discount += "<a href='" + dis[m].u + "' target='_blank'>" + dis[m].t + "</a><br/>";
       }
