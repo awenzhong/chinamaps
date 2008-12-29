@@ -245,6 +245,7 @@ msg.init = function() {
   var typeNames = ['全部', '商场', '影院','酒吧', 'KTV', '餐饮', '教堂'];
   var tabMap = [0, 4, 3, 6, 5, 1, 2];
   var base = "http://chinamaps.googlecode.com/svn/trunk/apps/XmasMap/";
+  var discountCity = "";
   window.initInfo = {
     beijing:[0, 0, 0, 0, 0, 0, 0],
     shanghai:[0, 0, 0, 0, 0, 0, 0]
@@ -300,6 +301,25 @@ msg.init = function() {
     }
     showMarker(i);
   }
+  function onGetDiscount(data) {
+    try{
+      data = eval(data);
+      for (var k = 0; k < data.length; k++) {
+        var shop = cities[discountCity]['Shop'];
+        if (!shop) return;
+        for (var n = 0; n < shop.length; n++) {
+        if (shop[n]['name'] === data[k]['n']) {
+            shop[n]['discount'] = data[k]['c'];
+          }
+        }
+      }
+    } catch (e) {
+      data = [];
+    }
+    discountCity = ""
+    cities[curCity]['discount'] = true;
+  }
+
 
   function openInfoWindow(marker, item) {
     var img = new Image();
@@ -309,6 +329,7 @@ msg.init = function() {
     var tabs = [];
     var local = '';
     var imgHtml = '';
+    var infoHtml = '';
     if(item['type'] == 'Cinema'){
       if(curCity == 'beijing') {
         local = '北京';
@@ -328,7 +349,16 @@ msg.init = function() {
     } else {
       imgHtml = "<span style='font-size:13px;'>" + item["name"] + "</span><br/><p style='display: block;font-size: 12px; color: red; padding-right:3px;text-align:right;'><a href='" + img.src + "' alt='点击查看原图'  target = '_blank' >请点击查看原图</a></p><p id='demoimg_" + item['type'] + "_" + i + "' style='font-size: 12px; color: red;'><img src='" + base + "loading.gif'/>&nbsp;正在加载中,请耐心等待...</p>";
     }
-    var infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
+
+    var discount = '';
+    var dis = item['discount']?item['discount']:false;
+    if (dis) {
+      discount = "<br/><br/>最新活动<br/>";
+      for (var m = 0; m < dis.length; m++) {
+        discount += "<a href='" + dis[m].u + "' target='_blank'>" + dis[m].t + "</a><br/>";
+      }
+    }
+    var infoHtml = "<div style='width:400px;font-size:13px;'>" + item["desc"] + discount + "</div>";
     tabs.push(new GInfoWindowTab("图片", imgHtml));
     tabs.push(new GInfoWindowTab("信息", infoHtml));
     marker.openInfoWindowTabsHtml(tabs);
@@ -389,7 +419,6 @@ msg.init = function() {
             imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
           }
         }
-        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
         tabs.push(new GInfoWindowTab("图片", imgHtml));
         tabs.push(new GInfoWindowTab("信息", infoHtml));
         marker.openInfoWindowTabsHtml(tabs);
@@ -447,7 +476,7 @@ msg.init = function() {
       var g = item.g.split(",");
       item['lat'] = parseFloat(g[1]);
       item['lng'] = parseFloat(g[0]);
-      item['name'] = item.n;
+      item['name'] = item.n.replace(/\s/ig, '');
       item['image'] = item.i;
       item['desc'] = item.d;
       cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
@@ -481,6 +510,14 @@ msg.init = function() {
     }
     cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
     cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+
+    if(types[reqTab] == 'Shop'){
+      if ( !cities[curCity]['discount'] && !discountCity) {
+        var disUrl = base + "data/" + curCity + "_discount.json";
+        discountCity = curCity;
+        _IG_FetchContent(disUrl, onGetDiscount);
+      }
+    }
     reqTab = 0;
     if (window.checking) {
       window.checkLoading();
@@ -502,7 +539,7 @@ msg.init = function() {
       var g = item.g.split(",");
       item['lat'] = parseFloat(g[1]);
       item['lng'] = parseFloat(g[0]);
-      item['name'] = item.n;
+      item['name'] = item.n.replace(/\s/ig, '');
       item['image'] = item.i;
       item['desc'] = item.d;
       cities[curCity].html[item['type']] += "<li id=\"item_" + item['type'] + "_" + len + "\" " +
@@ -537,6 +574,13 @@ msg.init = function() {
     if(i == data.length) {
       cities[curCity].html[types[reqTab]] = "<ul id=\"ul_" + curCity + "_" + types[reqTab] + "\">" + cities[curCity].html[types[reqTab]] + "</ul>";
       cities[curCity].html['allul'] = "<ul id=\"ul_" + curCity + "_all\">" + cities[curCity].html['all'] + "</ul>";
+      if(types[reqTab] == 'Shop'){
+        if ( !cities[curCity]['discount'] && !discountCity) {
+          var disUrl = base + "data/" + curCity + "_discount.json";
+          discountCity = curCity;
+          _IG_FetchContent(disUrl, onGetDiscount);
+        }
+      }
       reqTab = 0;
       if(window.checking) {
         window.checkLoading();
@@ -611,7 +655,7 @@ msg.init = function() {
     var root = $("cityList");
     root.innerHTML += "<a href=\"javascript:selectCity('beijing')\" title=\"" + cities['beijing'].name + "\" id=\"city_beijing\">" + cities['beijing'].name + "</a>";
     root.innerHTML += "<a href=\"javascript:selectCity('shanghai')\" title=\"" + cities['shanghai'].name + "\" id=\"city_shanghai\">" + cities['shanghai'].name + "</a>";
-    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.2</span>";
+    root.innerHTML += "&nbsp; <span style='color:#fff;'> ver 2.3</span>";
   }
 
   function initTabs() {
