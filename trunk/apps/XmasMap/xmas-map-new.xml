@@ -419,7 +419,6 @@ msg.init = function() {
             imgHtml = "<span style='font-size:13px;'>"+ item["name"]+"</span><br/><span style='display: block;font-size: 12px; color: red; padding-top:30px;text-align:center;'>图片加载失败</span><br/><a  style='display: block;font-size: 12px; color: blue; padding-top:30px;text-align:center;' target = '_blank' href='" + img.src + "'>查看原链接</a>";
           }
         }
-        //        infoHtml = "<div style='width:400px;font-size:13px;'>"+item["desc"]+"</div>";
         tabs.push(new GInfoWindowTab("图片", imgHtml));
         tabs.push(new GInfoWindowTab("信息", infoHtml));
         marker.openInfoWindowTabsHtml(tabs);
