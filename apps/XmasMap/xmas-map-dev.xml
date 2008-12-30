@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-<ModulePrefs title="圣诞节你去哪儿？"
+<ModulePrefs title="节日你去哪儿？"
              author="Fei Chen"
              author_email="chinamaps-devtools+xmasmap@google.com"
              author_affiliation="Google China"
-             description="圣诞节信息查询"
+             description="节日信息查询"
              screenshot=""
              thumbnail=""
              height="420">
