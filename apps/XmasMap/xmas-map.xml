@@ -130,7 +130,7 @@ div, p, ul, li {
 }
 #cityList a.selected {
   font-weight: bold;
-	background-color: #9900FF;
+  background-color: #9900FF;
   color: #fff;
 }
 #searchBtn {
@@ -301,6 +301,7 @@ msg.init = function() {
     }
     showMarker(i);
   }
+
   function onGetDiscount(data) {
     try{
       data = eval(data);
