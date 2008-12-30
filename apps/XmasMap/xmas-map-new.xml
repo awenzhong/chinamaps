@@ -130,7 +130,7 @@ div, p, ul, li {
 }
 #cityList a.selected {
   font-weight: bold;
-  background-color: #2244dd;
+	background-color: #9900FF;
   color: #fff;
 }
 #searchBtn {
@@ -138,9 +138,9 @@ div, p, ul, li {
 }
 
 .m3f,.m4f{font-size:1px;overflow:hidden;display:block;height:1px;}
-.m4f {margin:0 1px; border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
-.m3f {background:#000; margin:0 2px;}
-.m2f {border-right: 1px solid #000; border-left: 1px solid #000; background-color: #37a05e;}
+.m4f {margin:0 1px; border-right: 1px solid #FA0903; border-left: 1px solid #FA0903; background-color: #FA0903;}
+.m3f {background:#FA0903; margin:0 2px;}
+.m2f {border-right: 1px solid #FA0903 ; border-left: 1px solid #FA0903 ; background-color: #FA0903;}
 </style> 
 <script type="text/javascript">window.serverBase="http://www.google.ca";window.apiKey="";window.locale="zh_CN";window.js_messages={'Email':'\u7535\u5b50\u90ae\u4ef6','Please add your email address to the From: field':'\u8bf7\u5c06\u60a8\u7684\u7535\u5b50\u90ae\u4ef6\u5730\u5740\u6dfb\u52a0\u5230\u201c\u5bc4\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5','Oops! A popup blocker is preventing the bookmarklet from opening. Try holding the Shift key and clicking on the bookmarklet again.':'\u7cdf\u7cd5\uff01\u5f39\u51fa\u7a97\u53e3\u963b\u6b62\u7a0b\u5e8f\u963b\u6b62\u4e66\u7b7e\u6253\u5f00\u3002\u8bf7\u5c1d\u8bd5\u6309\u4f4f Shift \u952e\u518d\u6b21\u70b9\u51fb\u4e66\u7b7e\u3002','Google - Email / Share':'Google - \u7535\u5b50\u90ae\u4ef6/\u5171\u4eab','Edit this shared item':'\u7f16\u8f91\u6b64\u5171\u4eab\u9879\u76ee','Please enter valid email addresses in the To: field':'\u8bf7\u5728\u201c\u6536\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5\u8f93\u5165\u6709\u6548\u7684\u7535\u5b50\u90ae\u4ef6\u5730\u5740','Are you sure you want to remove this shared item?':'\u786e\u5b9e\u8981\u5220\u9664\u8be5\u5171\u4eab\u9879\u76ee\u5417\uff1f','Please enter a valid email address in the From: field':'\u8bf7\u5728\u201c\u5bc4\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5\u8f93\u5165\u6709\u6548\u7684\u7535\u5b50\u90ae\u4ef6\u5730\u5740','Share':'\u5171\u4eab','Oops! We seem to be experiencing network problems. Please check your connection and try again.':'\u7cdf\u7cd5\uff01\u6211\u4eec\u4f3c\u4e4e\u9047\u5230\u4e86\u7f51\u7edc\u95ee\u9898\u3002\u8bf7\u68c0\u67e5\u60a8\u7684\u8fde\u63a5\u5e76\u91cd\u8bd5\u3002','%1 does not exist!':'%1 \u4e0d\u5b58\u5728\uff01','Add a comment...':'\u6dfb\u52a0\u8bc4\u8bba...','Please add recipients to the To: field':'\u8bf7\u5c06\u6536\u4ef6\u4eba\u6dfb\u52a0\u5230\u201c\u6536\u4ef6\u4eba\uff1a\u201d\u5b57\u6bb5'};(function() { 
 var GLOBAL_document=document,$$PROP_appendChild="appendChild",$$PROP_prototype="prototype",$$PROP_createTextNode="createTextNode",$$PROP_createElement="createElement";function replaceAll(a,b,c){if(b.length==0)return a;var d=a.indexOf(b);while(d>-1){a=a.replace(b,c);d=a.indexOf(b)}return a}var messages=window.js_messages;function formatMessage(a,b){a=getMsg(a);if(b&&b.length)for(var c=0;c<b.length;c++)a=replaceAll(a,"%"+(c+1),b[c]);return a}
