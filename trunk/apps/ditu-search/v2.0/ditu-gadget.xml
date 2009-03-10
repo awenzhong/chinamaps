@@ -8,8 +8,8 @@
     author_affiliation="Google" 
     author_location="Beijing, China" 
     author_email="googlemodules+ditusearch@google.com" 
-    screenshot="/ig/modules/mapsearch.png" 
-    thumbnail="/ig/modules/mapsearch-thm.png"
+    screenshot="http://gadgetlab.googlecode.com/svn/trunk/mapsearch/v2.0/ditusearch.png" 
+    thumbnail="http://gadgetlab.googlecode.com/svn/trunk/mapsearch/v2.0/mapsearch-thm.png"
     height="410" 
     scrolling="false" 
     render_inline="optional" 
@@ -104,7 +104,7 @@ div, p, a, span{
 }
 </style>
 <script src="http://www.google.com/jsapi?hl=zh-CN&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTA88Ja3eVS5h82c7xtCgVhRculDRS9egijnXNfT4oxbCdUc9hGjeJZ1Q" type="text/javascript"></script>
-<script src="http://ditu.google.cn/?file=api&amp;v=2.x&amp;hl=zh-CN&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTA88Ja3eVS5h82c7xtCgVhRculDRS9egijnXNfT4oxbCdUc9hGjeJZ1Q" type="text/javascript"></script>
+<script src="http://maps.google.com/?file=api&amp;v=2.x&amp;hl=zh-CN&amp;key=ABQIAAAA91OZMiOe8VfhdtstxQrBBxTA88Ja3eVS5h82c7xtCgVhRculDRS9egijnXNfT4oxbCdUc9hGjeJZ1Q" type="text/javascript"></script>
   <div class="wrapper" id="wrapper">
     <div class="map-container" id="mapContainer"></div>
     <img style="padding:5px;" id="loadingImg" src="http://gadgetlab.googlecode.com/svn/trunk/mapsearch/v2.0/loading_circle.gif"/>
