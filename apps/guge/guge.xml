@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module> 
+<ModulePrefs title="“谷鸽”飞行路线图"
+             author=""
+             author_email=""
+             author_affiliation="Google"
+             description="“谷鸽”飞行路线图"
+             screenshot=""
+             height="200"
+             width="300"
+             thumbnail=""> 
+  <Require feature="sharedmap" /> 
+</ModulePrefs> 
+<Content type="html"><![CDATA[
+<style>
+div, p{
+  margin:0;
+  border:0;
+  padding:0;
+}
+.wrapper {
+  font-size:13px;
+  width:250px;
+  margin:5px;
+}
+.radar, .message{
+  text-align:center;
+  margin-top:10px;
+}
+.radar img, .radar input, .radar span, .message span{
+  display:block;
+  text-align:center;
+  margin:auto;
+}
+#tip{
+  color:#ff0000;
+}
+.msg-title{
+  
+  font-weight:bolder;
+  font-size:1.1em;
+  color:#666666;
+}
+</style> 
+  <div class="wrapper" style="display:none">
+    <p class="radar">
+      <span id="tip"></span>
+    </p>
+    <p id="message" class="message"></p>
+  </div>
+<script>   
+  (function(){
+  var mgr = (function(){
+    var map = null;
+    function initMap(){
+      map = new GMap2();
+      map.setCenter(new GLatLng(32.0, 99.0), 4);
+    }
+    return {
+      init: function(){
+        initMap();
+      }
+    }
+  })();
+  
+  window['guge'] = {
+    'init': mgr.init
+  }
+})();
+
+_IG_RegisterOnloadHandler(guge.init);
+</script> 
+]]></Content> 
+</Module> 
