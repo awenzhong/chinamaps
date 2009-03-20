@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module> 
-<ModulePrefs title="“谷鸽”飞行路线图"
+<ModulePrefs title="Google Mapplet Demo"
              author=""
              author_email=""
              author_affiliation="Google"
-             description="“谷鸽”飞行路线图"
+             description="Google Mapplet Demo"
              screenshot=""
              height="200"
              width="300"
