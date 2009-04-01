@@ -362,7 +362,7 @@ body, div, p{
         if (photo['photo_id'] == imgId) {
           var html = "<div><h3>"+photo["photo_title"]+"</h3>";
           html += "<div style='width:" + image.width + "px;height:" + image.height + "px;'><img src='" + image.src + "'/></div>";
-          html += "<p style='text-align:right;color:#666;font-size:0.8em;margin-top:3px;'>&copy; 图片为<span style='color:#333333;'>Panaramio</span>相关用户版权所有<a href='"+photo['photo_url']+"' target='_blank' style='display:block;'>查看详图</a></p>";
+          html += "<p style='text-align:right;color:#666;font-size:0.8em;margin-top:3px;'>&copy; 图片为<span style='color:#333333;'>Panoramio</span>相关用户版权所有<a href='"+photo['photo_url']+"' target='_blank' style='display:block;'>查看详图</a></p>";
           html += "</div>"
           marker.openInfoWindowHtml(html);
         }
