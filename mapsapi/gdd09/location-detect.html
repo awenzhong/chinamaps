@@ -4,11 +4,9 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>地址探测</title>
-    <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&hl=zh-CN&gl=cn"></script>
-    <script src="http://ditu.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&hl=zh-CN"
-            type="text/javascript"></script>
+    <script type="text/javascript" src="http://www.google.cn/jsapi?key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&hl=zh-CN&gl=cn"></script>
     <script type="text/javascript">
-
+    google.load("maps", "2.x", {base_domain: "ditu.google.cn", language: "zh-CN"});
     function initialize() {
       if (GBrowserIsCompatible()) {
         // Initialize default values
@@ -21,9 +19,10 @@
           alert('你的IP地址属于：' + google.loader.ClientLocation.address.city);
           latlng = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
         }
-        var map = new GMap2(document.getElementById("map_canvas"));
+        var map = new google.maps.Map2(document.getElementById("map_canvas"));
         map.setCenter(latlng, zoom);
       }
+      google.setOnLoadCallback(initialize);
     }
 
     </script>
