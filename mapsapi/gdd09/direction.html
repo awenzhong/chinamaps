@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>Google 地图 API 示例: 路线规划</title>
-    <script src=" http://ditu.google.cn/?file=api&amp;v=2.x&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ"
+    <script src=" http://ditu.google.cn/?file=api&amp;v=2.x&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&sensor=false"
       type="text/javascript"></script>
     <style type="text/css">
       body {
@@ -30,7 +30,7 @@
       if (GBrowserIsCompatible()) {      
         map = new GMap2(document.getElementById("map_canvas"));
         gdir = new GDirections(map, document.getElementById("directions"));
-//        GEvent.addListener(gdir, "load", onGDirectionsLoad);
+        // GEvent.addListener(gdir, "load", onGDirectionsLoad);
         GEvent.addListener(gdir, "error", handleErrors);
 
         setDirections("北京", "上海", "zh-CN");

@@ -4,14 +4,15 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title>Google 地图 API 示例: 地址解析 / 反向地址解析</title>
-    <script src="http://ditu.google.cn/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ" 
-            type="text/javascript"></script>
+    <script src="http://ditu.google.cn/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&sensor=false" type="text/javascript"></script>
     <script type="text/javascript">
 
     var map;
     var geocoder;
     
-    function $(id){return document.getElementById(id);}
+    function $(id){
+      return document.getElementById(id);
+    }
 
     function initialize() {
       map = new GMap2(document.getElementById("map_canvas"));
@@ -32,43 +33,28 @@
         marker.openInfoWindowHtml(getGeocodeHtml(response));
       }
     }
+
     function getGeocodeHtml(response){
       var html = "<div style='font-size:13px'>";
-      html += "<b>搜索目标：</b>"+response.name;
-      html += "<br/><b>结果状态：</b>"+response.Status.code;
-      if(response.Placemark){
+      html += "<b>搜索目标：</b>" + response.name;
+      html += "<br/><b>结果状态：</b>" + response.Status.code;
+      if (response.Placemark){
         for (var i = 0, place; place = response.Placemark[i]; i++) {
-          html += "<br/><b>地址：</b>"+place.address;
-          if(place.AddressDetails.Country)html += "<br/><b>国家代码：</b>"+place.AddressDetails.Country.CountryNameCode;
-          html += "<br/><b>准确度：</b>"+place.AddressDetails.Accuracy;
-          html += "<br/><b>坐标：</b>"+place.Point.coordinates[1]+place.Point.coordinates[0];
+          html += "<br/><b>地址：</b>" + place.address;
+          if(place.AddressDetails.Country)html += "<br/><b>国家代码：</b>" +place.AddressDetails.Country.CountryNameCode;
+          html += "<br/><b>准确度：</b>" + place.AddressDetails.Accuracy;
+          html += "<br/><b>坐标：</b>" + place.Point.coordinates[1] + place.Point.coordinates[0];
         }
       }
       html += "</div>";
       return html;
     }
-//{ "name": "北京市海淀区清华科技园",
-//  "Status": {"code": 200, "request": "geocode"},
-//  "Placemark": [ {
-//      "id": "p1",
-//      "address": "中国北京市海淀区中关村东路1号院清华科技园",
-//      "AddressDetails": {
-//         "Country": {
-//             "CountryNameCode": "CN",
-//             "CountryName": "中国",
-//             "Locality": {
-//                 "LocalityName": "北京市",
-//                 "DependentLocality": {
-//                     "DependentLocalityName": "海淀区",
-//                     "AddressLine":["清华科技园"]}}},
-//          "Accuracy": 9},
-//      "Point": {
-//          "coordinates": [ 116.3319111, 39.9947365, 0 ]}}]}
 
     function showLocation() {
       var address = $("q").value;
       geocoder.getLocations(address, addAddressToMap);
     }
+
     function updateURL(){
       $("url").value = "http://ditu.google.cn/maps/geo?q="+$("q").value+"&output=json&sensor=false&key=abcdefg";
     }
@@ -82,32 +68,26 @@
   </head>
 
   <body onload="initialize()">
+    <p>
+      <b>目标地址/坐标：</b>
+      <input type="text" id="q" value="" class="address_input" size="50"  onkeyup="updateURL();"/>
+      <input type="button" value="搜索" onclick="showLocation();"/>
+      <br/><b>等效URL：</b>
+      <input type="text" id="url" value="" class="address_input" size="100" />
       <p>
-        <b>目标地址/坐标：</b>
-        <input type="text" id="q" value="" class="address_input" size="50"  onkeyup="updateURL();"/>
-        <input type="button" value="搜索" onclick="showLocation();"/>
-        <br/><b>等效URL：</b>
-        <input type="text" id="url" value="" class="address_input" size="100" />
-        <p><b>预设目标:</b><br/>
-     <a href="javascript:void(0)"
-     onclick="findLocation('北京');return false;">北京</a><br />
-
-   <a href="javascript:void(0)"
-     onclick="findLocation('北京市海淀区');return false;">北京市海淀区</a><br />
-
-   <a href="javascript:void(0)"
-     onclick="findLocation('北京市海淀区清华科技园');return false;">北京市海淀区清华科技园</a><br />
-
-   <a href="javascript:void(0)"
-     onclick="findLocation('39.95,116.4');return false;">39.95,116.4</a><br />
-     <a href="javascript:void(0)"
-     onclick="findLocation('30.95,116.4');return false;">30.95,116.4</a><br />
-
-  </p>
+        <b>预设目标:</b><br/>
+        <a href="javascript:void(0)"
+          onclick="findLocation('北京');return false;">北京</a><br/>
+        <a href="javascript:void(0)"
+          onclick="findLocation('北京市海淀区');return false;">北京市海淀区</a><br/>
+        <a href="javascript:void(0)"
+          onclick="findLocation('北京市海淀区清华科技园');return false;">北京市海淀区清华科技园</a><br/>
+        <a href="javascript:void(0)"
+          onclick="findLocation('39.95,116.4');return false;">39.95,116.4</a><br/>     
+        <a href="javascript:void(0)"
+          onclick="findLocation('30.95,116.4');return false;">30.95,116.4</a><br/>
       </p>
-    <div id="map_canvas" style="width: 700px; height: 400px"></div>
-
-   <!-- Sample addresses //-->
-   
+    </p>
+    <div id="map_canvas" style="width: 700px; height: 400px"></div>   
   </body>
 </html>

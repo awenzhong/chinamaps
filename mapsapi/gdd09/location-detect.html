@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>地址探测</title>
-    <script type="text/javascript" src="http://www.google.cn/jsapi?key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&hl=zh-CN&gl=cn"></script>
+    <script type="text/javascript" src="http://www.google.cn/jsapi?key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&hl=zh-CN&gl=cn&sensor=false"></script>
     <script type="text/javascript">
     google.load("maps", "2.x", {base_domain: "ditu.google.cn", language: "zh-CN"});
     function initialize() {
@@ -17,7 +17,8 @@
         if (google.loader.ClientLocation) {
           zoom = 13;
           alert('你的IP地址属于：' + google.loader.ClientLocation.address.city);
-          latlng = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+          latlng = new google.maps.LatLng(google.loader.ClientLocation.latitude,                     
+                                          google.loader.ClientLocation.longitude);
         }
         var map = new google.maps.Map2(document.getElementById("map_canvas"));
         map.setCenter(latlng, zoom);
