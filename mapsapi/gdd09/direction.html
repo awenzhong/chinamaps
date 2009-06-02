@@ -33,13 +33,18 @@
         // GEvent.addListener(gdir, "load", onGDirectionsLoad);
         GEvent.addListener(gdir, "error", handleErrors);
 
-        setDirections("北京", "上海", "zh-CN");
+        setDirections("北京", "上海", "zh-CN", 0);
       }
     }
     
-    function setDirections(fromAddress, toAddress, locale) {
+    function setDirections(fromAddress, toAddress, locale, mode) {
+      var travelMode = G_TRAVEL_MODE_DRIVING;
+      if (mode == 2) {
+        travelMode = G_TRAVEL_MODE_WALKING;
+      }
+      alert(travelMode);
       gdir.load("from: " + fromAddress + " to: " + toAddress,
-                { "locale": locale });
+                { "locale": locale, "travelMode": travelMode });
     }
 
     function handleErrors(){
@@ -72,49 +77,43 @@
           break;
       }
   }
-
-  function onGDirectionsLoad(){ 
-      // Use this function to access information about the latest load()
-      // results.
-
-      // e.g.
-      // document.getElementById("getStatus").innerHTML = gdir.getStatus().code;
-    // and yada yada yada...
-  }
-    </script>
+    
+  </script>
 
   </head>
   <body onload="initialize()" onunload="GUnload()">
   
   <h2>地图API路线规划演示</h2>
-  <form action="#" onsubmit="setDirections(this.from.value, this.to.value, this.locale.value); return false">
+  <form action="#" onsubmit="setDirections(this.from.value, this.to.value, this.locale.value, this.mode.value); return false">
 
   <table>
-
    <tr><th align="right">从:&nbsp;</th>
-
    <td><input type="text" size="30" id="fromAddress" name="from"
      value="北京市"/></td>
    <th align="right">&nbsp;&nbsp;到:&nbsp;</th>
    <td align="right"><input type="text" size="30" id="toAddress" name="to"
-     value="上海市" /></td></tr>
+     value="上海市" /></td>
+   </tr>
 
-   <tr><th>语言:&nbsp;</th>
-   <td colspan="3"><select id="locale" name="locale">
-
-    <option value="zh-CN" selected>中文简体</option>
-
-    <option value="zh-TW">中文繁体</option>
-
-    <option value="en">英语</option>
-    </select>
-
-    <input name="submit" type="submit" value="开始路线规划!" />
-
-   </td></tr>
+   <tr>
+     <th>语言:&nbsp;</th>
+     <td>
+       <select id="locale" name="locale">
+         <option value="zh-CN" selected>中文简体</option>
+         <option value="zh-TW">中文繁体</option>
+         <option value="en">英语</option>
+       </select>
+     </td>
+     <th>模式:&nbsp;</th>
+     <td>
+       <select id="mode" name="mode">
+         <option value=1 selected>驾车</option>
+         <option value=2>走路</option>
+       </select>
+     </td>
+   </tr>
    </table>
-
-    
+   <input name="submit" type="submit" value="开始路线规划!" />    
   </form>
 
     <br/>
