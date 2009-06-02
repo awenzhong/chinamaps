@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>丰富的地图类型：地球、月亮、火星及星空</title>
+    <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&sensor=false"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+        var map = new GMap2(document.getElementById("map_canvas"));
+        map.addControl(new GLargeMapControl());
+        //map.setCenter(new GLatLng(35.67,104.67), 3);
+        map.setCenter(new GLatLng(39.917, 116.397), 10);
+        
+        var mapControl = new GHierarchicalMapTypeControl();
+
+        map.addMapType(G_PHYSICAL_MAP);
+        map.addMapType(G_SATELLITE_3D_MAP);
+        map.addMapType(G_MOON_ELEVATION_MAP);
+        map.addMapType(G_MOON_VISIBLE_MAP);
+        map.addMapType(G_MARS_ELEVATION_MAP);
+        map.addMapType(G_MARS_VISIBLE_MAP);
+        map.addMapType(G_SKY_VISIBLE_MAP);
+        
+        // Set up map type menu relationships
+        mapControl.clearRelationships();
+        mapControl.addRelationship(G_NORMAL_MAP, G_SATELLITE_MAP, "卫星", false);
+        mapControl.addRelationship(G_NORMAL_MAP, G_HYBRID_MAP, "混合", false);
+        mapControl.addRelationship(G_NORMAL_MAP, G_PHYSICAL_MAP, "地形", false);
+
+        mapControl.addRelationship(
+          G_SKY_VISIBLE_MAP, G_MOON_ELEVATION_MAP, "月球地形", false);
+        mapControl.addRelationship(
+          G_SKY_VISIBLE_MAP, G_MOON_VISIBLE_MAP, "月球照片", false);
+        mapControl.addRelationship(
+          G_SKY_VISIBLE_MAP, G_MARS_ELEVATION_MAP, "火星地形", false);
+        mapControl.addRelationship(
+          G_SKY_VISIBLE_MAP, G_MARS_VISIBLE_MAP, "火星照片", false);
+
+        map.addControl(mapControl);
+      }
+    }
+
+    </script>
+  </head>
+  <body onload="initialize()" onunload="GUnload()">
+    <div id="map_canvas" style="width: 400px; height: 400px"></div>
+  </body>
+</html>
