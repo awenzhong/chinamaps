@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Google 地图 API 示例: 自动调整地图控件</title>
+    <style type="text/css">
+      /*common*/
+      body, div, p, a, span, input {
+        font-size: 13px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+      
+      #map_canvas {
+        overflow: hidden;
+      }
+    </style>
+    <script src="http://ditu.google.cn/maps?hl=zh-CN&amp;file=api&amp;v=2&amp;key=ABQIAAAAPTwhF4vlVXrO7ZGOjA9sOxTqQ5WtUwE0C8FR1hRk-yj3qFOmhhR6esbxCerNyfzApAoTJGfOHzcKCQ&sensor=false"></script>
+    <script type="text/javascript">
+      var map;
+      
+      function initialize() {
+        if (GBrowserIsCompatible()) { 
+         var size = getSize();
+         map = new GMap2(document.getElementById("map_canvas"), {size:new GSize(size.width, size.height)});
+         map.setCenter(new GLatLng(39.917, 116.397), 14);
+         map.setUIToDefault();
+         GEvent.addDomListener(window, "resize", resize);
+        }
+      }
+      function resize(){
+        var size = getSize();
+        var container = map.getContainer();
+        container.style.width = size.width + "px";
+        container.style.height = size.height + "px";
+        map.checkResize();
+//        this.setMapUI(map);
+      }
+      function getSize(){
+        var size = {};
+        if (window.innerWidth) { // Except IE
+          size.width = window.innerWidth;
+          size.height = window.innerHeight;
+        } else if (document.documentElement && document.documentElement.clientWidth) { // IE with a DOCTYPE
+          size.height = document.documentElement.clientHeight;
+          size.width = document.documentElement.clientWidth;
+        } else if ((document.body) && (document.body.clientWidth)) { // IE without a DOCTYPE
+          size.width = document.body.clientWidth;
+          size.height = document.body.clientHeigt;
+        }
+        return size;
+      }
+      
+    </script>
+   </head>
+   <body onload="initialize()">
+    <div id="map_canvas" style="overflow:hidden;"></div>
+  </body>
+</html>
