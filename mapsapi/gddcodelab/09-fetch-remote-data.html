@@ -23,7 +23,8 @@
         });
 
         // 远程取数据
-        GDownloadUrl("http://chinamaps.googlecode.com/svn/mapsapi/gddcodelab/data/cities.json",
+        // GDownloadUrl("http://chinamaps.googlecode.com/svn/mapsapi/gddcodelab/data/cities.json",
+        GDownloadUrl("data/cities.json",
                      function(data, responseCode) {
            var cities = eval(data);
 		   if (cities.length > 0) {
