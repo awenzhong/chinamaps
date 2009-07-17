@@ -1,0 +1,2128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="2009年7月22日 - 全日食地图"
+             author="Fei Chen"
+             author_email="dituapi@google.com"
+             description="">
+  <Require feature="sharedmap" />
+  <Require feature="dynamic-height"/>
+</ModulePrefs>
+
+<Content type="html"><![CDATA[
+<style type="text/css">
+/*common*/
+body, div, p, a, span, table, iframe{
+  font-size:13px;
+  margin:0;
+  padding:0;
+  border:0;
+}
+.panel{
+}
+.panel-inner{
+  position:relative;
+}
+
+.panel-content{
+  overflow-y:auto;
+}
+.list-title{
+  font-weight:bolder;
+  padding:2px 5px;
+  margin:2px 0;
+  background-color:#E0E6F6;
+  overflow:hidden;
+  height:1.2em;
+}
+.list-content{
+  margin:5px 8px;
+}
+.list-content .city-item{
+  margin-left:10px;
+  cursor:pointer;
+}
+#resultList{
+  height:280px;
+  margin:0 10px;
+}
+.toggle-button-open, .toggle-button-close{
+  cursor:pointer;
+  width:12px;
+  height:14px;
+}
+.toggle-button-open{
+  background:url(http://docs.google.com/images/doclist/icons_8.png) no-repeat scroll -834px 0;
+}
+.toggle-button-close{
+  background:url(http://docs.google.com/images/doclist/icons_8.png) no-repeat scroll -850px 0;
+}
+
+.toggle-button-open-small, .toggle-button-close-small{
+  cursor:pointer;
+  width:10px;
+  height:14px;
+  margin-right:3px;
+  display:inline-block;
+}
+.toggle-button-open-small{
+  background:url(http://docs.google.com/images/doclist/icons_8.png) no-repeat scroll -195px 0;
+  
+}
+.toggle-button-close-small{
+  background:url(http://docs.google.com/images/doclist/icons_8.png) no-repeat scroll -211px 0;
+}
+
+.result-tips{
+  font-size:0.9em; 
+  color:#999999;
+  padding:0 6px;
+}
+.close-icon{
+  background:url(https://ssl.gstatic.com/docs/drawings/images/icons20.png) no-repeat scroll 0 -42px;
+  width:10px;
+  height:14px;
+  cursor:pointer;
+  display:inline-block;
+}
+
+.inline{
+ _display:inline;
+}
+.city-wrapper{
+  padding-left:10px;
+}
+.video-iframe{
+  overflow: hidden;
+  width: 100%;
+  height: 305px;
+}
+</style>
+  <div class="panel" id="panelDiv">
+    <div id="panelInner" class="panel-inner">
+      <div class="panel-content" id="panelContent">
+        <div class="city-panel">
+          <div class="list-title"><div style="float:left;">日全食主要观测城市</div><div id="cityToggle" style="float:right;">&nbsp;</div></div>
+          <div class="result-tips" style="color:#333333;">境内有12个省市自治区的部分地区将能观赏到此次日全食</div>
+          <div class="list-content" id="cityList"><span style="color:#FF0000;">加载中...</span></div>
+          <div style="margin:5px;"><input type="text" value="城市搜索/快速定位" style="width:130px;color:#666666;" id="citySearchBox"/><input type="button" value="搜" id="citySearchButton"/></div>
+          <div class="result-tips" style="color:#FF0000;display:none;" id="errMsg">没有找到你查找的城市，请确认输入内容正确，或请补充为完整地名</div>
+          <div class="result-tips">提示：点击地图上的任意地点可以查看在该点观测日食的具体信息。</div>
+        </div>
+        <div class="result-panel">
+          <div class="list-title"><div style="float:left;">日食观测数据</div><div id="resultToggle" style="float:right;">&nbsp;</div></div>
+          <div class="result-tips" style="color:#333333;">
+            1）红线间阴影区域为日全食带，蓝色线为全食带中心线<br/>
+            2）星号标注城市为天文台指定日全食主要观测城市<br/>
+            3）食分表示日食的程度，食分越大，日面被遮掩的程度就越大。<br/>
+            4）食象表示月球圆面同太阳圆面的位置关系，日全食有五种食象，日偏食有三种食象。
+          </div>
+        </div>
+        <div>
+        <div class="list-title"><div style="float:left;"><a href="http://www.google.cn/ig/china?referrer=ign" target="_blank">iGoogle日食直播倒计时</a></div><div id="liveToggle" style="float:right;">&nbsp;</div></div>
+          <div id="liveContent" class="video-iframe"></div>
+        </div>
+        <div style="color:#666;font-size:12px;margin:5px;">日食数据来自<a href="http://xjubier.free.fr/" target="_blank">Xavier Jubier</a>&nbsp;&&nbsp;<a href="http://tech.sina.com.cn" target="_blank">新浪中国</a></div>
+      </div>
+    </div>
+  </div>
+<script>
+/**
+ * Author: Chenfei
+ * E_Mail: phinix.chen@gmail.com
+ */
+(function(){
+  var fei = (function(){
+    // Private
+    var center = {
+      lat: 29.4666667,
+      lng: 109.6000000,
+      zoom: 5
+    };
+    
+    function computerCenter(fromIP){
+      var cookie = null;
+      if (cookie) {
+        //TODO first fetch from cookie
+      } else if (fromIP && google.loader.ClientLocation &&
+      google.loader.ClientLocation.latitude &&
+      google.loader.ClientLocation.longitude) { //  By IP detection
+        center.lat = google.loader.ClientLocation.latitude;
+        center.lng = google.loader.ClientLocation.longitude;
+        center.zoom = 10;
+      }
+    }
+    
+    return {
+      start: function(){
+        computerCenter(false);
+        eclipse2009.init(center);
+      },
+      callback: function(object, method, arguments){
+        return function(){
+          return method.apply(object, arguments);
+        }
+      },
+      getElem: function(id){
+        return document.getElementById(id);
+      },
+      getElems: function(name){
+        return document.getElementsByTagName(name);
+      },
+      createElem: function(tag, parent, className, attributes){
+        var el = document.createElement(tag);
+        el.className = className || "";
+        if (parent) parent.appendChild(el);
+        if (attributes) {
+          for (var nm in attributes) {
+            el.setAttribute(nm, attributes[nm])
+          }
+        }
+        return el;
+      },
+      createHead: function(tag, url, callback){
+        var head = Fei.$$("head")[0] || Fei.$n("head", document.body.parentNode);
+        var elem = null;
+        switch (tag) {
+          case "script":
+            elem = Fei.$n(tag, head, null, {
+              "type": "text/javascript",
+              "src": url
+            });
+            break;
+          case "css":
+            elem = Fei.$n(tag, head, null, {
+              "type": "text/css",
+              "href": url,
+              "rel": "stylesheet"
+            })
+            break;
+          default: // Only for debug
+            alert("Sorry, don't support this tag: " + tag);
+            head.removeChild(head.lastChild);
+            return;        }
+        if (callback) {
+          if (!/*@cc_on!@*/0) { // Not IE
+            elem.onload = callback;
+          } else { // IE only
+            elem.onreadystatechange = function(){
+              if (elem.readyState == 'loaded' || elem.readyState == 'complete') {
+                callback.apply(this);
+              }
+            }
+          }
+        } // End if
+      },
+      stopPropagation: function(e){
+        var e = e || window.event;
+        e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+      },
+      getX: function(elem){
+        var x = 0;
+        for (var e = elem; e; e = e.offsetParent) {
+          x += e.offsetLeft;
+        }//GLog.write("getX: "+x);
+        for (e = elem.parentNode; e && e != document.body; e = e.parentNode) {
+          if (e.scrollLeft) x -= e.scrollLeft;
+        }
+        return x;
+      },
+      getY: function(elem){
+        var y = 0;
+        for (var e = elem; e; e = e.offsetParent) {
+          y += e.offsetTop;
+        }//GLog.write("getY: "+y);
+        for (e = elem.parentNode; e && e != document.body; e = e.parentNode) {
+          if (e.scrollTop) y -= e.scrollTop;
+        }
+        return y;
+      },
+      getCenter:function(){
+        return center;
+      }
+    };
+  })();
+  
+  window['Fei'] = {
+    'start':fei.start,
+    '$': fei.getElem,
+    '$$': fei.getElems,
+    '$n': fei.createElem,
+    '$h': fei.createHead,
+    'callback': fei.callback,
+    'stopPropagation': fei.stopPropagation,
+    'getX':fei.getX,
+    'getY':fei.getY
+  };
+})();
+
+(function(){
+  // 2009 Eclipse data from http://xjubier.free.fr/
+  // Author: Fei Chen, phinix.chen@gmail.com
+  var cities = {
+    xizang:{name:'西藏自治区'},
+    sichuan: {
+      name: "四川省",
+      children: {
+        kangding: {
+          name: '康定',
+          latlng:[30.0527325,101.9576263]
+        },
+        leshan: {
+          name: '乐山',
+          latlng:[29.5520635,103.7656233]
+        },
+        chengdu: {
+          name: '成都',
+          latlng:[30.6586016,104.0648565],
+          spots: {
+            '四川大学':[30.6337224,104.0778091]
+          }
+        },
+        nanchong: {
+          name: '南充',
+          latlng:[30.8378881,106.1105945]
+        }
+      }
+    },
+    yunnan:{name:'云南省'},
+    chongqing: {
+      name: '重庆',
+      latlng:[29.5549144,106.548425]
+    },
+    hubei: {
+      name: "湖北省",
+      children: {
+        enshi: {
+          name: '恩施',
+          latlng:[30.2722038,109.4881623]
+        },
+        yichang: {
+          name: '宜昌',
+          latlng:[30.6919668,111.2864709]
+        },
+        jingzhou: {
+          name: '荆州',
+          latlng:[30.3351655,112.2397409]
+        },
+        xiaogan: {
+          name: '孝感',
+          latlng:[30.9245718,113.9169]
+        },
+        wuhan: {
+          recommend: true,
+          name: '武汉',
+          latlng:[30.593168,114.3053611],
+          spots: {
+            l1: '汉口江滩市府广场',
+            '武汉大学':[30.540456,114.3617901]
+          },
+          topics: ['武汉地区观测日全食活动启动仪式', '天文科普大篷车巡展', '日全食主题摄影赛', '天文知识专题报告会', '“观日食，看武汉新貌”']
+        },
+        huangshi: {
+          name: '黄石',
+          latlng:[30.1996524,115.03852]
+        }
+      }
+    },
+    henan:{name:'河南省'},
+    hunan:{name:'湖南省'},
+    anhui: {
+      name: "安徽省",
+      children: {
+        liuan: {
+          name: '六安',
+          latlng:[31.7450103,116.5056857]
+        },
+        tongcheng: {
+          recommend: true,
+          name: '桐城',
+          latlng:[31.0520703,116.9507816],
+          spots: {
+            spt1: '嬉子湖度假村',
+            spt2: '泡桐山顶'
+          },
+          topics: ['2009国际天文年桐城市日全食科普节开幕式', '中国科技大学：公众科普报告会', '中国科技大学：中国考古天文学国际学术研讨会']
+        },
+        hefei: {
+          name: '合肥',
+          latlng:[31.8657794,117.2869834]
+        },
+        tongling: {
+          recommend: true,
+          name: '铜陵',
+          latlng:[30.9445297,117.810841],
+          spots: {
+            l1: '乌木山广场',
+            '大通镇':[30.8117256,117.7497804]
+          },
+          topics: ['铜都鉴日日全食观测盛典', '国家天文台专题科普报告会', '2009日全食观测主题摄影赛']
+        },
+        huangshan: {
+          recommend: true,
+          name: '黟县',
+          latlng:[29.9248114,117.9382622],
+          spots: {
+            l1: '宏村中学',
+            l2: '奇墅湖',
+            '宏村景区':[29.9998192,117.9893743]
+          },
+          topics: ['画里乡村活动看日食启动', '公众科普报告会', '与天象奇观相约千名驴友古黟行', '青少年小天文学家特别训练营', '徽文化特色旅游活动']
+        },
+        wuhu: {
+          name: '芜湖',
+          latlng:[31.3387902,118.3851556]
+        }
+      }
+    },
+    jiangxi:{name:'江西省'},
+    zhejiang: {
+      name: "浙江省",
+      children: {
+        hangzhou: {
+          name: '杭州',
+          latlng:[30.2734969,120.1552488]
+        },
+        jiaxing: {
+          recommend: true,
+          name: '嘉兴',
+          latlng:[30.753924,120.758543],
+          spots: {
+            '七一广场':[30.7447598,120.7543202],
+            '南湖景区':[30.7502964,120.7650403],
+            '九龙山景区':[30.607566,121.145592]
+          },
+          topics: ['嘉兴科普旅游节', '火星探测科学会议及研习班', '“苏定强星”命名仪式', '公众科普报告会', '“水乡嘉兴、日食奇观”主题摄影赛']
+        },
+        ningbo: {
+          name: '宁波',
+          latlng:[29.868336,121.54399]
+        },
+        zhoushan: {
+          name: '舟山',
+          latlng:[29.9854444,122.2065964]
+        }
+      }
+    },
+    jiangsu: {
+      name: "江苏省",
+      children: {
+        wuxi: {
+          name: '无锡',
+          latlng:[31.5661476,120.3030271]
+        },
+        suzhou: {
+          recommend: true,
+          name: '苏州',
+          latlng:[31.2977791,120.5855864],
+          spots: {
+            '上方山国家森林公园':[31.2521431,120.5876841]
+          },
+          topics: ['“相约苏州”日全食观测活动', '日冕动力学国际学术大会', '青少年天文论坛', '“相约苏州”科普之夜游园会', '长江村星国际命名大会']
+        }
+      }
+    },
+    shanghai: {
+      recommend: true,
+      name: '上海',
+      latlng:[31.2243531,121.4759159],
+      spots: {
+        l1: '佘山月湖雕塑公园',
+        '上海洋山深水港':[30.8806685,121.848336]
+      },
+      topics: ['佘山月湖大型科普活动', '“日全食与宇宙之美”大型天文科普展览', '日全食主题天文摄影展', '天文科普讲座']
+    }
+  }
+  
+  function updateWeather(){
+    for(var i in cities){
+      if(cities[i].children){
+        for(var j in cities[i].children){
+          importWeather(j, cities[i].children[j]);
+        }
+      }else{
+        importWeather(i, cities[i]);
+      }
+    }
+  }
+  function importWeather(pinyin, city){
+    var url = "http://www.google.com/ig/api?output=xml&hl=zh-CN&weather=" + pinyin;
+    GDownloadUrl(url, function(response){
+      if(response){
+        var weather = GXml.parse(response);
+        GLog.write(weather);
+        //TODO
+      }
+    });
+  }
+  
+  
+  var eclipse = (function(){
+    var map = null;
+    var enableInfo = true;
+    var polygon = null;
+    var polyline = null;
+    var clickMarker = null;
+    
+    var geocoder = new GClientGeocoder();
+    var addr = '';
+    var addrTq = '';
+    
+    var dom = {
+      map:Fei.$("mapDiv"),
+      panel : Fei.$("panelDiv"),
+      panelContent : Fei.$("panelContent"),
+      cities : Fei.$("cityList"),
+      resultList : Fei.$("resultList"),
+      panelInner: Fei.$("panelInner"),
+      citySearchBox:Fei.$("citySearchBox"),
+      citySearchButton:Fei.$("citySearchButton"),
+      errMsg:Fei.$("errMsg")
+    }
+    
+    function addClickMarkerListener(){
+      GEvent.addListener(clickMarker, "dragend",function(point){
+        GEvent.trigger(map, "click", null, point);
+      });
+      GEvent.addListener(clickMarker, "click", function(point){
+        var html = EclipseCalculator.getEclipseInfo(addr, addrTq, point.lat(), point.lng(), 0);
+        if (html) {
+          clickMarker.openInfoWindowHtml(html);
+        }
+      });
+    }
+    function addMapListeners(){
+      GEvent.addListener(map, "click", function(overlay, point){
+        if (point) {
+          if (clickMarker) {
+            clickMarker.show();
+            clickMarker.setLatLng(point);
+          } else {
+            clickMarker = new GMarker(point, {
+              draggable: true
+            });
+            map.addOverlay(clickMarker);
+            addClickMarkerListener();
+          }
+          geocoder.getLocationsAsync(point, function(response){
+            if (response && response.Placemark) {
+              addr = response.Placemark[0].address;
+              if (response.Placemark[0].AddressDetails) {
+                var detail = response.Placemark[0].AddressDetails;
+                if (detail.Country) {
+                  if (detail.Country.Locality) {
+                    addrTq = detail.Country.Locality.LocalityName;
+                  } else if (detail.Country.AdministrativeArea) {
+                    var area = detail.Country.AdministrativeArea;
+                    if (area.AdministrativeAreaName) {
+                      addrTq = area.AdministrativeAreaName;
+                    }
+                    if (area.Locality) {
+                      addrTq += area.Locality.LocalityName;
+                    }
+                  }
+                }
+                
+              }
+            } else {
+              addr = addrTq = "";
+            }
+              var html = EclipseCalculator.getEclipseInfo(addr, addrTq, point.lat(), point.lng(), 0);
+              if (html && clickMarker) {
+                clickMarker.openInfoWindowHtml(html);
+            }
+          });
+        }
+      });
+      GEvent.addListener(map, "singlerightclick", function(point){
+        if (enableInfo) {
+          enableInfo = false;
+          map.closeInfoWindow();
+          if(clickMarker){
+            clickMarker.hide();
+          }
+        } else {
+          enableInfo = true;
+        }
+      });
+      GEvent.addListener(polygon, "click", function(point){
+        GEvent.trigger(map, "click", polygon, point);
+      });
+      GEvent.addListener(polyline, "click", function(point){
+        GEvent.trigger(map, "click", polyline, point);
+      });
+      GEvent.addDomListener(window, "resize", function(){
+        resizePanel();
+      });
+    }
+    function addOverlays(){
+      //Total lunar eclipse region
+      polygon = new GPolygon([new GLatLng(-1.02667, -179.31333), new GLatLng(-0.49667, 179.87167), new GLatLng(0.01500, 179.09500), new GLatLng(0.51167, 178.35500), new GLatLng(0.99333, 177.64833), new GLatLng(1.46167, 176.96833), new GLatLng(1.91833, 176.31500), new GLatLng(2.36500, 175.68333), new GLatLng(2.80167, 175.07500), new GLatLng(3.22833, 174.48500), new GLatLng(3.64667, 173.91333), new GLatLng(4.05667, 173.35833), new GLatLng(4.46000, 172.81833), new GLatLng(4.85500, 172.29333), new GLatLng(5.24333, 171.78000), new GLatLng(5.62667, 171.28000), new GLatLng(6.00167, 170.79167), new GLatLng(6.37333, 170.31333), new GLatLng(6.73833, 169.84500), new GLatLng(7.09667, 169.38667), new GLatLng(7.45167, 168.93667), new GLatLng(7.80167, 168.49500), new GLatLng(8.14667, 168.06167), new GLatLng(8.48667, 167.63500), new GLatLng(8.82333, 167.21500), new GLatLng(9.15500, 166.80333), new GLatLng(9.48333, 166.39667), new GLatLng(9.80667, 165.99500), new GLatLng(10.12667, 165.60000), new GLatLng(10.44500, 165.21000), new GLatLng(10.75833, 164.82500), new GLatLng(11.06667, 164.44500), new GLatLng(11.37333, 164.07000), new GLatLng(11.67667, 163.69833), new GLatLng(11.97833, 163.33000), new GLatLng(12.27500, 162.96667), new GLatLng(12.56833, 162.60667), new GLatLng(12.86000, 162.25000), new GLatLng(13.14833, 161.89500), new GLatLng(13.43333, 161.54500), new GLatLng(13.71667, 161.19667), new GLatLng(13.99667, 160.85167), new GLatLng(14.27500, 160.50833), new GLatLng(14.55000, 160.16833), new GLatLng(14.82167, 159.83000), new GLatLng(15.09167, 159.49500), new GLatLng(15.36000, 159.16000), new GLatLng(15.62500, 158.82833), new GLatLng(15.88833, 158.49833), new GLatLng(16.14833, 158.16833), new GLatLng(16.40667, 157.84167), new GLatLng(16.66333, 157.51500), new GLatLng(16.91667, 157.19000), new GLatLng(17.16833, 156.86667), new GLatLng(17.41833, 156.54500), new GLatLng(17.66667, 156.22333), new GLatLng(17.91167, 155.90167), new GLatLng(18.15500, 155.58167), new GLatLng(18.39500, 155.26333), new GLatLng(18.63500, 154.94500), new GLatLng(18.87167, 154.62667), new GLatLng(19.10667, 154.30833), new GLatLng(19.34000, 153.99167), new GLatLng(19.57167, 153.67500), new GLatLng(19.80000, 153.35833), new GLatLng(20.02833, 153.04167), new GLatLng(20.25333, 152.72500), new GLatLng(20.47667, 152.40833), new GLatLng(20.69833, 152.09167), new GLatLng(20.91833, 151.77500), new GLatLng(21.13500, 151.45667), new GLatLng(21.35167, 151.14000), new GLatLng(21.56500, 150.82167), new GLatLng(21.77833, 150.50333), new GLatLng(21.98833, 150.18500), new GLatLng(22.19667, 149.86500), new GLatLng(22.40333, 149.54500), new GLatLng(22.60833, 149.22500), new GLatLng(22.81167, 148.90333), new GLatLng(23.01167, 148.58000), new GLatLng(23.21167, 148.25833), new GLatLng(23.41000, 147.93333), new GLatLng(23.60500, 147.60833), new GLatLng(23.79833, 147.28167), new GLatLng(23.99000, 146.95500), new GLatLng(24.18000, 146.62667), new GLatLng(24.36833, 146.29667), new GLatLng(24.55500, 145.96500), new GLatLng(24.74000, 145.63333), new GLatLng(24.92333, 145.30000), new GLatLng(25.10333, 144.96333), new GLatLng(25.28333, 144.62667), new GLatLng(25.46000, 144.28833), new GLatLng(25.63500, 143.94833), new GLatLng(25.80833, 143.60667), new GLatLng(25.98000, 143.26333), new GLatLng(26.15000, 142.91667), new GLatLng(26.31667, 142.57000), new GLatLng(26.48333, 142.22000), new GLatLng(26.64667, 141.87000), new GLatLng(26.80833, 141.51667), new GLatLng(26.96833, 141.16000), new GLatLng(27.12667, 140.80333), new GLatLng(27.28167, 140.44333), new GLatLng(27.43667, 140.08167), new GLatLng(27.58833, 139.71667), new GLatLng(27.73833, 139.35000), new GLatLng(27.88500, 138.98000), new GLatLng(28.03000, 138.60833), new GLatLng(28.17500, 138.23333), new GLatLng(28.31500, 137.85500), new GLatLng(28.45500, 137.47500), new GLatLng(28.59167, 137.09333), new GLatLng(28.72667, 136.70667), new GLatLng(28.86000, 136.31833), new GLatLng(28.99000, 135.92667), new GLatLng(29.11833, 135.53167), new GLatLng(29.24333, 135.13333), new GLatLng(29.36667, 134.73167), new GLatLng(29.48833, 134.32833), new GLatLng(29.60667, 133.92000), new GLatLng(29.72333, 133.50833), new GLatLng(29.83833, 133.09333), new GLatLng(29.95000, 132.67500), new GLatLng(30.05833, 132.25333), new GLatLng(30.16500, 131.82667), new GLatLng(30.26833, 131.39667), new GLatLng(30.37000, 130.96333), new GLatLng(30.46833, 130.52500), new GLatLng(30.56333, 130.08333), new GLatLng(30.65667, 129.63667), new GLatLng(30.74667, 129.18667), new GLatLng(30.83500, 128.73167), new GLatLng(30.91833, 128.27167), new GLatLng(31.00000, 127.80833), new GLatLng(31.08000, 127.34000), new GLatLng(31.15500, 126.86500), new GLatLng(31.22667, 126.38667), new GLatLng(31.29667, 125.90333), new GLatLng(31.36167, 125.41333), new GLatLng(31.42500, 124.92000), new GLatLng(31.48500, 124.42000), new GLatLng(31.54000, 123.91333), new GLatLng(31.59333, 123.40333), new GLatLng(31.64167, 122.88500), new GLatLng(31.68667, 122.36167), new GLatLng(31.72833, 121.83167), new GLatLng(31.76500, 121.29500), new GLatLng(31.79833, 120.75167), new GLatLng(31.82833, 120.20167), new GLatLng(31.85333, 119.64500), new GLatLng(31.87500, 119.08167), new GLatLng(31.89167, 118.50833), new GLatLng(31.90500, 117.93000), new GLatLng(31.91167, 117.34167), new GLatLng(31.91500, 116.74500), new GLatLng(31.91333, 116.14000), new GLatLng(31.90500, 115.52667), new GLatLng(31.89333, 114.90333), new GLatLng(31.87667, 114.27000), new GLatLng(31.85333, 113.62667), new GLatLng(31.82333, 112.97167), new GLatLng(31.78833, 112.30667), new GLatLng(31.74667, 111.63000), new GLatLng(31.70000, 110.94167), new GLatLng(31.64500, 110.24000), new GLatLng(31.58333, 109.52500), new GLatLng(31.51500, 108.79667), new GLatLng(31.43833, 108.05167), new GLatLng(31.35333, 107.29167), new GLatLng(31.26000, 106.51500), new GLatLng(31.15833, 105.72000), new GLatLng(31.04500, 104.90667), new GLatLng(30.92333, 104.07333), new GLatLng(30.79167, 103.21667), new GLatLng(30.64667, 102.33667), new GLatLng(30.49000, 101.43000), new GLatLng(30.32000, 100.49667), new GLatLng(30.13500, 99.53167), new GLatLng(29.93500, 98.53167), new GLatLng(29.71667, 97.49500), new GLatLng(29.48000, 96.41500), new GLatLng(29.22167, 95.28833), new GLatLng(28.94000, 94.10500), new GLatLng(28.62833, 92.85833), new GLatLng(28.28667, 91.53667), new GLatLng(27.90500, 90.12333), new GLatLng(27.47667, 88.59833), new GLatLng(26.99000, 86.93167), new GLatLng(26.42333, 85.07000), new GLatLng(25.74667, 82.93167), new GLatLng(24.89000, 80.33667), new GLatLng(23.65167, 76.76167), new GLatLng(21.18333, 70.06667), new GLatLng(19.51833, 70.95333), new GLatLng(21.40000, 76.16500), new GLatLng(22.80000, 80.26667), new GLatLng(23.69167, 83.01333), new GLatLng(24.37667, 85.21833), new GLatLng(24.94167, 87.11333), new GLatLng(25.42333, 88.79667), new GLatLng(25.84333, 90.32500), new GLatLng(26.21667, 91.73500), new GLatLng(26.55167, 93.05000), new GLatLng(26.85167, 94.28500), new GLatLng(27.12667, 95.45500), new GLatLng(27.37667, 96.56667), new GLatLng(27.60500, 97.63000), new GLatLng(27.81333, 98.64833), new GLatLng(28.00667, 99.62833), new GLatLng(28.18333, 100.57333), new GLatLng(28.34667, 101.48667), new GLatLng(28.49667, 102.37000), new GLatLng(28.63500, 103.22833), new GLatLng(28.76167, 104.06333), new GLatLng(28.87667, 104.87333), new GLatLng(28.98333, 105.66500), new GLatLng(29.08167, 106.43667), new GLatLng(29.17000, 107.18833), new GLatLng(29.25000, 107.92500), new GLatLng(29.32333, 108.64500), new GLatLng(29.38833, 109.35000), new GLatLng(29.44667, 110.04167), new GLatLng(29.49833, 110.71833), new GLatLng(29.54333, 111.38333), new GLatLng(29.58167, 112.03667), new GLatLng(29.61500, 112.67667), new GLatLng(29.64333, 113.30667), new GLatLng(29.66500, 113.92667), new GLatLng(29.68000, 114.53500), new GLatLng(29.69167, 115.13500), new GLatLng(29.69833, 115.72500), new GLatLng(29.70000, 116.30500), new GLatLng(29.69667, 116.87833), new GLatLng(29.69000, 117.44167), new GLatLng(29.67833, 117.99833), new GLatLng(29.66167, 118.54667), new GLatLng(29.64167, 119.08833), new GLatLng(29.61833, 119.62167), new GLatLng(29.59000, 120.14833), new GLatLng(29.55833, 120.66833), new GLatLng(29.52167, 121.18167), new GLatLng(29.48333, 121.69000), new GLatLng(29.44000, 122.19000), new GLatLng(29.39333, 122.68667), new GLatLng(29.34500, 123.17500), new GLatLng(29.29167, 123.65833), new GLatLng(29.23500, 124.13667), new GLatLng(29.17667, 124.61000), new GLatLng(29.11333, 125.07833), new GLatLng(29.04833, 125.54000), new GLatLng(28.98000, 125.99833), new GLatLng(28.90833, 126.45167), new GLatLng(28.83500, 126.90000), new GLatLng(28.75833, 127.34333), new GLatLng(28.67833, 127.78167), new GLatLng(28.59500, 128.21667), new GLatLng(28.51000, 128.64833), new GLatLng(28.42167, 129.07500), new GLatLng(28.33167, 129.49667), new GLatLng(28.23833, 129.91667), new GLatLng(28.14333, 130.33167), new GLatLng(28.04500, 130.74167), new GLatLng(27.94500, 131.15000), new GLatLng(27.84167, 131.55333), new GLatLng(27.73667, 131.95333), new GLatLng(27.63000, 132.35167), new GLatLng(27.52000, 132.74500), new GLatLng(27.40833, 133.13500), new GLatLng(27.29333, 133.52333), new GLatLng(27.17667, 133.90833), new GLatLng(27.05833, 134.28833), new GLatLng(26.93667, 134.66667), new GLatLng(26.81333, 135.04333), new GLatLng(26.68833, 135.41500), new GLatLng(26.56167, 135.78500), new GLatLng(26.43167, 136.15333), new GLatLng(26.30000, 136.51833), new GLatLng(26.16667, 136.88000), new GLatLng(26.03167, 137.24000), new GLatLng(25.89333, 137.59667), new GLatLng(25.75333, 137.95167), new GLatLng(25.61167, 138.30500), new GLatLng(25.46833, 138.65500), new GLatLng(25.32333, 139.00333), new GLatLng(25.17667, 139.35000), new GLatLng(25.02667, 139.69500), new GLatLng(24.87500, 140.03667), new GLatLng(24.72167, 140.37667), new GLatLng(24.56667, 140.71500), new GLatLng(24.41000, 141.05167), new GLatLng(24.25167, 141.38667), new GLatLng(24.09000, 141.72000), new GLatLng(23.92833, 142.05167), new GLatLng(23.76333, 142.38167), new GLatLng(23.59667, 142.71000), new GLatLng(23.42833, 143.03667), new GLatLng(23.25833, 143.36167), new GLatLng(23.08667, 143.68667), new GLatLng(22.91333, 144.01000), new GLatLng(22.73833, 144.33167), new GLatLng(22.56167, 144.65167), new GLatLng(22.38167, 144.97000), new GLatLng(22.20167, 145.28833), new GLatLng(22.01833, 145.60667), new GLatLng(21.83500, 145.92167), new GLatLng(21.64833, 146.23667), new GLatLng(21.46000, 146.55167), new GLatLng(21.27000, 146.86500), new GLatLng(21.07833, 147.17833), new GLatLng(20.88500, 147.49000), new GLatLng(20.69000, 147.80167), new GLatLng(20.49333, 148.11167), new GLatLng(20.29500, 148.42333), new GLatLng(20.09333, 148.73333), new GLatLng(19.89167, 149.04167), new GLatLng(19.68667, 149.35167), new GLatLng(19.48000, 149.66000), new GLatLng(19.27167, 149.97000), new GLatLng(19.06167, 150.27833), new GLatLng(18.85000, 150.58667), new GLatLng(18.63667, 150.89500), new GLatLng(18.42167, 151.20333), new GLatLng(18.20333, 151.51167), new GLatLng(17.98500, 151.82167), new GLatLng(17.76333, 152.13000), new GLatLng(17.54000, 152.44000), new GLatLng(17.31500, 152.75000), new GLatLng(17.08667, 153.06000), new GLatLng(16.85833, 153.37167), new GLatLng(16.62667, 153.68333), new GLatLng(16.39333, 153.99500), new GLatLng(16.15833, 154.30833), new GLatLng(15.92000, 154.62333), new GLatLng(15.68167, 154.93833), new GLatLng(15.44000, 155.25333), new GLatLng(15.19500, 155.57167), new GLatLng(14.95000, 155.89000), new GLatLng(14.70167, 156.21000), new GLatLng(14.45167, 156.53167), new GLatLng(14.19833, 156.85500), new GLatLng(13.94333, 157.17833), new GLatLng(13.68667, 157.50500), new GLatLng(13.42667, 157.83333), new GLatLng(13.16333, 158.16500), new GLatLng(12.90000, 158.49667), new GLatLng(12.63167, 158.83167), new GLatLng(12.36333, 159.17000), new GLatLng(12.09000, 159.51000), new GLatLng(11.81500, 159.85167), new GLatLng(11.53833, 160.19833), new GLatLng(11.25667, 160.54667), new GLatLng(10.97333, 160.89833), new GLatLng(10.68833, 161.25333), new GLatLng(10.39833, 161.61167), new GLatLng(10.10667, 161.97500), new GLatLng(9.81167, 162.34167), new GLatLng(9.51167, 162.71167), new GLatLng(9.21000, 163.08667), new GLatLng(8.90500, 163.46667), new GLatLng(8.59667, 163.85167), new GLatLng(8.28500, 164.24167), new GLatLng(7.96833, 164.63833), new GLatLng(7.64833, 165.03833), new GLatLng(7.32500, 165.44667), new GLatLng(6.99667, 165.86000), new GLatLng(6.66500, 166.28000), new GLatLng(6.32833, 166.70833), new GLatLng(5.98833, 167.14500), new GLatLng(5.64333, 167.58833), new GLatLng(5.29167, 168.04000), new GLatLng(4.93667, 168.50167), new GLatLng(4.57500, 168.97333), new GLatLng(4.20833, 169.45500), new GLatLng(3.83667, 169.94833), new GLatLng(3.45667, 170.45333), new GLatLng(3.07167, 170.97167), new GLatLng(2.68000, 171.50167), new GLatLng(2.28000, 172.04833), new GLatLng(1.87167, 172.61000), new GLatLng(1.45667, 173.18833), new GLatLng(1.03167, 173.78667), new GLatLng(0.59833, 174.40500), new GLatLng(0.15333, 175.04500), new GLatLng(-0.30167, 175.70833), new GLatLng(-0.77000, 176.40000), new GLatLng(-1.25000, 177.12167), new GLatLng(-1.74500, 177.87500), new GLatLng(-2.25667, 178.66667), new GLatLng(-2.78667, 179.50000), new GLatLng(-3.33667, -179.61667), new GLatLng(-3.91000, -178.67833), new GLatLng(-4.51000, -177.67333), new GLatLng(-5.14333, -176.59000), new GLatLng(-5.81500, -175.40833), new GLatLng(-6.53667, -174.10500), new GLatLng(-7.32000, -172.64000), new GLatLng(-8.19167, -170.94833), new GLatLng(-9.19500, -168.91167), new GLatLng(-10.44333, -166.23333), new GLatLng(-13.75667, -158.11000), new GLatLng(-12.08667, -157.28167), new GLatLng(-10.15000, -162.09833), new GLatLng(-8.49833, -165.79333), new GLatLng(-7.33333, -168.20833), new GLatLng(-6.36833, -170.11000), new GLatLng(-5.51833, -171.71167), new GLatLng(-4.74833, -173.11167), new GLatLng(-4.03833, -174.36667), new GLatLng(-3.37333, -175.50833), new GLatLng(-2.74500, -176.56000), new GLatLng(-2.14667, -177.53667), new GLatLng(-1.57500, -178.45167), new GLatLng(-1.02667, -179.31333)], "#FF0000", 3, 0.45, "#000000", 0.3);
+      // Central Line (Espenak)
+      polyline = new GPolyline([new GLatLng(20.35167, 70.51667), new GLatLng(21.28333, 73.02667), new GLatLng(23.30000, 78.70167), new GLatLng(24.32667, 81.77167), new GLatLng(25.08667, 84.14500), new GLatLng(25.70167, 86.15000), new GLatLng(26.22333, 87.91333), new GLatLng(26.67500, 89.50667), new GLatLng(27.07333, 90.97167), new GLatLng(27.43000, 92.33167), new GLatLng(27.75000, 93.60833), new GLatLng(28.04167, 94.81500), new GLatLng(28.30667, 95.96000), new GLatLng(28.55000, 97.05500), new GLatLng(28.77167, 98.10167), new GLatLng(28.97667, 99.11000), new GLatLng(29.16500, 100.08000), new GLatLng(29.33833, 101.01833), new GLatLng(29.49833, 101.92667), new GLatLng(29.64500, 102.80833), new GLatLng(29.78000, 103.66500), new GLatLng(29.90333, 104.49833), new GLatLng(30.01833, 105.31000), new GLatLng(30.12167, 106.10167), new GLatLng(30.21667, 106.87500), new GLatLng(30.30333, 107.63000), new GLatLng(30.38333, 108.37000), new GLatLng(30.45333, 109.09333), new GLatLng(30.51667, 109.80333), new GLatLng(30.57333, 110.49833), new GLatLng(30.62333, 111.18167), new GLatLng(30.66500, 111.85167), new GLatLng(30.70333, 112.51000), new GLatLng(30.73333, 113.15667), new GLatLng(30.75833, 113.79167), new GLatLng(30.77833, 114.41833), new GLatLng(30.79333, 115.03333), new GLatLng(30.80167, 115.64000), new GLatLng(30.80667, 116.23667), new GLatLng(30.80500, 116.82500), new GLatLng(30.80000, 117.40500), new GLatLng(30.79000, 117.97667), new GLatLng(30.77667, 118.54000), new GLatLng(30.75833, 119.09667), new GLatLng(30.73500, 119.64500), new GLatLng(30.70833, 120.18667), new GLatLng(30.67667, 120.72167), new GLatLng(30.64333, 121.24833), new GLatLng(30.60500, 121.77000), new GLatLng(30.56167, 122.28500), new GLatLng(30.51667, 122.79500), new GLatLng(30.46667, 123.29667), new GLatLng(30.41500, 123.79500), new GLatLng(30.35833, 124.28667), new GLatLng(30.30000, 124.77167), new GLatLng(30.23667, 125.25333), new GLatLng(30.17167, 125.72833), new GLatLng(30.10167, 126.19833), new GLatLng(30.03000, 126.66333), new GLatLng(29.95500, 127.12500), new GLatLng(29.87833, 127.58000), new GLatLng(29.79667, 128.03167), new GLatLng(29.71333, 128.47833), new GLatLng(29.62667, 128.92167), new GLatLng(29.53833, 129.36000), new GLatLng(29.44667, 129.79333), new GLatLng(29.35167, 130.22333), new GLatLng(29.25500, 130.65000), new GLatLng(29.15500, 131.07167), new GLatLng(29.05333, 131.49000), new GLatLng(28.95000, 131.90500), new GLatLng(28.84167, 132.31667), new GLatLng(28.73333, 132.72333), new GLatLng(28.62167, 133.12833), new GLatLng(28.50667, 133.52833), new GLatLng(28.39000, 133.92667), new GLatLng(28.27167, 134.32000), new GLatLng(28.15000, 134.71167), new GLatLng(28.02667, 135.10000), new GLatLng(27.90167, 135.48500), new GLatLng(27.77333, 135.86667), new GLatLng(27.64333, 136.24500), new GLatLng(27.51167, 136.62167), new GLatLng(27.37667, 136.99500), new GLatLng(27.24000, 137.36667), new GLatLng(27.10167, 137.73500), new GLatLng(26.96167, 138.10000), new GLatLng(26.82000, 138.46333), new GLatLng(26.67500, 138.82500), new GLatLng(26.52833, 139.18333), new GLatLng(26.38000, 139.54000), new GLatLng(26.22833, 139.89333), new GLatLng(26.07667, 140.24500), new GLatLng(25.92167, 140.59500), new GLatLng(25.76500, 140.94333), new GLatLng(25.60667, 141.28833), new GLatLng(25.44667, 141.63333), new GLatLng(25.28500, 141.97500), new GLatLng(25.12000, 142.31500), new GLatLng(24.95500, 142.65333), new GLatLng(24.78667, 142.99000), new GLatLng(24.61667, 143.32500), new GLatLng(24.44500, 143.65833), new GLatLng(24.27167, 143.99000), new GLatLng(24.09667, 144.32000), new GLatLng(23.91833, 144.65000), new GLatLng(23.74000, 144.97667), new GLatLng(23.56000, 145.30333), new GLatLng(23.37667, 145.62833), new GLatLng(23.19167, 145.95167), new GLatLng(23.00667, 146.27500), new GLatLng(22.81833, 146.59667), new GLatLng(22.62833, 146.91667), new GLatLng(22.43667, 147.23667), new GLatLng(22.24333, 147.55500), new GLatLng(22.04667, 147.87333), new GLatLng(21.85000, 148.19000), new GLatLng(21.65167, 148.50667), new GLatLng(21.45000, 148.82333), new GLatLng(21.24667, 149.13833), new GLatLng(21.04333, 149.45167), new GLatLng(20.83667, 149.76667), new GLatLng(20.62833, 150.08000), new GLatLng(20.41833, 150.39333), new GLatLng(20.20667, 150.70667), new GLatLng(19.99167, 151.02000), new GLatLng(19.77667, 151.33167), new GLatLng(19.55833, 151.64500), new GLatLng(19.34000, 151.95667), new GLatLng(19.11833, 152.27000), new GLatLng(18.89500, 152.58333), new GLatLng(18.67000, 152.89500), new GLatLng(18.44333, 153.20833), new GLatLng(18.21333, 153.52167), new GLatLng(17.98167, 153.83667), new GLatLng(17.75000, 154.15000), new GLatLng(17.51333, 154.46500), new GLatLng(17.27667, 154.78167), new GLatLng(17.03833, 155.09833), new GLatLng(16.79667, 155.41500), new GLatLng(16.55333, 155.73333), new GLatLng(16.30833, 156.05333), new GLatLng(16.06000, 156.37333), new GLatLng(15.81000, 156.69500), new GLatLng(15.55833, 157.01833), new GLatLng(15.30333, 157.34167), new GLatLng(15.04667, 157.66833), new GLatLng(14.78833, 157.99500), new GLatLng(14.52667, 158.32500), new GLatLng(14.26333, 158.65667), new GLatLng(13.99667, 158.99000), new GLatLng(13.72833, 159.32500), new GLatLng(13.45833, 159.66167), new GLatLng(13.18333, 160.00167), new GLatLng(12.90833, 160.34500), new GLatLng(12.62833, 160.69000), new GLatLng(12.34667, 161.03833), new GLatLng(12.06333, 161.39000), new GLatLng(11.77667, 161.74333), new GLatLng(11.48500, 162.10167), new GLatLng(11.19333, 162.46333), new GLatLng(10.89667, 162.82833), new GLatLng(10.59667, 163.19667), new GLatLng(10.29500, 163.57000), new GLatLng(9.98833, 163.94833), new GLatLng(9.68000, 164.33000), new GLatLng(9.36667, 164.71667), new GLatLng(9.05167, 165.11000), new GLatLng(8.73167, 165.50833), new GLatLng(8.40667, 165.91167), new GLatLng(8.08000, 166.32167), new GLatLng(7.74833, 166.73833), new GLatLng(7.41167, 167.16167), new GLatLng(7.07167, 167.59167), new GLatLng(6.72500, 168.03000), new GLatLng(6.37667, 168.47667), new GLatLng(6.02167, 168.93333), new GLatLng(5.66000, 169.39667), new GLatLng(5.29500, 169.87167), new GLatLng(4.92333, 170.35667), new GLatLng(4.54667, 170.85333), new GLatLng(4.16333, 171.36167), new GLatLng(3.77333, 171.88333), new GLatLng(3.37500, 172.41833), new GLatLng(2.97000, 172.96833), new GLatLng(2.55833, 173.53500), new GLatLng(2.13667, 174.12000), new GLatLng(1.70667, 174.72333), new GLatLng(1.26667, 175.34667), new GLatLng(0.81667, 175.99333), new GLatLng(0.35500, 176.66500), new GLatLng(-0.12000, 177.36333), new GLatLng(-0.60833, 178.09333), new GLatLng(-1.11167, 178.85667), new GLatLng(-1.63167, 179.66000), new GLatLng(-2.17000, -179.49333), new GLatLng(-2.73000, -178.59667), new GLatLng(-3.31500, -177.64000), new GLatLng(-3.92833, -176.61333), new GLatLng(-4.57667, -175.50333), new GLatLng(-5.26667, -174.28833), new GLatLng(-6.01000, -172.94000), new GLatLng(-6.82333, -171.41500), new GLatLng(-7.73667, -169.63167), new GLatLng(-8.80833, -167.43667), new GLatLng(-10.20500, -164.38833), new GLatLng(-12.92167, -157.69833)], "#007FFF", 3, 0.8);
+      // GEP new GLatLng(24.2100000, 144.1066667)
+      
+      map.addOverlay(polygon);
+      map.addOverlay(polyline);
+      //      map.addOverlay(markerGEP);
+    }
+    function initPanel(){
+      loadCities();
+      initSearchBox();
+      initLiveVideo();
+      resizePanel();
+    }
+    function resizePanel(){
+       _IG_AdjustIFrameHeight();
+    }
+    function initSearchBox(){
+      GEvent.addDomListener(dom.citySearchBox, "focus", function(){
+        if(dom.errMsg.style.display != "none"){
+          dom.errMsg.style.display = "none";
+        }
+        if(this.value == "城市搜索/快速定位"){
+          this.select();
+        }
+        this.style.color = "#000000";
+      });
+      GEvent.addDomListener(dom.citySearchBox, "blur", function(){
+        if(this.value == ""){
+          this.value = "城市搜索/快速定位";
+        }
+        this.style.color = "#666666";
+      });
+      GEvent.addDomListener(dom.citySearchBox, "keydown", function(e){
+        e = e || window.event;
+        Fei.stopPropagation(e);
+        var keyCode = e.keyCode || e.which || e.charCode;
+        var elem = e.target || e.srcElement;
+        if (elem && elem == this && keyCode == 13) {
+          GEvent.trigger(dom.citySearchButton, "click");
+        }        
+      });
+      GEvent.addDomListener(dom.citySearchButton, "click", function(){
+        if(dom.errMsg.style.display != "none"){
+          dom.errMsg.style.display = "none";
+        }
+        if (dom.citySearchBox.value && dom.citySearchBox.value != "城市搜索/快速定位") {
+          geocoder.getLocationsAsync(dom.citySearchBox.value, function(response){
+            if (!response || response.Status.code != 200) {
+              dom.errMsg.style.display = "block";
+//              GLog.write("没有找到你输入的城市，请确认输入正确");
+            } else if (response && response.Placemark) {
+              var place = response.Placemark[0];
+              if (place.ExtendedData && place.ExtendedData.LatLonBox) {
+                var box = place.ExtendedData.LatLonBox;
+                var bounds = new GLatLngBounds(new GLatLng(box.south, box.west), new GLatLng(box.north, box.east));
+                map.getBoundsZoomLevelAsync(bounds, function(zoom){
+                  map.setCenter(bounds.getCenter(), zoom);
+                });
+              } else if (place.Point) {
+                map.setCenter(new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]));
+              }
+            }
+          });
+        }
+      });
+    }
+    function initLiveVideo(){
+      addToggleBtn("liveToggle", Fei.$("liveContent"), false, false, loadLiveVideo);
+//      var closeIcon = Fei.$("tipCloseBtn");
+//      GEvent.addDomListener(closeIcon, "click", function(e){
+//        Fei.stopPropagation(e);
+//        closeIcon.parentNode.style.display = "none";
+//      });
+//      dom.resultList.innerHTML = "";
+    }
+    var videoLoaded = false;
+    function loadLiveVideo(){
+      if(!videoLoaded){
+        var src="http://www.gmodules.com/ig/ifr?url=http://www.google.com/ig/modules/chinagadgets/onlinevideo/onlinevideo.xml&hl=zh-CN";
+        var ifrmae = Fei.$n("iframe", Fei.$("liveContent"), "video-iframe");
+        ifrmae.setAttribute("frameBorder", "no");  
+        ifrmae.setAttribute("scrolling", "no"); 
+        ifrmae.setAttribute("height", "300");
+        ifrmae.setAttribute("src", src); 
+        videoLoaded = true;
+        _IG_AdjustIFrameHeight();
+      }
+    }
+    function addToggleBtn(elem, content, isExpand, isSmall, callback){
+      function showing(){
+        elem.className = isSmall ? "toggle-button-close-small inline":"toggle-button-close inline";
+        content.style.display = "block";
+        if(callback){
+          callback();
+        }
+        _IG_AdjustIFrameHeight();
+      }
+      function hidden(){
+        elem.className = isSmall ? "toggle-button-open-small inline":"toggle-button-open inline";
+        content.style.display = "none";
+      }
+      if (typeof elem == "string") {
+        elem = Fei.$(elem);
+      }
+      var parent = elem.parentNode;
+      if (isExpand) {
+        showing();
+      } else {
+        hidden();
+      }
+      GEvent.addDomListener(elem, "click", function(e){
+        if(e)Fei.stopPropagation(e);
+        if (elem.className.indexOf("toggle-button-close") != -1) {
+          hidden()
+        } else {
+          showing();
+        }
+      });
+//      GEvent.addDomListener(parent, "click", function(e){
+//        if(e)Fei.stopPropagation(e);
+//        if (elem.className.indexOf("toggle-button-close") != -1) {
+//          hidden();
+//        } else {
+//          showing();
+//        }
+//      });
+    }
+    function addCityListener(name, node, marker, markerM){
+      GEvent.addListener(markerM, "click", function(){
+        if (clickMarker) {
+          clickMarker.hide();
+        }
+          var html = EclipseCalculator.getEclipseInfo(name, name, markerM.point.lat(), markerM.point.lng(), 0);
+          //TODO add other Data
+          markerM.openInfoWindowHtml(html);
+      });
+          
+      GEvent.addListener(marker, "mouseover", function(latlng){
+        markerM.show();
+        marker.hide();
+        node.style.backgroundColor = "#CFCFCF";
+      })
+      GEvent.addListener(markerM, "mouseout", function(latlng){
+        marker.show();
+        GEvent.trigger(map, "mousemove", latlng);
+        markerM.hide();
+        node.style.backgroundColor = "#FFFFFF";
+      })
+      GEvent.addDomListener(node, "mouseover", function(){
+        GEvent.trigger(marker, "mouseover", marker.point);
+      });
+      GEvent.addDomListener(node, "mouseout", function(){
+        GEvent.trigger(markerM, "mouseout", markerM.point);
+      });
+      GEvent.addDomListener(node, "click", function(e){
+        Fei.stopPropagation(e);
+        GEvent.trigger(markerM, "mouseout", markerM.point);
+      });
+    }
+    function createCityIcon(size, url){
+      var icon = new GIcon();
+      //http://www.gstatic.com/codesite/ph/images/star_off.gif
+      //http://www.gstatic.com/codesite/ph/images/star_on.gif
+      icon.image = url;
+      icon.iconSize = new GSize(size, size);
+      icon.shadowSize = new GSize(size, size);
+      icon.iconAnchor = new GPoint(parseInt(size/2), parseInt(size/2));
+      icon.infoWindowAnchor = new GPoint(parseInt(size/2), parseInt(size/2));
+      return icon;
+    }
+    function addProvnodeListener(node, name){
+      GEvent.addDomListener(node, "click", function(){
+        //TODO cache geocode result
+        geocoder.getLocationsAsync(name, function(response){
+          if (response && response.Placemark) {
+            var place = response.Placemark[0];
+            if (place.ExtendedData && place.ExtendedData.LatLonBox) {
+              var box = place.ExtendedData.LatLonBox;
+              var bounds = new GLatLngBounds(new GLatLng(box.south, box.west), new GLatLng(box.north, box.east));
+              map.getBoundsZoomLevelAsync(bounds, function(zoom){
+                map.setCenter(bounds.getCenter(), zoom);
+              });
+              
+            } else if (place.Point) {
+              map.setCenter(new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]));
+            }
+          }
+        });
+      });
+    }
+    function loadCities(){
+      var provWrapper = Fei.$("cityList");
+      provWrapper.innerHTML = "";
+      for (var i in cities) {
+        var prov = cities[i];
+        var provNode = Fei.$n("div", provWrapper, "city-item");
+        var toggleBtn = null;
+        if (prov.children) {
+          toggleBtn = Fei.$n("div", provNode);
+        }
+        Fei.$n("span", provNode, "").innerHTML = prov.name;
+        if (prov.children) {
+          var cityWrapper = Fei.$n("div", provNode, "city-wrapper");
+          addToggleBtn(toggleBtn, cityWrapper, false, true);
+          for (var j in prov.children) {
+            var city = prov.children[j];
+            var cityNode = Fei.$n("div", cityWrapper, "city-item");
+            Fei.$n("span", cityNode).innerHTML = city.name;
+            var point = new GLatLng(city.latlng[0], city.latlng[1]);
+            var marker = new GMarker(point, {
+              icon: createCityIcon(12, "http://maps.gstatic.cn/intl/zh-CN_cn/mapfiles/markers/553-star-on-map-12px.png"),
+              title:city.name
+            });
+            marker.point = point;
+            map.addOverlay(marker);
+            
+            var markerM = new GMarker(point, {
+              icon: createCityIcon(15, "http://www.gstatic.com/codesite/ph/images/star_on.gif"),
+              title:city.name
+            });
+            markerM.point = point;
+            map.addOverlay(markerM);
+            markerM.hide();
+//            if (city.recommend) {
+//              Fei.$n("div", cityNode, "inline", {
+//                "style": "display:inline-block;font-size:bolder;"
+//              }).innerHTML = "*";
+//            }
+            addCityListener(city.name, cityNode, marker, markerM);
+          }
+          addProvnodeListener(provNode, prov.name)
+//          cityWrapper.style.display = "none";
+        } else if(prov.latlng){
+          var point = new GLatLng(prov.latlng[0], prov.latlng[1]);
+          var marker = new GMarker(point, {
+            icon: createCityIcon(12, "http://maps.gstatic.cn/intl/zh-CN_cn/mapfiles/markers/553-star-on-map-12px.png"),
+            title:prov.name
+          });
+          marker.point = point;
+          map.addOverlay(marker);
+          var markerM = new GMarker(point, {
+            icon: createCityIcon(15, "http://www.gstatic.com/codesite/ph/images/star_on.gif"),
+            title:prov.name
+          });
+          markerM.point = point;
+          map.addOverlay(markerM);
+          markerM.hide();
+//          if (prov.recommend) {
+//            Fei.$n("div", provNode, "inline", {
+//              "style": "display:inline-block"
+//            }).innerHTML = "*";
+//          }
+          provNode.style.cssText = "margin-left:23px;";
+          addCityListener(prov.name, provNode, marker, markerM);
+        }else{
+          provNode.style.cssText = "margin-left:23px;";
+          addProvnodeListener(provNode, prov.name);
+        }
+        
+      }
+      addToggleBtn("cityToggle", provWrapper, true);
+    }
+    return {
+      init: function(center){
+        map = new GMap2();
+        map.setCenter(new GLatLng(center.lat, center.lng), center.zoom);
+        addOverlays();
+        addMapListeners();
+        initPanel();
+      }
+    }
+  })();
+  window["eclipse2009"] = {
+    "init": eclipse.init
+  };
+})();
+
+(function(){
+var calculator = (function(){
+//<!--
+//<![CDATA[
+// Solar Eclipse Calculator & Diagram for Google Maps (Xavier Jubier: http://xjubier.free.fr/)
+// Copyright (C) 2004-2009 Xavier M. Jubier
+//
+
+/*
+Borrowed the idea from Javascript Solar Eclipse Calculator
+Copyright (C) 2003 Chris O'Byrne and Stephen McCann
+*/
+/*
+Modifications:
+2004-06-10   Xavier Jubier   Added language parameter to recalculate()
+2005-06-16   Xavier Jubier   Added base 10 specification in parseInt()
+2005-06-17   Xavier Jubier   Added display of deltaT, plus some number formatting features
+2005-07-04   Xavier Jubier   Adjusted values of deltaT
+2005-07-05   Xavier Jubier   Version for Google Maps
+2007-07-20   Xavier Jubier   Added eclipse diagram
+2008-01-18   Xavier Jubier   Added altitude with refraction
+2008-03-12   Xavier Jubier   Minor corrections and huge code adaptation for most browsers
+2009-07-04   Phinix Chen     Remove unnecessary codes to reduce the size for Chinese version of 20090722, full data version at http://xjubier.free.fr/javascript/EclipseCalculatorGoogleMap.js
+*/
+
+//var strUserAgent = navigator.userAgent.toLowerCase();
+//var isSafari = ( strUserAgent.indexOf("safari") != -1 );
+//var isFirefox = ( strUserAgent.indexOf("mozilla") != -1 ) && ( strUserAgent.indexOf("firefox") != -1 );
+//var isIE = ( strUserAgent.indexOf("msie") != -1 );
+//var isWin = ( strUserAgent.indexOf("windows") != -1 );
+//var gSVG_VML_Support = 0;
+var D2R = Math.PI / 180.0;
+var R2D = 180.0 / Math.PI;
+//var gIFRAMEindex = 0; // Used to workaround an iframe Firefox long-standing bug
+//var gIFRAMEid = ""; // Used to workaround an iframe Firefox long-standing bug
+//var gNbLoadiframe = 0;
+
+//
+// Eclipse Elements
+//
+// First line -
+//  (0) Julian day of maximum eclipse
+//  (1) t0 - the TDT hour at which t=0
+//  (2) tmin - the lowest allowed value of t
+//  (3) tmax - the highest allowed value of t
+//  (4) dUTC - the difference between the civilian "GMT" timescale and TDT
+//  (5) dT - the difference between UT and TDT
+// Second line -
+//  (6) X0, X1, X2, X3 - X elements
+// Third line -
+// (10) Y0, Y1, Y2, Y3 - Y elements
+// Fourth line -
+// (14) D0, D1, D2 - D elements
+// Fifth line -
+// (17) M0, M1, M2 - mu elements
+// Sixth line -
+// (20) L10, L11, L12 - L1 elements
+// Seventh line -
+// (23) L20, L21, L22 - L2 elements
+// Eighth line -
+// (26) tan f1
+// (27) tan f2
+//
+
+var elements = new Array(
+//2009 Jul 22
+2455034.60861538,   3.0,  -4.0,   3.0, 66.184, 66.2,
+   0.23998829,  0.55639545, -5.7622e-05, -9.4305e-06,
+  -0.00328382, -0.17745794, -1.3437e-04,  3.1760e-06,
+  20.26424248, -0.00787358, -4.5592e-06,
+ 223.38413727, 15.00100234,  1.9276e-06,
+   0.53045030,  0.00000631, -1.2808e-05,
+  -0.01562861,  0.00000628, -1.2744e-05,
+   0.00460142,  0.00457850
+);
+
+//
+// Observer constants -
+// (0) North Latitude (radians)
+// (1) West Longitude (radians)
+// (2) Altitude (meters)
+// (3) West time zone (hours)
+// (4) rho sin O'
+// (5) rho cos O'
+// (6) index into the elements array for the eclipse in question
+//
+// Note that correcting for refraction will involve creating a "virtual" altitude
+// for each contact, and hence a different value of rho and O' for each contact!
+//
+var obsvconst = new Array();
+
+//
+// Eclipse circumstances
+//  (0) Event type (C1=-2, C2=-1, Mid=0, C3=1, C4=2)
+//  (1) t
+// -- time-only dependent circumstances (and their per-hour derivatives) follow --
+//  (2) x
+//  (3) y
+//  (4) d
+//  (5) sin d
+//  (6) cos d
+//  (7) mu
+//  (8) l1
+//  (9) l2
+// (10) dx
+// (11) dy
+// (12) dd
+// (13) dmu
+// (14) dl1
+// (15) dl2
+// -- time and location dependent circumstances follow --
+// (16) h
+// (17) sin h
+// (18) cos h
+// (19) xi
+// (20) eta
+// (21) zeta
+// (22) dxi
+// (23) deta
+// (24) u
+// (25) v
+// (26) a
+// (27) b
+// (28) l1'
+// (29) l2'
+// (30) n^2
+// -- observational circumstances follow --
+// (31) p
+// (32) alt
+// (33) q
+// (34) v
+// (35) azi
+// (36) m (mid eclipse only) or limb correction applied (where available!)
+// (37) magnitude (mid eclipse only)
+// (38) moon/sun (mid eclipse only)
+// (39) calculated local event type for a transparent earth (0 = none, 1 = partial, 2 = annular, 3 = total)
+// (40) event visibility (0 = above horizon, 1 = below horizon, 2 = sunrise, 3 = sunset, 4 = below horizon, disregard)
+// (41) moon altitude (diagram)
+// (42) moon azimuth (diagram)
+// (43) sun radius
+// (44) moon radius
+// (45) sun altitude (diagram)
+// (46) sun azimuth (diagram)
+//
+var lambdak1k2 = 1.00076024401; // = k1/k2 with k1 = 0.272488 and k2 = 0.272281 or 1.00076026356 with 0.272481 and 0.272274
+var f1, f2;
+
+var c1 = new Array();
+var c2 = new Array();
+var mid = new Array();
+var c3 = new Array();
+var c4 = new Array();
+
+var c1_alt = new Array(2);
+var c1_azi = new Array(2);
+var c1_rad = new Array(2);
+var c2_alt = new Array(2);
+var c2_azi = new Array(2);
+var c2_rad = new Array(2);
+var mid_alt = new Array(2);
+var mid_azi = new Array(2);
+var mid_rad = new Array(2);
+var c3_alt = new Array(2);
+var c3_azi = new Array(2);
+var c3_rad = new Array(2);
+var c4_alt = new Array(2);
+var c4_azi = new Array(2);
+var c4_rad = new Array(2);
+var V = new Array(2);
+var PV = new Array(5);
+
+//
+// Populate the circumstances array with the time-only dependent circumstances (x, y, d, m, ...)
+function timedependent( circumstances )
+{
+  var t = circumstances[1];  
+  var index = obsvconst[6];  
+  // x
+  var ans = elements[9 + index] * t + elements[8 + index];
+  ans = ans * t + elements[7 + index];
+  ans = ans * t + elements[6 + index];
+  circumstances[2] = ans;
+  // dx
+  ans = 3.0 * elements[9 + index] * t + 2.0 * elements[8 + index];
+  ans = ans * t + elements[7 + index];
+  circumstances[10] = ans;
+  // y
+  ans = elements[13 + index] * t + elements[12 + index];
+  ans = ans * t + elements[11 + index];
+  ans = ans * t + elements[10 + index];
+  circumstances[3] = ans;
+  // dy
+  ans = 3.0 * elements[13 + index] * t + 2.0 * elements[12 + index];
+  ans = ans * t + elements[11 + index];
+  circumstances[11] = ans;
+  // d
+  ans = elements[16 + index] * t + elements[15 + index];
+  ans = ans * t + elements[14 + index];
+  ans *= D2R;
+  circumstances[4] = ans;
+  // sin d and cos d
+  circumstances[5] = Math.sin(ans);
+  circumstances[6] = Math.cos(ans);
+  // dd
+  ans = 2.0 * elements[16 + index] * t + elements[15 + index];
+  ans *= D2R;
+  circumstances[12] = ans;
+  // m
+  ans = elements[19 + index] * t + elements[18 + index];
+  ans = ans * t + elements[17 + index];
+  if (ans >= 360.0){
+    ans -= 360.0;
+  }
+    
+  ans *= D2R;
+  circumstances[7] = ans;
+  // dm
+  ans = 2.0 * elements[19 + index] * t + elements[18 + index];
+  ans *= D2R;
+  circumstances[13] = ans;
+  // l1 and dl1
+  var type = circumstances[0];
+  ans = elements[22 + index] * t + elements[21 + index];
+  ans = ans * t + elements[20 + index];
+  circumstances[8] = ans;
+  if ((type == -2) || (type == 0) || (type == 2)){
+    circumstances[14] = 2.0 * elements[22 + index] * t + elements[21 + index];
+  }
+    
+  // l2 and dl2
+  ans = elements[25 + index] * t + elements[24 + index];
+  ans = ans * t + elements[23 + index];
+  circumstances[9] = ans;
+  if ((type == -1) || (type == 0) || (type == 1)){
+    circumstances[15] = 2.0 * elements[25 + index] * t + elements[24 + index];
+  }
+  return circumstances;
+}
+
+//
+// Populate the circumstances array with the time and location dependent circumstances
+function timelocdependent( circumstances )
+{
+  timedependent(circumstances);
+  var index = obsvconst[6];
+  // h, sin h, cos h
+  circumstances[16] = circumstances[7] - obsvconst[1] - (elements[5 + index] / 13713.440925010498); // 13713.4410528
+  circumstances[17] = Math.sin(circumstances[16]);
+  circumstances[18] = Math.cos(circumstances[16]);
+  // xi
+  circumstances[19] = obsvconst[5] * circumstances[17];
+  // eta
+  circumstances[20] = (obsvconst[4] * circumstances[6]) - (obsvconst[5] * circumstances[18] * circumstances[5]);
+  // zeta
+  circumstances[21] = (obsvconst[4] * circumstances[5]) + (obsvconst[5] * circumstances[18] * circumstances[6]);
+  // dxi
+  circumstances[22] = circumstances[13] * obsvconst[5] * circumstances[18];
+  // deta
+  circumstances[23] = (circumstances[13] * circumstances[19] * circumstances[5]) - (circumstances[21] * circumstances[12]);
+  // u
+  circumstances[24] = circumstances[2] - circumstances[19];
+  // v
+  circumstances[25] = circumstances[3] - circumstances[20];
+  // a
+  circumstances[26] = circumstances[10] - circumstances[22];
+  // b
+  circumstances[27] = circumstances[11] - circumstances[23];
+  // l1'
+  var type = circumstances[0];
+  if ((type == -2) || (type == 0) || (type == 2)){
+    circumstances[28] = circumstances[8] - circumstances[21] * elements[26 + index];
+  }
+    
+  // l2'
+  if ((type == -1) || (type == 0) || (type == 1)){
+    circumstances[29] = circumstances[9] - circumstances[21] * elements[27 + index];
+  }
+    
+  // n^2
+  circumstances[30] = (circumstances[26] * circumstances[26]) + (circumstances[27] * circumstances[27]);
+
+  return circumstances;
+}
+
+//
+// Iterate on C1 or C4
+function c1c4iterate( circumstances )
+{
+  var sign, n;
+
+  timelocdependent(circumstances);
+  if (circumstances[0] < 0){
+    sign = -1.0;
+  }else{
+    sign = 1.0;
+  }
+  var tmp = 1.0;
+  var iter = 0;
+  while (((tmp > 0.000001) || (tmp < -0.000001)) && (iter < 50)){
+    n = Math.sqrt(circumstances[30]);
+    tmp = (circumstances[26] * circumstances[25]) - (circumstances[24] * circumstances[27]);
+    tmp = tmp / n / circumstances[28];
+    if ( Math.abs(tmp) <= 1.0 ){
+      tmp = sign * Math.sqrt(1.0 - (tmp * tmp)) * circumstances[28] / n;
+    }else{
+      tmp = 0.0;
+    }
+    tmp = ((circumstances[24] * circumstances[26]) + (circumstances[25] * circumstances[27])) / circumstances[30] - tmp;
+    circumstances[1] -= tmp;
+    timelocdependent(circumstances);
+    iter++;
+  }
+  return circumstances;
+}
+
+//
+// Get C1 and C4 data
+//   Entry conditions -
+//   1. The mid array must be populated
+//   2. The magnitude at mid eclipse must be > 0.0
+function getc1c4( ){
+  var n = Math.sqrt(mid[30]);
+  var tmp = (mid[26] * mid[25]) - (mid[24] * mid[27]);
+  tmp = tmp / n / mid[28];
+  tmp = Math.sqrt(1.0 - (tmp * tmp)) * mid[28] / n;
+  c1[0] = -2;
+  c4[0] = 2;
+  c1[1] = mid[1] - tmp;
+  c4[1] = mid[1] + tmp;
+  c1c4iterate(c1);
+  c1c4iterate(c4);
+}
+
+//
+// Iterate on C2 or C3
+function c2c3iterate( circumstances ){
+  var sign, n;
+
+  timelocdependent(circumstances);
+  if (circumstances[0] < 0){
+    sign = -1.0;
+  }else{
+    sign = 1.0;
+  }
+    
+  
+    
+  if (mid[29] < 0.0){
+    sign = -sign;
+  }
+    
+  var tmp = 1.0;
+  var iter = 0;
+  while (((tmp > 0.000001) || (tmp < -0.000001)) && (iter < 50)){
+    n = Math.sqrt(circumstances[30]);
+    tmp = (circumstances[26] * circumstances[25]) - (circumstances[24] * circumstances[27]);
+    tmp = tmp / n / circumstances[29];
+    if ( Math.abs(tmp) <= 1.0 ){
+      tmp = sign * Math.sqrt(1.0 - (tmp * tmp)) * circumstances[29] / n;
+    }else{
+      tmp = 0.0;
+    }
+    tmp = ((circumstances[24] * circumstances[26]) + (circumstances[25] * circumstances[27])) / circumstances[30] - tmp;
+    circumstances[1] -= tmp;
+    timelocdependent(circumstances);
+    iter++;
+  }
+
+  return circumstances;
+}
+
+//
+// Get C2 and C3 data
+//   Entry conditions -
+//   1. The mid array must be populated
+//   2. There must be either a total or annular eclipse at the location!
+function getc2c3( ){
+  var n = Math.sqrt(mid[30]);
+  var tmp = (mid[26] * mid[25]) - (mid[24] * mid[27]);
+  tmp = tmp / n / mid[29];
+  tmp = Math.sqrt(1.0 - (tmp * tmp)) * mid[29] / n;
+  c2[0] = -1;
+  c3[0] = 1;
+  if (mid[29] < 0.0){
+    c2[1] = mid[1] + tmp;
+    c3[1] = mid[1] - tmp;
+  } else{
+    c2[1] = mid[1] - tmp;
+    c3[1] = mid[1] + tmp;
+  }
+  c2c3iterate(c2);
+  c2c3iterate(c3);
+}
+
+//
+// Get the observational circumstances
+function observational( circumstances ){
+  var contacttype;
+
+  // We are looking at an "external" contact UNLESS this is a total solar eclipse AND we are looking at
+  // c2 or c3, in which case it is an INTERNAL contact! Note that if we are looking at mid eclipse,
+  // then we may not have determined the type of eclipse (mid[39]) just yet!
+  if (circumstances[0] == 0){
+    contacttype = 1.0;
+  } else{
+    if ((mid[39] == 3) && ((circumstances[0] == -1) || (circumstances[0] == 1))){
+      contacttype = -1.0;
+    }else{
+      contacttype = 1.0;
+    }
+  }
+  // p
+  circumstances[31] = Math.atan2(contacttype * circumstances[24], contacttype * circumstances[25]);
+  // alt
+  var sinlat = Math.sin(obsvconst[0]);
+  var coslat = Math.cos(obsvconst[0]);
+  circumstances[32] = Math.asin(circumstances[5] * sinlat + circumstances[6] * coslat * circumstances[18]);
+  // q
+  circumstances[33] = Math.asin(coslat * circumstances[17] / Math.cos(circumstances[32]));
+  if (circumstances[20] < 0.0)
+    circumstances[33] = Math.PI - circumstances[33];
+  // v
+  circumstances[34] = circumstances[31] - circumstances[33];
+  // azi
+  circumstances[35] = Math.atan2(-circumstances[17] * circumstances[6], (circumstances[5] * coslat) - (circumstances[18] * sinlat * circumstances[6]));
+
+  // Visibility (take refraction into account)
+  if (circumstances[32] > -0.00524){
+    circumstances[40] = 0;
+  }else{
+    circumstances[40] = 1;
+  }
+  var xi = circumstances[19];
+  var eta = circumstances[20];
+  var zeta = circumstances[21];
+  // Sun distance in unit of the earth equatorial radius
+  var zs = (circumstances[8] * Math.cos(f1)) - (circumstances[9] * Math.cos(f2));
+  zs /= Math.sin(f1) - Math.sin(f2);
+  // Moon distance in unit of the earth equatorial radius
+  var zm = (circumstances[8] * Math.cos(f1)) + (lambdak1k2 * circumstances[9] * Math.cos(f2));
+  zm /= Math.sin(f1) + (lambdak1k2 * Math.sin(f2));
+  var u = circumstances[2] - xi;
+  var v = circumstances[3] - eta;
+  zs -= zeta;
+  zm -= zeta;
+  var tmp = Math.sqrt((u * u) + (v * v) + (zs * zs));
+  var sdec = (v * circumstances[6]) + (zs * circumstances[5]);
+  sdec = Math.asin(sdec / tmp);
+  var tmp = Math.sqrt((u * u) + (v * v) + (zm * zm));
+  var mdec = (v * circumstances[6]) + (zm * circumstances[5]);
+  mdec = Math.asin(mdec / tmp);
+  var deltamus = Math.atan(u / ((v * circumstances[5]) - (zs * circumstances[6])));
+  var deltamum = Math.atan(u / ((v * circumstances[5]) - (zm * circumstances[6])));
+  var sha = circumstances[7] + deltamus;
+  var mha = circumstances[7] + deltamum;
+
+  // Local hour angle
+  var index = obsvconst[6];
+  sha -= obsvconst[1] + (elements[5 + index] / 13713.440925010498); // 13713.4410528
+  mha -= obsvconst[1] + (elements[5 + index] / 13713.440925010498); // 13713.4410528
+
+  var sinsdec = Math.sin(sdec);
+  var cossdec = Math.cos(sdec);
+  var sinsha = Math.sin(sha);
+  var cossha = Math.cos(sha);
+  // Sun altitude
+  circumstances[45] = Math.asin((sinsdec * sinlat) + (cossdec * cossha * coslat));
+  // Sun azimuth
+  circumstances[46] = Math.atan2(-cossdec * sinsha, (sinsdec * coslat) - (cossdec * cossha * sinlat));
+  var sinmdec = Math.sin(mdec);
+  var cosmdec = Math.cos(mdec);
+  var sinmha = Math.sin(mha);
+  var cosmha = Math.cos(mha);
+  // Moon altitude
+  circumstances[41] = Math.asin((sinmdec * sinlat) + (cosmdec * cosmha * coslat));
+  // Moon azimuth
+  circumstances[42] = Math.atan2(-cosmdec * sinmha, (sinmdec * coslat) - (cosmdec * cosmha * sinlat));
+
+  // Sun apparent radius
+  tmp = (circumstances[8] * Math.cos(f1) * Math.sin(f2)) - (circumstances[9] * Math.sin(f1) * Math.cos(f2));
+  var R = tmp / (Math.sin(f1) - Math.sin(f2));
+  var rs = Math.asin(R / Math.sqrt((u * u) + (v * v) + (zs * zs))); // Topocentric
+  circumstances[43] = rs * R2D;
+  // Moon apparent radius
+  var k = tmp / ((Math.sin(f1) / lambdak1k2) + Math.sin(f2));
+  var rm = Math.asin(k / Math.sqrt((u * u) + (v * v) + (zm * zm))); // Topocentric
+  circumstances[44] = rm * R2D;
+
+  return circumstances;
+}
+
+//
+// Calculate mid eclipse
+function getmid(){
+  mid[0] = 0;
+  mid[1] = 0.0;
+  var iter = 0;
+  var tmp = 1.0;
+  timelocdependent(mid);
+  while (((tmp > 0.000001) || (tmp < -0.000001)) && (iter < 50)){
+    tmp = ((mid[24] * mid[26]) + (mid[25] * mid[27])) / mid[30];
+    mid[1] -= tmp;
+    timelocdependent(mid);
+    iter++;
+  }
+}
+
+//
+// Populate the c1, c2, mid, c3 and c4 arrays
+function getall( indexEclipse ){
+  var index = obsvconst[6];
+  f1 = Math.atan(elements[26 + index]);
+  f2 = Math.atan(elements[27 + index]);
+
+  getmid();
+  observational(mid);
+  PV[2] = getpv(mid);
+  // m, magnitude and moon/sun
+  mid[36] = Math.sqrt((mid[24] * mid[24]) + (mid[25] * mid[25]));
+  mid[37] = (mid[28] - mid[36]) / (mid[28] + mid[29]);
+  mid[38] = (mid[28] - mid[29]) / (mid[28] + mid[29]);
+  if (mid[37] > 0.0){
+    getc1c4();
+    if ((mid[36] < mid[29]) || (mid[36] < -mid[29])){
+      getc2c3();
+      if (mid[29] < 0.0){
+        mid[39] = 3; // Total solar eclipse
+      }else{
+        mid[39] = 2; // Annular solar eclipse
+      }
+      observational(c2);
+      V[0] = 360 - (c2[34] * R2D);
+      PV[1] = getpv(c2);
+      observational(c3);
+      V[1] = 360 - (c3[34] * R2D);
+      PV[3] = getpv(c3);
+      if (indexEclipse == 73) { // 2003 May 31 eclipse limb corrections -
+      
+        c2[36] = limbcorrection(c2[31], C2limb2003May);
+        c3[36] = limbcorrection(c3[31], C3limb2003May);
+        if (c2[36] < 990.0)
+          c2[1] += c2[36] / 3600.0;
+        if (c3[36] < 990.0)
+          c3[1] += c3[36] / 3600.0;
+      }else {
+        c2[36] = 999.9;
+        c3[36] = 999.9;
+      }
+    }else{
+      mid[39] = 1; // Partial eclipse
+    }
+    observational(c1);
+    PV[0] = getpv(c1);
+    observational(c4);
+    PV[4] = getpv(c4);
+  }else{
+    mid[39] = 0; // No eclipse
+  }
+  c1_alt[0] = c1[45] * R2D; // Sun
+  c1_azi[0] = c1[46] * R2D;
+  if (c1_azi[0] < 0.0)
+    c1_azi[0] += 360.0;
+  else if (c1_azi[0] >= 360.0)
+    c1_azi[0] -= 360.0;
+  c1_rad[0] = c1[43] * 100;
+  c2_alt[0] = c2[45] * R2D;
+  c2_azi[0] = c2[46] * R2D;
+  if (c2_azi[0] < 0.0)
+    c2_azi[0] += 360.0;
+  else if (c2_azi[0] >= 360.0)
+    c2_azi[0] -= 360.0;
+  c2_rad[0] = c2[43] * 100;
+  mid_alt[0] = mid[45] * R2D;
+  mid_azi[0] = mid[46] * R2D;
+  if (mid_azi[0] < 0.0)
+    mid_azi[0] += 360.0;
+  else if (mid_azi[0] >= 360.0)
+    mid_azi[0] -= 360.0;
+  mid_rad[0] = mid[43] * 100;
+  c3_alt[0] = c3[45] * R2D;
+  c3_azi[0] = c3[46] * R2D;
+  if (c3_azi[0] < 0.0)
+    c3_azi[0] += 360.0;
+  else if (c3_azi[0] >= 360.0)
+    c3_azi[0] -= 360.0;
+  c3_rad[0] = c3[43] * 100;
+  c4_alt[0] = c4[45] * R2D;
+  c4_azi[0] = c4[46] * R2D;
+  if (c4_azi[0] < 0.0)
+    c4_azi[0] += 360.0;
+  else if (c4_azi[0] >= 360.0)
+    c4_azi[0] -= 360.0;
+  c4_rad[0] = c4[43] * 100;
+
+  c1_alt[1] = c1[41] * R2D; // Moon
+  c1_azi[1] = c1[42] * R2D;
+  if (c1_azi[1] < 0.0)
+    c1_azi[1] += 360.0;
+  else if (c1_azi[1] >= 360.0)
+    c1_azi[1] -= 360.0;
+  c1_rad[1] = c1[44] * 100;
+  c2_alt[1] = c2[41] * R2D;
+  c2_azi[1] = c2[42] * R2D;
+  if (c2_azi[1] < 0.0)
+    c2_azi[1] += 360.0;
+  else if (c2_azi[1] >= 360.0)
+    c2_azi[1] -= 360.0;
+  c2_rad[1] = c2[44] * 100;
+  mid_alt[1] = mid[41] * R2D;
+  mid_azi[1] = mid[42] * R2D;
+  if (mid_azi[1] < 0.0)
+    mid_azi[1] += 360.0;
+  else if (mid_azi[1] >= 360.0)
+    mid_azi[1] -= 360.0;
+  mid_rad[1] = mid[44] * 100;
+  c3_alt[1] = c3[41] * R2D;
+  c3_azi[1] = c3[42] * R2D;
+  if (c3_azi[1] < 0.0)
+    c3_azi[1] += 360.0;
+  else if (c3_azi[1] >= 360.0)
+    c3_azi[1] -= 360.0;
+  c3_rad[1] = c3[44] * 100;
+  c4_alt[1] = c4[41] * R2D;
+  c4_azi[1] = c4[42] * R2D;
+  if (c4_azi[1] < 0.0)
+    c4_azi[1] += 360.0;
+  else if (c4_azi[1] >= 360.0)
+    c4_azi[1] -= 360.0;
+  c4_rad[1] = c4[44] * 100;
+}
+
+//
+// Read the data, and populate the obsvconst array
+function readdata( lat, lon, indexEclipse )
+{
+  // Get the latitude
+  obsvconst[0] = lat;
+  obsvconst[0] *= 1;
+  obsvconst[0] *= D2R;
+
+  // Get the longitude
+  obsvconst[1] = lon;
+  obsvconst[1] *= -1;
+  obsvconst[1] *= D2R;
+
+  var Elv = 0;
+  if ( location.search.length > 1 ) {
+    var argstr = location.search.substring(1, location.search.length);
+    var args = argstr.split("&");
+    for ( var i = 0; i < args.length; i++ ) {
+      if ( args[i].substring(0, 4) == "Elv=" ){
+        eval(unescape(args[i]));
+      }
+        
+    }
+  }
+
+  // Get the altitude (sea level by default)
+  obsvconst[2] = Elv;
+
+  // Get the time zone (UT by default)
+  obsvconst[3] = 0;
+
+  // Get the observer's geocentric position
+  var tmp = Math.atan(0.996647189335 * Math.tan(obsvconst[0]));
+  obsvconst[4] = 0.996647189335 * Math.sin(tmp) + (obsvconst[2] / 6378137.0) * Math.sin(obsvconst[0]);
+  obsvconst[5] = Math.cos(tmp) + (obsvconst[2] * Math.cos(obsvconst[0]) / 6378137.0);
+
+  // Get the index for the selected eclipse
+  obsvconst[6] = 28 * indexEclipse;
+}
+
+//
+// Read the deltaT value for the selected eclipse
+function getdTValue( indexEclipse ){
+  var deltaT = elements[5 + (28 * indexEclipse)];
+  return deltaT.toFixed(1);
+}
+
+//
+// Get the local date of an event (see http://aa.usno.navy.mil/js/JulianDate.js)
+function getdate(circumstances){
+  var ans;
+  var year, month, day;
+  var index = obsvconst[6];
+  // Local time to the nearest 0.1 sec
+  var t = circumstances[1] + elements[1 + index] - obsvconst[3] - ((elements[4 + index] - 0.05) / 3600.0);
+  if (t < 0.0) 
+    t += 24.0;
+  else if (t >= 24.0) t -= 24.0;
+  // JD for as close to local noon as possible, and convert into a date
+  // This algorithm, as is, will only work for the period 1900/03/01 to 2100/02/28
+  var jd = Math.floor(elements[index] - (t / 24.0) + 1538.0);
+  var c = Math.floor((jd - 122.1) / 365.25);
+  var d = Math.floor(365.25 * c);
+  var e = Math.floor((jd - d) / 30.6001);
+  d = jd - d - Math.floor(30.6001 * e);
+  if (e < 13.5) {
+    e -= 1;
+  } else{
+    e -= 13;
+  } 
+  if (e > 2.5){
+    year = c - 4716;
+  } else {
+    year = c - 4715;
+  } 
+    
+//  if (e < 10) ans += "0";
+    month = e;
+//  ans += e + "/";
+//  if (d < 10) ans += "0";
+    day = d;//GLog.write(year+":"+month+":"+day);
+//  ans += d;
+  return new Date(year, month-1, day).toLocaleDateString();
+}
+
+//
+// Get the local time of an event
+function gettime( circumstances )
+{
+  var ans = "";
+  var index = obsvconst[6];
+  // Local time to the nearest 0.1 sec
+  var t = circumstances[1] + elements[1 + index] - obsvconst[3] - ((elements[4 + index] - 0.05) / 3600.0)+8.0;
+  if (t < 0.0)
+    t += 24.0;
+  else if (t >= 24.0)
+    t -= 24.0;
+  if (t < 10.0)
+    ans += "0";
+  ans += Math.floor(t) + ":";
+  t = (t - Math.floor(t)) * 60.0;
+  if (t < 10.0)
+    ans += "0";
+  ans += Math.floor(t) + ":";
+  t = (t - Math.floor(t)) * 60.0;
+  if (t < 10.0)
+    ans += "0";
+  ans += Math.floor(t);
+    ans += ".";
+  ans += Math.floor(10.0 * (t - Math.floor(t)));
+  // Add an asterix if the altitude is less than zero (take refraction into account)
+  if (circumstances[32] < -0.00524)
+    ans += "*";
+
+  return ans;
+}
+
+//
+// Get the altitude
+function getalt( circumstances )
+{
+  var ans;
+
+  var t = (circumstances[32] * R2D) + 0.05;
+  if (t < 0.0)
+  {
+    ans = "-";
+    t = -t;
+  }
+  else
+    ans = "+";
+  var tmp = Math.floor(t);
+  if (tmp < 10.0)
+    ans += "0";
+  ans += tmp;
+    ans += ".";
+  ans += Math.floor(10.0 * (t - tmp));
+
+  return ans;
+}
+
+//
+// Get the azimuth
+function getazi( circumstances )
+{
+  var ans = "";
+  var t = (circumstances[35] * R2D) + 0.05;
+  if (t < 0.0)
+    t += 360.0;
+  else if (t >= 360.0)
+    t -= 360.0;
+  var tmp = Math.floor(t);
+  if (tmp < 100.0)
+    ans += "0";
+  if (tmp < 10.0)
+    ans += "0";
+  ans += tmp;
+    ans += ".";
+  ans += Math.floor(10.0 * (t - tmp));
+
+  return ans;
+}
+
+//
+// Get P
+function getp( circumstances )
+{
+  var ans = "";
+  var t = circumstances[31] * R2D;
+  if (t < 0.0)
+    t += 360.0;
+  else if (t >= 360.0)
+    t -= 360.0;
+  t = Math.floor(t + 0.5);
+  if (t < 100.0)
+    ans += "0";
+  if (t < 10.0)
+    ans += "0";
+  ans += t;
+
+  return ans;
+}
+
+//
+// Get V
+function getv( circumstances )
+{
+  var ans = "";
+  var t = Math.floor(120.5 - circumstances[34] * 60.0 / Math.PI) / 10.0;
+  while (t > 13.0)
+    t -= 12.0;
+  while (t < 1.0)
+    t += 12.0;
+  if (t < 10.0)
+    ans += "0";
+  ans += Math.floor(t);
+    ans += ".";
+  ans += Math.floor(t * 10.0 - 10.0 * Math.floor(t)).toString();
+
+  return ans;
+}
+
+function getpv( circumstances )
+{
+  var p = circumstances[31] * R2D;
+  while (p < 0.0)
+    p += 360.0;
+  while (p >= 360.0)
+    p -= 360.0;
+
+  var v = 360 - (circumstances[34] * R2D);
+  while (v < 0.0)
+    v += 360.0;
+  while (v >= 360.0)
+    v -= 360.0;
+
+  var ans = p + v;
+  while (ans < 0.0)
+    ans += 360.0;
+  while (ans >= 360.0)
+    ans -= 360.0;
+
+  return ans;
+}
+
+//
+// Get the limb correction
+function getlc( circumstances )
+{
+  var ans = "";
+  if (((circumstances[0] == 1) || (circumstances[0] == -1)) && (circumstances[36] < 990.0))
+  {
+    var t;
+
+    if (circumstances[36] < 0.0)
+    {
+      ans = "-";
+      t = -circumstances[36];
+    }
+    else
+    {
+      ans = "+";
+      t = circumstances[36];
+    }
+    t = Math.floor(t * 10.0 + 0.5) / 10.0;
+    ans += Math.floor(t).toString();
+      ans += ".";
+    ans += Math.floor(t * 10.0 - 10.0 * Math.floor(t)).toString();
+    ans += "s";
+  }
+
+  return ans;
+}
+
+// Display the information about 1st contact
+function displayc1(isPanel, title, rowspan){
+  var html = '<tr align="right" bgcolor="#EFEFEF">';
+  if(title && rowspan){
+    html += '<td rowspan="'+rowspan+'">' + title + '</td>';
+  }
+  html += '<td align="center" title="日偏食开始">';
+  html += "<b>初亏</b>";
+  var alt = c1[32] * R2D;
+  var true_alt = elevationRefraction(alt).toFixed(1);
+  if(isPanel){
+    html += '</td><td>' + gettime(c1) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c1) + '&deg;</td><td>' + getazi(c1) + '&deg;</td></tr>';
+  }else{
+    html += '</td><td>' + gettime(c1) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c1) + '&deg;</td><td>' + getazi(c1) + '&deg;</td><td>' + getp(c1) + '&deg;</td><td>' + getv(c1) + '</td><td>&nbsp;</td></tr>';
+  }
+  return html;
+}
+
+// Display the information about 2nd contact
+function displayc2(isPanel){
+  var html = '<tr align="right" bgcolor="#EFEFEF">';
+    if ( mid[39] > 2 )
+      html += '<td align="center" title="日全食开始"><b>食既</b>';
+    else
+      html += '<td align="center" title="日环食开始"><b>食既</b>';
+  var alt = c2[32] * R2D;
+  var true_alt = elevationRefraction(alt).toFixed(1);
+  if(isPanel){
+    html += '</td><td>' + gettime(c2) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c2) + '&deg;</td><td>' + getazi(c2) + '&deg;</td></tr>';    
+  }else{
+    html += '</td><td>' + gettime(c2) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c2) + '&deg;</td><td>' + getazi(c2) + '&deg;</td><td>' + getp(c2) + '&deg;</td><td>' + getv(c2) + '</td><td>' + getlc(c2) + '</td></tr>';
+  }
+  return html;
+}
+
+// Display the information about mid eclipse
+function displaymid(isPanel){
+  var html = '<tr align="right" bgcolor="#EFEFEF"><td align="center" title="日月中心基本重叠">';
+    html += "<b>食甚</b>"; // Mid eclipse
+  var alt = mid[32] * R2D;
+  var true_alt = elevationRefraction(alt).toFixed(1);
+  if(isPanel){
+    html += '</td><td>' + gettime(mid) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(mid) + '&deg;</td><td>' + getazi(mid) + '&deg;</td></tr>';
+  }else{
+    html += '</td><td>' + gettime(mid) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(mid) + '&deg;</td><td>' + getazi(mid) + '&deg;</td><td>' + getp(mid) + '&deg;</td><td>' + getv(mid) + '</td><td>&nbsp;</td></tr>';
+  }
+  return html;
+}
+
+// Display the information about 3rd contact
+function displayc3(isPanel){
+  var html = '<tr align="right" bgcolor="#EFEFEF">';
+    if ( mid[39] > 2 )
+      html += '<td align="center" title="日全食结束"><b>生光</b>';
+    else
+      html += '<td align="center" title="日环食结束"><b>生光</b>';
+  var alt = c3[32] * R2D;
+  var true_alt = elevationRefraction(alt).toFixed(1);
+  if(isPanel){
+    html += '</td><td>' + gettime(c3) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c3) + '&deg;</td><td>' + getazi(c3) + '&deg;</td></tr>';
+  }else{
+    html += '</td><td>' + gettime(c3) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c3) + '&deg;</td><td>' + getazi(c3) + '&deg;</td><td>' + getp(c3) + '&deg;</td><td>' + getv(c3) + '</td><td>' + getlc(c3) + '</td></tr>';
+  }
+  return html;
+}
+
+// Display the information about 4th contact
+function displayc4(isPanel){
+  var html = '<tr align="right" bgcolor="#EFEFEF"><td align="center" title="日偏食结束">';
+    html += "<b>复圆</b>";
+  var alt = c4[32] * R2D;
+  var true_alt = elevationRefraction(alt).toFixed(1);
+  if(isPanel){
+    html += '</td><td>' + gettime(c4) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c4) + '&deg;</td><td>' + getazi(c4) + '&deg;</td></tr>';
+  }else{
+    html += '</td><td>' + gettime(c4) + '</td><td ' + ((alt > -0.3) ? 'title="' + true_alt + '&deg;已含折射率" ' : ' ') + '>' + getalt(c4) + '&deg;</td><td>' + getazi(c4) + '&deg;</td><td>' + getp(c4) + '&deg;</td><td>' + getv(c4) + '</td><td>&nbsp;</td></tr>';
+  }
+  return html;
+}
+
+// Get the duration in 00分00.0秒 format，食延
+function getduration(  ){
+  var tmp = c3[1] - c2[1];
+  if (tmp < 0.0)
+    tmp += 24.0;
+  else if (tmp >= 24.0)
+    tmp -= 24.0;
+  tmp = (tmp * 60.0) - 60.0 * Math.floor(tmp) + 0.05 / 60.0;
+  var ans = Math.floor(tmp) + "分";//m
+  tmp = (tmp * 60.0) - 60.0 * Math.floor(tmp);
+  if (tmp < 10.0)
+    ans += "0";
+  ans += Math.floor(tmp);
+    ans += ".";
+  ans += Math.floor((tmp - Math.floor(tmp)) * 10.0).toString() + "秒";//s
+
+  return ans;
+}
+
+// Get the obscuration //食分
+function getcoverage(  ){
+  var a, b, c;
+  if (mid[37] <= 0.0){
+      return "0.00%";
+  }  else if (mid[37] >= 1.0)  {
+      return "100.00%";
+  }
+  if (mid[39] == 2){
+    c = mid[38] * mid[38];
+  } else  {
+    c = Math.acos((mid[28] * mid[28] + mid[29] * mid[29] - 2.0 * mid[36] * mid[36]) / (mid[28]*mid[28] - mid[29]*mid[29]));
+    b = Math.acos((mid[28] * mid[29] + mid[36] * mid[36]) / mid[36] / (mid[28] + mid[29]));
+    a = Math.PI - b - c;
+    c = ((mid[38] * mid[38] * a + b) - mid[38] * Math.sin(c)) / Math.PI;
+  }
+  return (c * 100).toFixed(2) + "%";
+}
+
+// Get the (Ant)Umbral depth  // 食深，只有日全食或日环食时有效
+// Entry condition - there is a total or annular eclipse
+function getdepth(  ){
+  var depth = mid[36] / mid[29];
+  if (depth < 0.0)
+    depth = 1.0 + depth;
+  else
+    depth = 1.0 - depth;
+  return (depth * 100).toFixed(1) + "%";
+}
+function getUnavailableEclipse(){
+  var msg = null;
+  if(indexEclipse == -1){
+    msg = "The local circumstances are only available for solar eclipses between 1970 and 2039.";
+  }else{
+    msg = "无效坐标:"+lat+","+lon;
+  }
+  return '<div style="width: 200px; font-size: 12px; text-align: left; ">'+ msg + '</div>';
+}
+// Re-calculate
+function recalculate(addr, addrTq, lat, lon, indexEclipse, isPanel){//GLog.write("enter recalculate");
+  var html = "";
+  var htmlc1 = "";
+  var htmlc2 = "";
+  var htmlmid = "";
+  var htmlc3 = "";
+  var htmlc4 = "";
+  
+  var title = "";
+  var umbral = "";
+  var obscuration = "";
+  var duration = "";
+
+  var refractionHeight = -0.00524; // Take refraction into account
+  var ECLIPSE = {
+    NO:1,
+    PARTIAL:2,
+    TOTAL:3
+  }
+  var mode = ECLIPSE.NO;
+  if ((isNaN(lat)) || (isNaN(lon)) || indexEclipse == -1){
+    return getUnavailableEclipse(lat, lon, indexEclipse);
+  }     
+    
+  readdata(lat, lon, indexEclipse);
+  getall(indexEclipse);
+  deltaT = getdTValue(indexEclipse);
+  
+  htmlmid = displaymid(isPanel);
+  if (mid[39] > 0) { // There is an event
+    htmlc1 = displayc1(isPanel);
+    htmlc4 = displayc4(isPanel);
+    if (mid[39] > 1) { // There is a total/annular event
+      htmlc2 = displayc2(isPanel);
+      htmlc3 = displayc3(isPanel);
+      if ((c1[32] <= refractionHeight) && (c4[32] <= refractionHeight)) {
+        mode = ECLIPSE.NO;    // The sun is below the horizon for the entire duration of the event
+      } else {                       // The sun is above the horizon for at least some of the event
+        if ((c2[32] <= refractionHeight) && (c3[32] <= refractionHeight)) {
+          // The sun is below the horizon for just the total/annular event
+          mode = ECLIPSE.PARTIAL;
+          title = "日偏食"; 
+          umbral = "未知"; 
+          obscuration = "未知";
+        } else { // The sun is above the horizon for at least some of the total/annular event
+          mode = ECLIPSE.TOTAL;
+          if ((c2[32] > refractionHeight) && (c3[32] > refractionHeight)) {
+            // The sun is above the horizon for the entire annular/total event
+            if (mid[39] == 2) { // It is an annular event
+              title = "日环食";
+              umbral = getdepth();
+            } else { // it is a total event
+              title = "日全食"; 
+              umbral = getdepth();
+            }
+            obscuration = getcoverage(); 
+            duration = getduration();
+          } else { // The sun is below the horizon for at least some of the annular/total event
+            title = "未知";
+            // Is the sun above the horizon at C2 or C3? (The obscuration remains constant during a total/annular event)
+            if ((c2[32] > refractionHeight) || (c3[32] > refractionHeight)) 
+              obscuration = getcoverage();
+            else 
+              obscuration = "未知";
+          }
+        }
+      }
+    } else { // It is just a partial event
+      if ((c1[32] <= refractionHeight) && (c4[32] <= refractionHeight)) {
+        // The sun is below the horizon for the entire event
+        mode = ECLIPSE.NO;
+      } else { // The sun is above the horizon for at least some of the event2
+        mode = ECLIPSE.PARTIAL;
+        title = "日偏食"; 
+        if (mid[32] <= refractionHeight) // The sun is below the horizon at mid eclipse?
+          obscuration = "未知";
+        else // The sun is above the horizon at mid eclipse?
+           obscuration = getcoverage();
+      }
+    }
+  } else { // ... or is there no event at all?
+    mode = ECLIPSE.NO;
+  }
+  
+  if (mode != ECLIPSE.NO) {
+    if (isPanel) {
+      if (addr) {
+        html += '<p style="margin:3px 0;">观测点:';
+        html += '<span style="margin:5px;"><a href="http://ditu.google.cn/maps?q=' + encodeURIComponent(addr) + '" target="_blank">' + addr + '</a></span></p>';
+      } else {
+        html += '<p>当前观测点地址未知</p>';
+      }
+      html += '<div style="border:solid 1px #EFEFEF; margin-left:5px;"><table border="0" cellspacing="1" width="100%">';
+      html += '<tr align="center" bgcolor="#CFCFCF">';
+      html += ' <th>类型</th><th title="月球与太阳的位置关系">食象</th><th>北京时间</th><th title="Alt">高度角</th><th title="Azi">方位角</th>';
+      html += '</tr>';
+      var rowspan = 3;
+      if(mode == ECLIPSE.TOTAL){
+        rowspan = 5;
+      }
+      html += displayc1(isPanel, title, rowspan);;
+      if (mode == ECLIPSE.TOTAL) html += htmlc2;
+      html += htmlmid;
+      if (mode == ECLIPSE.TOTAL) html += htmlc3;
+      html += htmlc4;
+      html += '</table></div>';
+      
+      html +='<div style="padding:3px 0;"><span>其他日食参数</span>'
+      if (duration) html += '<p style="padding:2px 10px;">全日食延：' + duration + '</p>';
+      if (umbral) html += '<p style="padding:2px 10px;">本影深度：' + umbral + '</p>';
+      if (obscuration) html += '<p style="padding:2px 10px;">食分:' + obscuration + '</p>';
+      html += '<p style="padding:2px 10px;">星等(食甚)：' + Math.floor(100000.0 * mid[37] + 0.5) / 100000.0 + '</p>';
+//      html += '<p style="padding:2px 10px;">食分' + Math.floor(100000.0 * mid[38] + 0.5) / 100000.0 + '</p>';
+      html += '</div>';
+      if(addr){
+        html += '<p style="width:360px; float:left;padding:3px 0;"><span style="margin:2px;font-weight:normal;"><a href="http://www.google.cn/search?hl=zh-CN&q=' + encodeURIComponent(addrTq||addr) + '+'+encodeURIComponent("天气")+'" target="_blank">查询当地天气</a></span></p>';
+      }
+    } else {
+      html = '<div style="width: 400px; font-size: 12px;color:#333;">';
+      if (addr) {
+        html += '<p style="margin:5px;">当前观测点位于<span style="margin:2px;"><a href="http://ditu.google.cn/maps?q=' + addr + '" target="_blank">' + addr + '</a></span>，';
+      } else {
+        html += '<p>当前观测点地址未知，';
+      }
+      html += '可观测<span>' + title + '</span></p>';
+      
+      html += '<div style="border:solid 1px #EFEFEF; margin-left:5px;"><table border="0" cellspacing="1" width="100%">';
+      html += '<tr align="center" bgcolor="#CFCFCF">';
+      html += ' <th>食象<span style="font-size:0.8em;font-weight:normal;"> (&Delta;T=' + deltaT + 's)</span></th><th>北京时间</th><th title="Alt">高度角</th><th title="Azi">方位角</th><th>P</th><th>V</th><th>LC</th>';
+      html += '</tr>';
+      html += htmlc1;
+      if (mode == ECLIPSE.TOTAL) html += htmlc2;
+      html += htmlmid;
+      if (mode == ECLIPSE.TOTAL) html += htmlc3;
+      html += htmlc4;
+      html += '</table></div>';
+      
+      
+      html +='<div style="padding:3px 0;position:relative;overflow:hidden;">'
+      html += '<p style="width:360px;margin: 3px 0; padding: 0;">其他日食参数</p>';
+      html += '<div style="padding:2px 5px;"><table border="0" cellspacing="3" width="100%"><tr>';
+      if (mode == ECLIPSE.TOTAL){
+        html += '<td>全日食延：' + duration + '</td>';
+        html += '<td>本影深度：' + umbral + '</td></tr>';
+      }
+      html += '<tr>';
+      if (obscuration) html += '<td>食分:' + obscuration + '</td>';
+      html += '<td>星等(食甚)：' + Math.floor(100000.0 * mid[37] + 0.5) / 100000.0 + '</td><tr></table>';
+      html += '</div>';
+      if(addr){
+        html += '<p style="width:360px;margin: 3px 0; padding: 0;"><span><a href="http://www.google.cn/search?hl=zh-CN&q=' + encodeURIComponent(addrTq||addr) + '+'+encodeURIComponent("天气")+'" target="_blank">查询当地天气</a></span></p>';
+      }
+      
+      html += '<p style="margin: 3px 0; padding: 0;color:#666;font-size:12px;width:360px;">所有日食数据来自<a href="http://xjubier.free.fr/" target="_blank">Xavier Jubier</a></p>';
+      html += "</div>";
+    }
+    
+  } else { // No eclipse
+    html = '<div style="width: 190px; font-size:12px; text-align: center;">' + '在该点无法观测' + getdate(mid) + '的日食' + '</div>';
+  }
+  return html;
+}
+function getBriefInfo(lat, lon, indexEclipse){
+  if(typeof indexEclipse == "string"){
+    indexEclipse = parseInt(indexEclipse);
+  }
+  var msg = "";
+
+  var refractionHeight = -0.00524; // Take refraction into account
+  var ECLIPSE = {
+    NO:1,
+    PARTIAL:2,
+    TOTAL:3
+  }
+  var mode = ECLIPSE.NO;
+  if ((isNaN(lat)) || (isNaN(lon)) || indexEclipse == -1){
+    return "";
+  }     
+  readdata(lat, lon, indexEclipse);
+  getall(indexEclipse);
+  deltaT = getdTValue(indexEclipse);
+  
+  if (mid[39] > 0) { // There is an event
+    if (mid[39] > 1) { // There is a total/annular event
+      if ((c1[32] <= refractionHeight) && (c4[32] <= refractionHeight)) {
+        mode = ECLIPSE.NO;    // The sun is below the horizon for the entire duration of the event
+      } else {                       // The sun is above the horizon for at least some of the event
+        if ((c2[32] <= refractionHeight) && (c3[32] <= refractionHeight)) {
+          // The sun is below the horizon for just the total/annular event
+          mode = ECLIPSE.PARTIAL;
+          msg = "当前位置可观测到日偏食，食分"+getcoverage();
+        } else { // The sun is above the horizon for at least some of the total/annular event
+          mode = ECLIPSE.TOTAL;
+          if ((c2[32] > refractionHeight) && (c3[32] > refractionHeight)) {
+            // The sun is above the horizon for the entire annular/total event
+            if (mid[39] == 2) { // It is an annular event
+              msg = "当前位置可观测到日环食，食分"+getcoverage();
+            } else { // it is a total event
+              msg = "当前位置可观测到日全食，食分"+getcoverage();
+            }
+          } else { // The sun is below the horizon for at least some of the annular/total event
+            msg = "当前位置观测结果未知";
+            // Is the sun above the horizon at C2 or C3? (The obscuration remains constant during a total/annular event)
+            if ((c2[32] > refractionHeight) || (c3[32] > refractionHeight)) 
+              msg += "，食分"+getcoverage();
+          }
+        }
+      }
+    } else { // It is just a partial event
+      if ((c1[32] <= refractionHeight) && (c4[32] <= refractionHeight)) {
+        // The sun is below the horizon for the entire event
+        mode = ECLIPSE.NO;
+      } else { // The sun is above the horizon for at least some of the event2
+        mode = ECLIPSE.PARTIAL;
+        msg = "当前位置可观测到日偏食"; 
+        if (mid[32] <= refractionHeight) // The sun is below the horizon at mid eclipse?
+          msg += "，食分未知";
+        else // The sun is above the horizon at mid eclipse?
+          msg += "，食分"+getcoverage();
+      }
+    }
+  } else { // ... or is there no event at all?
+    mode = ECLIPSE.NO;
+  }
+  
+  if (mode != ECLIPSE.NO) {
+    return msg;
+  } else { // No eclipse
+    return '当前位置无法观测日食';
+  }
+}
+// The values given are for  and 100.3 kPa. Add 1% to the refraction for every  colder, subtract if hotter
+// (hot air is less dense, and will therefore have less refraction). Add 1% for every 0.9 kPa higher pressure,
+// subtract if lower.
+// As the atmospheric refraction is 34' on the horizon itself, but only 29' above it, the setting or rising sun
+// seems to be flattened by about 5' (about 1/6 of its apparent diameter).
+function elevationRefraction(elv_geometric){
+  if (elv_geometric > 10.2) 
+    refraction = 0.01617 * Math.cos(elv_geometric * D2R) / Math.sin(elv_geometric * D2R);
+  else {
+    var a0 = 0.58804392;
+    var a1 = -0.17941557;
+    var a2 = 0.29906946e-1;
+    var a3 = -0.25187400e-2;
+    var a4 = 0.82622101e-4;
+    var x = Math.abs(elv_geometric + 0.589);
+    var x2 = x * x;
+    var x3 = x * x2;
+    var x4 = x2 * x2;
+    refraction = Math.abs(a0 + (a1 * x) + (a2 * x2) + (a3 * x3) + (a4 * x4));
+  }
+  var elv_observed = elv_geometric + refraction;
+  return (elv_observed);
+}
+
+window["EclipseCalculator"] = {
+  "getEclipseInfo":recalculate,
+  "getBriefInfo":getBriefInfo
+}
+})();
+})();
+_IG_RegisterOnloadHandler(Fei.start);
+
+
+</script>
+]]></Content>
+</Module>
