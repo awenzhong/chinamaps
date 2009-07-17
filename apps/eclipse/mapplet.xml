@@ -108,18 +108,17 @@ body, div, p, a, span, table, iframe{
           <div class="result-tips" style="color:#FF0000;display:none;" id="errMsg">没有找到你查找的城市，请确认输入内容正确，或请补充为完整地名</div>
           <div class="result-tips">提示：点击地图上的任意地点可以查看在该点观测日食的具体信息。</div>
         </div>
+        <div class="list-title"><div style="float:left;"><a href="http://www.google.cn/ig/china?referrer=ign" target="_blank">iGoogle日食直播倒计时</a></div><div id="liveToggle" style="float:right;">&nbsp;</div></div>
+          <div id="liveContent" class="video-iframe"></div>
+        </div>
         <div class="result-panel">
-          <div class="list-title"><div style="float:left;">日食观测数据</div><div id="resultToggle" style="float:right;">&nbsp;</div></div>
+          <div class="list-title"><div style="float:left;">日食观测数据说明</div><div id="resultToggle" style="float:right;">&nbsp;</div></div>
           <div class="result-tips" style="color:#333333;">
             1）红线间阴影区域为日全食带，蓝色线为全食带中心线<br/>
             2）星号标注城市为天文台指定日全食主要观测城市<br/>
             3）食分表示日食的程度，食分越大，日面被遮掩的程度就越大。<br/>
             4）食象表示月球圆面同太阳圆面的位置关系，日全食有五种食象，日偏食有三种食象。
           </div>
-        </div>
-        <div>
-        <div class="list-title"><div style="float:left;"><a href="http://www.google.cn/ig/china?referrer=ign" target="_blank">iGoogle日食直播倒计时</a></div><div id="liveToggle" style="float:right;">&nbsp;</div></div>
-          <div id="liveContent" class="video-iframe"></div>
         </div>
         <div style="color:#666;font-size:12px;margin:5px;">日食数据来自<a href="http://xjubier.free.fr/" target="_blank">Xavier Jubier</a>&nbsp;&&nbsp;<a href="http://tech.sina.com.cn" target="_blank">新浪中国</a></div>
       </div>
