@@ -713,7 +713,7 @@ body, div, p, a, span, table, iframe{
       });
       GEvent.addDomListener(node, "click", function(e){
         Fei.stopPropagation(e);
-        GEvent.trigger(markerM, "mouseout", markerM.point);
+        GEvent.trigger(markerM, "click", markerM.point);
       });
     }
     function createCityIcon(size, url){
