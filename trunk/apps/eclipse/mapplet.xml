@@ -675,14 +675,6 @@ body, div, p, a, span, table, iframe{
           showing();
         }
       });
-//      GEvent.addDomListener(parent, "click", function(e){
-//        if(e)Fei.stopPropagation(e);
-//        if (elem.className.indexOf("toggle-button-close") != -1) {
-//          hidden();
-//        } else {
-//          showing();
-//        }
-//      });
     }
     function addCityListener(name, node, marker, markerM){
       GEvent.addListener(markerM, "click", function(){
@@ -693,27 +685,27 @@ body, div, p, a, span, table, iframe{
           //TODO add other Data
           markerM.openInfoWindowHtml(html);
       });
-          
-      GEvent.addListener(marker, "mouseover", function(latlng){
+      GEvent.addListener(marker, "click", function(){
+        if (clickMarker) {
+          clickMarker.hide();
+        }
+          var html = EclipseCalculator.getEclipseInfo(name, name, markerM.point.lat(), markerM.point.lng(), 0);
+          //TODO add other Data
+          marker.openInfoWindowHtml(html);
+      });
+      GEvent.addDomListener(node, "mouseover", function(){
         markerM.show();
         marker.hide();
         node.style.backgroundColor = "#CFCFCF";
-      })
-      GEvent.addListener(markerM, "mouseout", function(latlng){
-        marker.show();
-        GEvent.trigger(map, "mousemove", latlng);
-        markerM.hide();
-        node.style.backgroundColor = "#FFFFFF";
-      })
-      GEvent.addDomListener(node, "mouseover", function(){
-        GEvent.trigger(marker, "mouseover", marker.point);
       });
       GEvent.addDomListener(node, "mouseout", function(){
-        GEvent.trigger(markerM, "mouseout", markerM.point);
+        marker.show();
+        markerM.hide();
+        node.style.backgroundColor = "#FFFFFF";
       });
       GEvent.addDomListener(node, "click", function(e){
         Fei.stopPropagation(e);
-        GEvent.trigger(markerM, "click", markerM.point);
+        GEvent.trigger(marker, "click", markerM.point);
       });
     }
     function createCityIcon(size, url){
