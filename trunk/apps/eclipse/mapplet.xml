@@ -120,7 +120,7 @@ body, div, p, a, span, table, iframe{
             4）食象表示月球圆面同太阳圆面的位置关系，日全食有五种食象，日偏食有三种食象。
           </div>
         </div>
-        <div style="color:#666;font-size:12px;margin:5px;">日食数据来自<a href="http://xjubier.free.fr/" target="_blank">Xavier Jubier</a>&nbsp;&&nbsp;<a href="http://tech.sina.com.cn" target="_blank">新浪中国</a></div>
+        <div style="color:#666;font-size:12px;margin:5px;">日食数据来自<a href="http://xjubier.free.fr/" target="_blank">Xavier Jubier</a>&nbsp;&&nbsp;<a href="http://www.sina.com.cn" target="_blank">新浪中国</a></div>
       </div>
     </div>
   </div>
@@ -755,7 +755,7 @@ body, div, p, a, span, table, iframe{
         var provNode = Fei.$n("div", provWrapper, "city-item");
         var toggleBtn = null;
         if (prov.children) {
-          toggleBtn = Fei.$n("div", provNode);
+          toggleBtn = Fei.$n("img", provNode, null, {src:"http://maps.gstatic.cn/intl/zh-CN_cn/mapfiles/transparent.png"});
         }
         Fei.$n("span", provNode, "").innerHTML = prov.name;
         if (prov.children) {
