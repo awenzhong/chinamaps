@@ -46,7 +46,7 @@
           infowindow.open(map, marker);
         });
         google.maps.event.addListener(infowindow, 'content_changed', function(){
-          marker.setTitle(infowindow.get_content());
+          marker.set_title(infowindow.get_content());
         });
       }
     </script>
