@@ -175,7 +175,7 @@
 <div style="margin:10px 10px 0;">
   <span style="color:#ff0000">红色线路：</span>&nbsp;&nbsp;所有机动车禁行<br/>
   <span style="color:#0000cc">蓝色线路：</span>&nbsp;&nbsp;载货汽车/载客汽车禁行<br/>
-  <span style="color:green">绿色线路：</span>&nbsp;&nbsp;机动车绕行</br/>
+  <span style="color:green">绿色线路：</span>&nbsp;&nbsp;机动车可选绕行线路</br/>
 </div>
 <div id="links" style="margin-left:10px;">
   <div style="margin-bottom:5px;"><b>禁行区域</b></div>
@@ -213,7 +213,7 @@
   <li>7时至19时，西康路康庄路口至岔道城由西向东方向、八达岭高速公路市界至营城子进京方向，禁止4吨（不含）以上载货汽车通行。</li> 
   <li>7时至12时，八达岭高速公路昌平南环出口至营城子收费站出京方向，禁止4吨（不含）以上载货汽车通行。机动车可绕行110国道。</li>
 </ul>
-<span style="color:#0000cc">（9座以上）载客汽车</span><br/>
+<span style="color:#0000cc">载客汽车（9座以上）</span><br/>
 <ul>
   <li>8时至17时，香山路由香泉环岛（不含）至卧佛寺口（不含），禁止9座（含）以上的载客汽车通行（公共汽车除外）。</li>
   <li>8时至17时，香山南路由卧佛寺口（不含）至闵庄路西口（不含），禁止9座（含）以上的载客汽车通行（公共汽车除外）。</li>
