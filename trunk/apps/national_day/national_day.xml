@@ -1,0 +1,1378 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="国庆北京交通限行地图" author="">
+  <Require feature="sharedmap" />
+  <Require feature="dynamic-height" />
+</ModulePrefs>
+<Content type="html">
+<![CDATA[
+<style>
+      body {
+        font-family:arial,helvetica,sans-serif;
+        font-size:75%;
+      }
+      td {
+        font-size:75%
+      }
+      .clear {
+        clear: both;
+        font-size: 0;
+        *display: inline;
+      }
+      .small-calendar { 
+        background:#c3d9ff;
+        color:#333333; 
+        margin:0px 10px;
+        margin-bottom:0;
+        padding:5px 10px 10px;
+      }
+      .s-c-border-wrap {
+        margin:0 10px;
+        zoom:1
+      }
+      .s-c-border-full-1 {
+        margin:0 3px;
+      }
+      .s-c-border-full-2 {
+        margin:0 2px;
+      }
+      .s-c-border-full-3 {
+        margin:0 1px;
+      }
+      .s-c-border {
+        border-top:1px solid #c3d9ff;
+      }
+      .s-c-control { 
+        color: #112abb; 
+        font-size: 1.1em; 
+        font-weight: bold; 
+        margin-bottom:5px; 
+        text-align:center; 
+      }
+      .s-c-tip { 
+        margin-top:5px; 
+      }
+      .s-c-arrow { 
+        cursor: pointer; 
+      }
+      .s-c-c-title { 
+        color: #333333; 
+      }
+      .s-c-c-today { 
+        margin-left:5px; 
+      }
+      .small-calendar table { 
+        table-layout: fixed; 
+        width:100%;
+        *width:auto; 
+      }
+      .small-calendar table td { 
+        text-align: center; 
+      }
+      .s-c-content { 
+        background: #ffffff;
+        *display:inline-block; 
+        margin: 3px 0 10px;
+      }
+      .s-c-c-table .day-top { 
+        font-size:0; 
+        margin:1px 3px 0;
+      }
+      .s-c-c-table .day-bottom { 
+        font-size:0; 
+        margin:0 3px 1px;
+      }
+      .s-c-c-table .day-cont { 
+        height:14px;
+        margin:0 2px; 
+      }
+      .s-c-date-range input { 
+        margin:0 8px 0 5px;
+        height:1.5em;
+        padding:0;
+        text-align:center; 
+        vertical-align:middle;
+        width:25px;
+      }
+      .s-c-link { 
+        color:#0000cc;
+        cursor:pointer;
+        margin-left:12px;
+        text-decoration:underline;
+      }
+      .s-c-fe { 
+        margin-top:5px; 
+        text-align:center;
+      }
+      .s-c-fold { 
+        background:url(/sports/img/but.gif) -31px -2px;
+        cursor:pointer; 
+        height:9px;
+        width:17px;
+      }
+      .s-c-expand { 
+        background:url(/sports/img/but.gif) -31px -13px;
+        cursor:pointer; 
+        height:9px;
+        width:17px;
+      }
+
+      .d-selected .d-b-color { 
+        border-top:1px solid #aaccee; 
+      }
+      .d-selected .d-color { 
+        background-color:#aaccee; 
+      }
+      .d-gray .d-color { 
+        background-color:#eeeeee; 
+      }
+      .d-gray .d-b-color { 
+        border-top:1px solid #eeeeee; 
+      }
+      .d-today .d-color { 
+        background-color:#557799; 
+      }
+      .d-today .d-b-color { 
+        border-top:1px solid #557799; 
+      }
+      .d-normal .d-color { 
+        background-color:#ffffff; 
+      }
+      .d-normal .d-b-color { 
+        border-top:1px solid #ffffff; 
+      }
+      .s-c-box { 
+        border-color: #a2b2dd; 
+        border-style: solid; 
+        border-width: 1px; 
+        padding: 3px 0; 
+      }
+      #links {
+        margin: 10px;
+      }
+      #links span {
+        color: #0000cc;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      #infos ul {
+        margin: 0 0 8px;
+        padding: 0;
+        list-style-type: none;
+      }
+      #infos ul li {
+        margin: 0 0 0 10px;
+        padding: 5px 0;
+        list-style-type: none;
+        line-height: 18px;
+        border-bottom: 1px solid #aaaaaa;
+      }
+</style>
+<!--<h2>__MSG_title__</h2>-->
+<div id="calendar">
+</div>
+<div style="margin:10px 10px 0;">
+  <span style="color:#ff0000">红色线路：</span>&nbsp;&nbsp;所有机动车禁行<br/>
+  <span style="color:#0000cc">蓝色线路：</span>&nbsp;&nbsp;载货汽车/载客汽车禁行<br/>
+  <span style="color:green">绿色线路：</span>&nbsp;&nbsp;机动车绕行</br/>
+</div>
+<div id="links" style="margin-left:10px;">
+  <div style="margin-bottom:5px;"><b>禁行区域</b></div>
+  <span id="area0">天安门</span>
+  <span id="area1">奥林匹克公园</span>
+  <span id="area2">香山，颐和园</span>
+  <span id="area3">八达岭</span>
+</div>
+<div style="margin:10px;">
+<div><b>今日交通管制</b></div>
+<div style="margin-top:5px;" id="infos">
+<span style="color:#ff0000">所有机动车</span>
+<ul id="tianan">
+  <li class="area_0">7时至24时，故宫筒子河（东华门至西华门）双方向禁止机动车通行和停放（持国庆期间通行证及专线通行证的机动车除外）。</li>
+  <li class="area_0">7时至广场熄灯，天安门广场东、西侧路禁止车辆通行（持专项活动通行证的机动车除外）。过往车辆（含公共电、汽车）绕行正义路和大会堂西侧路。</li>
+  <li class="area_0">7时至17时，景山东街禁止机动车由北向南行驶。</li>
+  <li class="area_0">7时至17时，景山后街禁止机动车由西向东行驶。</li>
+  <li class="area_0">7时至17时，景山西街禁止机动车由南向北行驶。</li>
+  <li class="area_0">7时至17时，地安门内大街南口禁止机动车由北向东左转弯。</li>
+  <li class="area_0">7时至17时，景山西街南口禁止机动车由西向北左转弯。</li>
+  <li>8时至17时，杰王府路由买卖街东口至公交车总站后街东口禁止机动车由南向北行驶（大型载客汽车除外）</li>
+  <li>8时至17时，杰王府路由公交车总站后街东口至香山南路禁止机动车由东向西行驶。</li>
+</ul>
+<span style="color:#0000cc">载货汽车</span>
+<ul>
+  <li>7时至22时，北辰东路由北辰东桥桥区主路至奥林东路南口，禁止载货汽车通行。</li>
+  <li>7时至22时，奥林东路由奥林东路南口至奥林东桥桥区主路，禁止载货汽车通行。</li>
+  <li>7时至22时，北辰西路由民族园路口（不含）迤北主路至奥林西路南口，禁止载货汽车通行。</li>
+  <li>7时至22时，奥林西路由奥林西路南口至奥林西桥桥区主路，禁止载货汽车通行。</li>
+  <li>8时至17时，颐和园路由安河桥（不含）至101中学口（不含），禁止载货汽车通行。</li>
+  <li>8时至17时，清华西路由101中学口（不含）至中关村大街（不含），禁止载货汽车通行。</li>  
+  <li>8时至17时，香山路由卧佛寺口（不含）至安河桥（不含），禁止载货汽车通行。</li>  
+  <li>8时至17时，香山南路由卧佛寺口（不含）至闵庄路西口（不含），禁止载货汽车通行。</li>  
+  <li>8时至17时，旱河路由香泉环岛（不含）至闵庄路（不含），禁止载货汽车通行。</li>
+  <li>7时至19时，西康路康庄路口至岔道城由西向东方向、八达岭高速公路市界至营城子进京方向，禁止4吨（不含）以上载货汽车通行。</li> 
+  <li>7时至12时，八达岭高速公路昌平南环出口至营城子收费站出京方向，禁止4吨（不含）以上载货汽车通行。机动车可绕行110国道。</li>
+</ul>
+<span style="color:#0000cc">（9座以上）载客汽车</span><br/>
+<ul>
+  <li>8时至17时，香山路由香泉环岛（不含）至卧佛寺口（不含），禁止9座（含）以上的载客汽车通行（公共汽车除外）。</li>
+  <li>8时至17时，香山南路由卧佛寺口（不含）至闵庄路西口（不含），禁止9座（含）以上的载客汽车通行（公共汽车除外）。</li>
+</ul>
+</div>
+<script>
+BASEIMGURL = 'http://jsbackyard.appspot.com/sports/img/';
+
+/**
+ * Get a element by id
+ * @param {String} element Element id
+ * @return {Object}
+ */
+function $(element) {
+  return typeof element === 'string' ?
+      document.getElementById(element) : element;
+}
+
+/**
+ * Create a new dom element
+ * @param {String} tag Tag name of new element
+ * @param {String} className Class name
+ * @param {String} styles Element styles
+ * @return {Object} New element.
+ */
+function $n(tag, className, styles) {
+  var ele = document.createElement(tag);
+  if (className) {
+    ele.className = className;
+  }
+  if (styles) {
+    ele.style.cssText = styles;
+  }
+  return ele;
+}
+
+/**
+ * Append a child to a dom element
+ * @param {Object} parent Dom element of parent
+ * @param {Object} child Dom element of child
+ */
+function $a(parent, child) {
+  parent.appendChild(child);
+}
+
+/**
+ * Attach a event to a dom element
+ * @param {Object} obj Dom element
+ * @param {String} evt Event type
+ * @param {Function} fn Callback function
+ */
+function addDomListener(obj, evt, fn) {
+  if (obj.events_) {
+    obj.events_.push([evt, fn]);
+  } else {
+    obj.events_ = [[evt, fn]];
+  }
+  if (window.attachEvent) {
+    evt = 'on' + evt;
+    obj.attachEvent(evt, fn);
+  } else {
+    obj.addEventListener(evt, fn, false);
+  }
+};
+
+/**
+ * Clear listeners of an object
+ * @param {Object} obj Object to clear
+ * @param {String} opt_evt Event to clear, if not provide, clear all
+ */
+function clearListeners (obj, opt_evt) {
+  for (var i = 0; i < obj.events_.length; ++i) {
+    var evt = obj.events_[i];
+    if (!opt_evt || evt[0] == opt_evt) {
+      if (window.detachEvent) {
+        obj.detachEvent('on' + evt[0], evt[1]);
+      } else {
+        obj.removeEventListener(evt[0], evt[1], false);
+      }
+    }
+  }
+};
+
+/**
+ * Remove a listener of a event type from a dom element
+ * @param {Object} obj Dom element
+ * @param {String} evt Event type
+ */
+function removeListenerEvts(obj, evt) {
+  for (var i = 0; i < obj.events_.length; ++i) {
+    var ev = obj.events_[i];
+    if (evt == ev[0]) {
+      if (window.detachEvent) {
+        obj.detachEvent('on' + evt, ev[1]);
+      } else {
+        obj.removeEventListener(evt, ev[1], false);
+      }
+    }
+  }
+};
+
+/**
+ * Attach a function with an object
+ * @param {Object} obj Object to attach
+ * @param {Function} fn Function to be attached
+ * @return {Function} Function same as fn but with object
+ */
+function callback(obj, fn) {
+  return function() {
+    fn.apply(obj, arguments);
+  };
+};
+
+(
+function() {
+  /**
+   * Tool box object
+   */
+  var Tool = {
+    /**
+     * Change style string like border-width to borderWidth
+     * @param {String} str Style string
+     * @return {String}
+     */
+    camelCase: function (str) {
+      return str.replace(/-\D/g, function (match) {
+        return match.charAt(1).toUpperCase();
+      });
+    },
+
+    /**
+     * Change style string like borderWidth to border-width
+     * @param {String} str Style string
+     * @param {String}
+     */
+    hyphenate: function (str) {
+      return str.replace(/[A-Z]/g, function (match) {
+        return ('-' + match.charAt(0).toLowerCase());
+      });
+    },
+
+    /**
+     * Remove spaces at the front and end of a string
+     * @param {String} str String to operate
+     */
+    trim: function (str) {
+      str = str.replace(/^\s\s*/, '');
+      var ws = /\s/;
+      var i = str.length;
+      while (ws.test(str.charAt(--i)));
+      return str.slice(0, i + 1);
+    }
+  };
+
+  /**
+   * Browser object to detect browser type and system information
+   */
+  var Browser = {
+    Quirks: false,
+    Engine: {
+      name: 'unknow',
+      version: 0
+    },
+    Features: {
+      xpath: !!(document.evaluate),
+      air: !!(window.runtime),
+      query: !!(document.querySelector)
+    },
+    Engines: {
+      /**
+       * Most like opera
+       */
+      presto: function () {
+        var part1 = (document.getElementsByClassName) ? 950 : 925;
+        var part = (arguments.callee.caller) ? 960 : part1;
+        return (!window.opera) ? false : part;
+      },
+
+      /**
+       * Most like ie
+       */
+      trident: function () {
+        return (!window.ActiveXObject) ?
+            false : ((window.XMLHttpRequest) ? 5 : 4);
+      },
+
+      /**
+       * Most like safari and chrome
+       */
+      webkit: function () {
+        var part = (Browser.Features.xpath) ?
+            ((Browser.Features.query) ? 525 : 420) : 419;
+        return (navigator.taintEnabled) ? false : part;
+      },
+
+      /**
+       * Most like Firefox
+       */
+      gecko: function () {
+        var part = document.getElementsByClassName ? 19 : 18;
+        return (document.getBoxObjectFor == undefined) ? false : part;
+      }
+    }
+  };
+
+  /**
+   * Detect which kind of browser is using
+   */
+  Browser.detect = function () {
+    for (var engine in this.Engines) {
+      var version = this.Engines[engine]();
+      if (version) {
+        this.Engine = {
+          name: engine,
+          version: version
+        };
+        this.Engine[engine] = this.Engine[engine + version] = true;
+        break;
+      }
+    }
+    var quirks = $n('div', '', 'position:absolute;height:20px;padding:2px;');
+    $a(document.body, quirks);
+    if (quirks.offsetHeight == 20) {
+      this.Quirks = true;
+    }
+    document.body.removeChild(quirks);
+    return {
+      name: engine,
+      version: version
+    };
+  };
+
+  Browser.detect();
+
+  // Background image cache for ie
+  if (Browser.Engine.trident) {
+    document.execCommand('BackgroundImageCache', false, true);
+  }
+
+  /**
+   * Dom operation methods
+   */
+  var Dom = {
+    /**
+     * Get style property of dom element including these defined in css
+     * @param {Object} element Dom element
+     * @param {String} property Property name
+     * @return {String} Property value
+     */
+    styleString: function (element, property) {
+      var style = '';
+      if (element.currentStyle) {
+        style =  element.currentStyle[Tool.camelCase(property)];
+      } else {
+        var computed =
+            element.ownerDocument.defaultView.getComputedStyle(element, null);
+        style = (computed) ?
+            computed.getPropertyValue([Tool.hyphenate(property)]) : null;
+      }
+      return style;
+    },
+
+    /**
+     * Get style property of dom element including tese defined in css by number
+     * @param {Object} element Dom element
+     * @param {String} property Property name
+     * @return {Number} Property value
+     */
+    styleNumber: function (element, property) {
+      return parseInt(Dom.styleString(element, property)) || 0;
+    },
+
+    /**
+     * Is dom element body
+     * @param {Object} element Dom element
+     * @return {Boolean}
+     */
+    isBody: function (element) {
+      return (/^(?:body|html)$/i).test(element.tagName);
+    },
+
+    /**
+     * Get scroll of dom element
+     * @param {Object} element Dom element
+     * @return {Object} {x: 'scroll left', y: 'scroll top'}
+     */
+    getScrolls: function (element) {
+      var position = {
+        x: 0,
+        y: 0
+      };
+      while (element && !Dom.isBody(element)) {
+        position.x += element.scrollLeft;
+        position.y += element.scrollTop;
+        element = element.parentNode;
+      }
+      return position;
+    },
+
+    /**
+     * Get offset position of dom element according to body
+     * @param {element} Dom element
+     * @return {Object} {x: 'offset left', y: 'offset top'}
+     */
+    getOffsets: function (element) {
+      if (Browser.Engine.trident) {
+        var bound = element.getBoundingClientRect();
+        var html = element.ownerDocument.documentElement;
+        return  {
+          x: bound.left + html.scrollLeft - html.clientLeft,
+          y: bound.top + html.scrollTop - html.clientTop
+        };
+      }
+      var position = {
+        x: 0,
+        y: 0
+      };
+      var ele = element;
+      while (ele && !Dom.isBody(ele)) {
+        position.x += ele.offsetLeft;
+        position.y += ele.offsetTop;
+        var bl = Dom.styleNumber(ele, 'border-left-width');
+        var bt = Dom.styleNumber(ele, 'border-top-width');
+        if (Browser.Engine.gecko) {
+          if (!Dom.styleString(ele, '-moz-box-sizing') == 'border-box') {
+            position.x += bl;
+            position.y += bt;
+          }
+          var parent = ele.parentNode;
+          if (parent && Dom.styleString(ele, 'overflow') != 'visible') {
+            position.x += bl;
+            position.y += bt;
+          }
+        } else if (ele !=  element && Browser.Engine.webkit) {
+          position.x += bl;
+          position.y += bt;
+        }
+        ele = ele.offsetParent;
+      }
+      if (Browser.Engine.gecko &&
+            (!Dom.styleString(element, '-moz-box-sizing') == 'border-box')) {
+        position.x -= Dom.styleNumber(element, 'border-left-width');
+        position.y -= Dom.styleNumber(element, 'border-top-width');
+      }
+      return position;
+    },
+
+    /**
+     * Get element parent which is absolute or relative positioned
+     * @param {Object} element Dom element
+     * @return {Object}
+     */
+    getAbsoluteParent: function (element) {
+      if (Dom.isBody(element)) {
+        return null;
+      }
+      var relative = element;
+      while (Dom.styleString(relative, 'position') == 'static' &&
+          !Dom.isBody(relative)) {
+        relative = relative.offsetParent;
+      }
+      return relative;
+    },
+
+    /**
+     * Get relative position of a dom element
+     * @param {Object} element Dom element
+     * @param {Object} relative Relative dom element
+     * @return {Object} {x: 'position x', y: 'position y'}
+     */
+    getPosition: function (element, relative) {
+      if (Dom.isBody(element)) {
+        return {
+          x: 0,
+          y: 0
+        };
+      }
+      var offset = Dom.getOffsets(element);
+      var scroll = Dom.getScrolls(element.parentNode);
+
+      if (Browser.Engine.trident) {
+        offset.x += scroll.x;
+        offset.y += scroll.y;
+      }
+
+      var position = {
+        x: offset.x,
+        y: offset.y
+      };
+      var relativePosition = relative ? Dom.getPosition(relative) : {
+        x: 0,
+        y: 0
+      };
+      return {
+        x: position.x - relativePosition.x,
+        y: position.y - relativePosition.y
+      };
+    }
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * BCalendar control
+   * @constructor
+   * @param {Object} parent Parent dom element
+   * @param {Object} opt_i18n Text for calendar of i18n
+   */
+  function Calendar(parent, opt_i18n) {
+    if (parent) {
+      this.parent_ = parent;
+    } else {
+      throw 'Parent should be provided';
+    }
+
+    this.i18n_ = {
+      month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      monthFull: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+          'August', 'September', 'October', 'November', 'December'],
+      week: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      wholeMonth: 'Select All',
+      today: 'Today'
+    };
+    if (opt_i18n) {
+      this.i18n_ = opt_i18n;
+    }
+    this.initialize();
+
+  };
+
+  /**
+   * Initialize a calendar
+   */
+  Calendar.prototype.initialize = function() {
+    // Build basic structure of calendar
+    var container = $n('div');
+    var border = $n('div', 's-c-border-wrap');
+    var borderHtm = '';
+    for (var i = 0; i < 3; ++i) {
+      borderHtm += '<div class="clear s-c-border s-c-border-full-' + (i + 1) +
+          '"></div>';
+    }
+    border.innerHTML = borderHtm;
+    $a(container, border);
+
+    this.calendar_ = $n('div', 'small-calendar');
+    $a(this.parent_, container);
+    $a(container, this.calendar_);
+    var control = $n('div', 's-c-control');
+    var table = $n('table');
+    var tb = $n('tbody');
+    var tr = $n('tr');
+    var td = $n('td', '', 'width:10px;');
+    this.scLeft_ = $n('span', 's-c-arrow', 'display:none');
+    this.scLeft_.innerHTML = '&laquo;';
+    $a(td, this.scLeft_);
+    $a(tr, td);
+    td = $n('td');
+    this.monthSel_ = $n('span');
+    this.yearSel_ = $n('span');
+    $a(td, this.monthSel_);
+    $a(td, this.yearSel_);
+    $a(tr, td);
+    td = $n('td', '', 'width:10px');
+    this.scRight_ = $n('span', 's-c-arrow', 'display:none');
+    this.scRight_.innerHTML = '&raquo;';
+    $a(td, this.scRight_);
+    $a(tr, td);
+    $a(table, tb);
+    $a(tb, tr);
+    $a(table, tb);
+    $a(control, table);
+    $a(this.calendar_, control);
+
+    var tip = $n('div', 's-c-tip');
+    this.tip_ = tip;
+    var tipHtm = '<table cellspacing="0" cellpadding="0"><tbody><tr>';
+    for (i = 0; i < 7; i++) {
+      tipHtm += '<td>' + this.i18n_.week[i] + '</td>';
+    }
+    tipHtm += '</tr></tbody></table>';
+    tip.innerHTML = tipHtm;
+    $a(this.calendar_, tip);
+
+    var cont = $n('div', 's-c-content s-c-box');
+    this.cont_ = cont;
+    $a(this.calendar_, cont);
+    var range = $n('div', 's-c-date-range');
+    this.frLabel_ = $n('span');
+    this.frInp_ = $n('input');
+    this.toLabel_ = $n('span', '', 'margin-left:8px;');
+    this.toInp_ = $n('input');
+    var toTxt = document.createTextNode('-');
+    this.selAll_ = $n('span', 's-c-link');
+    this.selAll_.innerHTML = this.i18n_.wholeMonth;
+    this.selToday_ = $n('span', 's-c-link');
+    this.selToday_.innerHTML = this.i18n_.today;
+    $a(range, this.frLabel_);
+    $a(range, this.frInp_);
+    $a(range, toTxt);
+    $a(range, this.toLabel_);
+    $a(range, this.toInp_);
+    $a(range, this.selAll_);
+    $a(range, this.selToday_);
+//    $a(this.calendar_, range);
+
+    var fold = $n('div', 's-c-fe');
+    this.fold_ = $n('img', 's-c-fold');
+    this.fold_.src = BASEIMGURL + 'blank.gif';
+    $a(fold, this.fold_);
+//    $a(this.calendar_, fold);
+
+    border = $n('div', 's-c-border-wrap');
+    borderHtm = '';
+    for (i = 3; i > 0; --i) {
+      borderHtm += '<div class="clear s-c-border s-c-border-full-' + i +
+          '"></div>';
+    }
+    border.innerHTML = borderHtm;
+    $a(container, border);
+    addDomListener(this.scLeft_, 'click', callback(this, this.previousMonth));
+    addDomListener(this.scRight_, 'click', callback(this, this.nextMonth));
+    addDomListener(this.frInp_,
+        'change',
+        callback(this, this.setDateRangeCusFn_(true)));
+    addDomListener(this.toInp_,
+        'change',
+        callback(this, this.setDateRangeCusFn_(false)));
+    addDomListener(this.selAll_,
+        'click',
+        callback(this, this.setDateRangeWhole));
+    addDomListener(this.selToday_, 'click', callback(this, this.gotoToday));
+    addDomListener(this.fold_, 'click', callback(this, this.feCalendar_));
+
+    // List of td cell and content cell of date
+    this.stdc_ = [];
+    this.std_ = [];
+
+    // Create date table
+    table = $n('table', 's-c-c-table');
+    $a(cont, table);
+    table.cellPadding = 0;
+    table.cellSpacing = 0;
+    tb = $n('tbody');
+    $a(table, tb);
+    for (i = 0; i < 6; ++i) {
+      tr = $n('tr');
+      $a(tb, tr);
+      for (var j = 0; j < 7; ++j) {
+        td = $n('td', 'd-normal');
+        $a(tr, td);
+        var borderTop = $n('div', 'day-top d-b-color');
+        var content = $n('div', 'day-cont d-color');
+        var borderBottom = $n('div', 'day-bottom d-b-color');
+        $a(td, borderTop);
+        $a(td, content);
+        $a(td, borderBottom);
+
+        if (j == 0 || j == 6) {
+          td.className = 'd-gray';
+        }
+        this.std_.push(td);
+        this.stdc_.push(content);
+      }
+    }
+
+    this.yearSel_.innerHTML = '10月';
+    this.monthSel_.innerHTML = '2009年';
+/*
+    var opts = [];
+    for (i = 0; i < this.i18n_.monthFull.length; ++i) {
+      opts.push({'label': this.i18n_.monthFull[i], 'value': i});
+    }
+    this.scMonth_ = new BSelect({
+      'parent': this.monthSel_,
+      'opt_options': opts
+    });
+    this.scMonth_.addEvent('change', callback(this, this.changeMonOrYear_));
+    opts = [];
+    for (i = 2007; i <= 2012; ++i) {
+      opts.push({'label': i, 'value': i});
+    }
+    this.scYear_ = new BSelect({
+      'parent': this.yearSel_,
+      'opt_options': opts,
+      'styles': 'margin-left:5px;'
+    });
+    this.scYear_.addEvent('change', callback(this, this.changeMonOrYear_));
+*/
+    this.rangeFrom_ = null;
+    this.rangeTo_ = null;
+    this.events_ = [];
+    this.gotoToday();
+    addDomListener(document.body, 'mouseup', callback(this, this.setDateRangeFn_));
+  };
+
+  /**
+   * Get current year
+   * @return {Number}
+   */
+  Calendar.prototype.getYear = function () {
+    return this.curYear_;
+  };
+
+  /**
+   * Get current month
+   * @return {Number} from 1 to 12
+   */
+  Calendar.prototype.getMonth = function () {
+    return this.curMonth_ + 1;
+  };
+
+  /**
+   * Get cureent date range
+   * @return {Array of Number}
+   */
+  Calendar.prototype.getDateRange = function () {
+    return [parseInt(this.frInp_.value), parseInt(this.toInp_.value)];
+  };
+
+  /**
+   * Goto a month
+   * @param {Number} year Year to go
+   * @param {Number} month Month to go, month is from 0 to 11
+   */
+  Calendar.prototype.gotoMonth = function(year, month) {
+    var time = new Date(year, month, 1);
+    var mSecond = time.getTime();
+    var day = time.getDay();
+    var mSPerday = 24 * 3600 * 1000;
+    var startDay = mSecond - mSPerday * day;
+    var date = new Date();
+    var today = new Date();
+    var foundMonFir = false;
+    var foundNextMonFir = false;
+
+    if (year == today.getFullYear() && month == today.getMonth()) {
+      this.selToday_.style.color = '#999999';
+      this.selToday_.style.textDecoration = 'none';
+    } else {
+      this.selToday_.style.color = '#0000cc';
+      this.selToday_.style.textDecoration = 'underline';
+    }
+
+    var tds = [];
+    var monthTyp = 0;
+    this.stdOStyles_ = [];
+    for (var i = 0; i < this.std_.length; ++i) {
+      if (i % 7 == 0 || i % 7 == 6) {
+        this.std_[i].className = 'd-gray';
+      } else {
+        this.std_[i].className = 'd-normal';
+      }
+      date.setTime(startDay + mSPerday * i);
+      var curYear = date.getFullYear();
+      var curMonth = date.getMonth();
+      var curDate = date.getDate();
+      if (curDate == 1) {
+        monthTyp ++;
+      }
+      var cDate = curDate;
+      if (monthTyp == 0) {
+        cDate = 1;
+      }
+      if (monthTyp == 2) {
+        var dTmp = new Date(curYear, curMonth, 1);
+        dTmp.setTime(dTmp - mSPerday);
+        cDate = dTmp.getDate() + 1;
+      }
+      var ctDate = cDate;
+      if (monthTyp == 1) {
+        ctDate ++;
+        tds['' + curYear + '_' + curMonth + '_' + curDate] = true;
+      }
+      this.std_[i].onmousedown =
+          callback(this, this.setDateRangeFromFn_(new Date(date)));
+      this.std_[i].onmousemove =
+          callback(this, this.setDateRangeToFn_(new Date(date)));
+      this.std_[i].onmouseup =
+          callback(this, this.setDateRangeToFn_(new Date(date)));
+      if (i % 7 == 6 && monthTyp == 0) {
+        this.std_[i].parentNode.style.display = 'none';
+      }
+      if (i % 7 == 0 && monthTyp == 2) {
+        this.std_[i].parentNode.style.display = 'none';
+      }
+
+      if (monthTyp != 1) {
+        this.stdc_[i].style.color = '#888888';
+        this.stdc_[i].style.cursor = 'default';
+      } else {
+        this.stdc_[i].style.color = '#333333';
+        this.stdc_[i].style.cursor = 'pointer';
+        this.std_[i].parentNode.style.display = '';
+      }
+
+      this.stdc_[i].innerHTML = curDate;
+      if (curYear == today.getFullYear() &&
+          curMonth == today.getMonth() &&
+          curDate == today.getDate()) {
+        this.std_[i].className = 'd-today';
+        this.stdc_[i].style.color = '#ffffff';
+      }
+      this.stdOStyles_[i] = [this.std_[i].className, this.stdc_[i].style.color];
+    }
+
+    this.curYear_ = year;
+    this.curMonth_ = month;
+    var monthStr = this.i18n_.monthFull[this.curMonth_] + ' ' + this.curYear_;
+//    this.scYear_.setValue(this.curYear_);
+//    this.scMonth_.setValue(this.curMonth_);
+    this.frLabel_.innerHTML = this.i18n_.month[this.curMonth_];
+    this.toLabel_.innerHTML = this.i18n_.month[this.curMonth_];
+    if (this.events_['change']) {
+      for (i = 0; i < this.events_['change'].length; ++i) {
+        this.events_['change'][i](this);
+      }
+    }
+//    this.setDateRangeWhole(true);
+  };
+
+  /**
+   * Attach a event to BCalendar
+   * @param {String} type Event type supported: 'change', 'daterangechange',
+   *    'sizechange'
+   * @param {Function} fn Callback function
+   */
+  Calendar.prototype.addEvent = function (type, fn) {
+    if (!this.events_[type]) {
+      this.events_[type] = [];
+    }
+    this.events_[type].push(fn);
+  };
+
+  /**
+   * Remove a event callback function of BCalendar
+   * @param {String} type Event type
+   * @param {Function} fn Callback function to remove
+   */
+  Calendar.prototype.removeEvent = function (type, fn) {
+    if (this.events_[type]) {
+      for (var i = 0; i < this.events_[type]; ++i) {
+        if (this.events_[type][i] == fn) {
+          this.events_[type].splice(i, 1);
+          break;
+        }
+      }
+    }
+  };
+
+  /**
+   * Go to next month
+   */
+  Calendar.prototype.nextMonth = function() {
+    var year = this.curYear_;
+    var month = this.curMonth_ + 1;
+    if (month == 12) {
+      month = 0;
+      year += 1;
+    }
+    if (year > 2012 || year < 2007) {
+      return;
+    }
+    this.gotoMonth(year, month);
+  };
+
+  /**
+   * Go to previous month
+   */
+  Calendar.prototype.previousMonth = function() {
+    var year = this.curYear_;
+    var month = this.curMonth_ - 1;
+    if (month == -1) {
+      month = 11;
+      year --;
+    }
+    if (year > 2012 || year < 2007) {
+      return;
+    }
+    this.gotoMonth(year, month);
+  };
+
+  Calendar.prototype.setRange = function(from, to) {
+    this.setDateRangeFromFn_(from).apply(this);
+    this.setDateRangeToFn_(to).apply(this);
+  };
+  /**
+   * Go to today
+   */
+  Calendar.prototype.gotoToday = function() {
+    var today = new Date();
+    this.gotoMonth(today.getFullYear(), today.getMonth());
+    for (var i = 0; i < this.std_.length; ++i) {
+      this.std_[i].className = this.stdOStyles_[i][0];
+      this.stdc_[i].style.color = this.stdOStyles_[i][1];
+    }
+    this.setDateRange(today, today);
+  };
+
+  /**
+   * Get the last day of month by date
+   * @param {Number} year Which year
+   * @param {Number} month Which month
+   * @return {Number} date
+   */
+  Calendar.prototype.getLastDateOfMonth = function(year, month) {
+    var yer = year;
+    var mon = month + 1;
+    if (mon > 11) {
+      mon = 0;
+      yer ++;
+    }
+    var day = new Date(yer, mon, 1);
+    var mSPerday = 24 * 3600 * 1000;
+    day.setTime(day.getTime() - mSPerday);
+    return day.getDate();
+  };
+
+  /**
+   * Callback when year or month changed
+   */
+  Calendar.prototype.changeMonOrYear_ = function() {
+    var year = this.scYear_.getValue();
+    var month = this.scMonth_.getValue();
+    this.gotoMonth(year, month);
+  };
+
+  /**
+   * Get date index in array this.stdc_
+   * @private
+   * @param {Date} date Date to test
+   * @param {Boolean} opt_isNotCurentMonth Get the no current month index
+   */
+  Calendar.prototype.getIndexByDate_ = function(date, isNotCurrentMonth) {
+    var mon = date.getMonth();
+    var day = date.getDate();
+    var preMon = mon - 1 < 0 ? 11 : mon - 1;
+    var nxtMon = mon + 1 > 11 ? 0 : mon + 1;
+    var mtyp = 1;
+    switch(this.curMonth_) {
+    case preMon:
+      day = this.getLastDateOfMonth(this.curYear_, this.curMonth_);
+      mtyp = 2;
+      break;
+    case nxtMon:
+      day = 1;
+      mtyp = 0;
+      break;
+    };
+
+    var index = -1;
+    var indexNC = -1;
+    var mType = 0;
+    for (var i = 0; i < this.stdc_.length; ++i) {
+      var td = this.stdc_[i];
+      var tdd = parseInt(td.innerHTML, 10);
+      if (tdd == 1) {
+        mType ++;
+      }
+      if (day == tdd && mType == 1) {
+        index = i;
+      }
+      if (date.getDate() == tdd && mType == mtyp) {
+        indexNC = i;
+      }
+    }
+    if (isNotCurrentMonth) {
+      index = indexNC;
+    }
+    return index;
+  };
+
+  /**
+   * Set a range of calendar days from and to
+   * @param {Date} from From day of current month
+   * @param {Date} to To day of Current month
+   * @param {Boolean} isSelf Is this call from gotoMonth
+   */
+  Calendar.prototype.setDateRange = function(from, to, isSelf) {
+    var fIndex = this.getIndexByDate_(from);
+    var tIndex = this.getIndexByDate_(to);
+    from = this.stdc_[fIndex].innerHTML;
+    to = this.stdc_[tIndex].innerHTML;
+    this.frInp_.value = from;
+    this.toInp_.value = to;
+    if (!isSelf) {
+      if (this.events_['daterangechange']) {
+        for (var i = 0; i < this.events_['daterangechange'].length; ++i) {
+          this.events_['daterangechange'][i](this);
+        }
+      }
+    }
+  };
+
+  /**
+   * Mark a date
+   * @param {Number} date Date to be marked
+   */
+  Calendar.prototype.mark = function (date) {
+    date = new Date(this.curYear_, this.curMonth_, date);
+    var index = this.getIndexByDate_(date);
+    if (index != -1) {
+      var cont = this.stdc_[index];
+      cont.style.backgroundImage = 'url(' + BASEIMGURL + 'dot.gif)';
+      cont.style.backgroundRepeat = 'no-repeat';
+      cont.style.backgroundPosition = 'bottom right';
+    }
+  };
+
+  /**
+   * Whether a date is marked
+   * @param {Number} date Date to test
+   * @return {Boolean}
+   */
+  Calendar.prototype.isMarked = function (date) {
+    date = new Date(this.curYear_, this.curMonth_, date);
+    var index = this.getIndexByDate_(date);
+    if (index != -1) {
+      return Dom.styleString(this.stdc_[index], 'background-image') != 'none';
+    }
+    return false;
+  };
+
+  /**
+   * Clear a mark
+   * @param {Number} date Date to be marked
+   */
+  Calendar.prototype.clearMark = function (date) {
+    date = new Date(this.curYear_, this.curMonth_, date);
+    var index = this.getIndexByDate_(date);
+    if (index != -1) {
+      var cont = this.stdc_[index];
+      cont.style.backgroundImage = 'none';
+    }
+  };
+
+  /**
+   * Clear all marks
+   */
+  Calendar.prototype.clearAllMarks = function () {
+    for (var i = 0; i < this.stdc_.length; ++i) {
+      this.stdc_[i].style.backgroundImage = 'none';
+    };
+  };
+
+  /**
+   * Set the date range to the whole month
+   * @param {Boolean} isSelf Is this call from gotoMonth
+   */
+  Calendar.prototype.setDateRangeWhole = function(isSelf) {
+    var fr = new Date(this.curYear_, this.curMonth_, 1);
+    var to = this.getLastDateOfMonth(this.curYear_, this.curMonth_);
+    to = new Date(this.curYear_, this.curMonth_, to);
+    for (var i = 0; i < this.std_.length; ++i) {
+      this.std_[i].className = this.stdOStyles_[i][0];
+      this.stdc_[i].style.color = this.stdOStyles_[i][1];
+    }
+    for (i = 0; i < this.std_.length; ++i) {
+      if (this.stdc_[i].style.cursor == 'pointer' &&
+          this.std_[i].className != 'd-today') {
+        this.std_[i].className = 'd-selected';
+        this.stdc_[i].style.color = '#ffffff';
+      }
+    }
+    this.setDateRange(fr, to, isSelf);
+  };
+
+  /**
+   * Some private callback functions
+   */
+  Calendar.prototype.setDateRangeFromFn_ = function(from) {
+    return function() {
+      if (from.getDate() < 1 || from.getDate() > 8) {
+        return;
+      }
+      this.rangeFrom_ = from;
+      addDomListener(document.body, 'mousemove', function() {
+        window.getSelection ? window.getSelection().removeAllRanges() :
+            document.selection.empty();
+      });
+      this.setDateRangeToFn_(from).apply(this);
+    };
+  };
+
+  Calendar.prototype.setDateRangeToFn_ = function(to) {
+    return function() {
+      if (this.rangeFrom_ != null) {
+        this.rangeTo_ = to;
+        var toIndex = this.getIndexByDate_(to, true);
+        var fromIndex = this.getIndexByDate_(this.rangeFrom_, true);
+        for (var i = 0; i < this.std_.length; ++i) {
+          this.std_[i].className = this.stdOStyles_[i][0];
+          this.stdc_[i].style.color = this.stdOStyles_[i][1];
+        }
+        var f = fromIndex > toIndex ? toIndex : fromIndex;
+        var t = fromIndex > toIndex ? fromIndex : toIndex;
+        for (i = f; i <= t; ++i) {
+          if (this.stdc_[i].style.cursor == 'pointer' &&
+              this.std_[i].className != 'd-today') {
+            this.std_[i].className = 'd-selected';
+            this.stdc_[i].style.color = '#ffffff';
+          }
+        }
+        this.setDateRangeFn_();
+      }
+    };
+  };
+
+  Calendar.prototype.setDateRangeCusFn_ = function(isFrom) {
+    return function() {
+      var fr = parseInt(this.frInp_.value, 10);
+      var to = parseInt(this.toInp_.value, 10);
+      if (!fr || fr < 1) {
+        fr = 1;
+      }
+      var lastDay = this.getLastDateOfMonth(this.curYear_, this.curMonth_);
+      if (!to || to > lastDay) {
+        to = lastDay;
+      }
+      if (fr > to) {
+        if (isFrom) {
+          fr = to;
+        } else {
+          to = fr;
+        }
+      }
+      this.frInp_.value = fr;
+      this.toInp_.value = to;
+      fr = new Date(this.curYear_, this.curMonth_, fr);
+      to = new Date(this.curYear_, this.curMonth_, to);
+      this.setDateRangeFromFn_(fr).apply(this);
+      this.setDateRangeToFn_(to).apply(this);
+      this.rangeFrom_ = null;
+      this.rangeTo_ = null;
+      this.setDateRange(fr, to);
+    };
+  };
+
+  Calendar.prototype.setDateRangeFn_ = function() {
+    if (this.rangeFrom_ != null && this.rangeTo_ != null) {
+      var from = this.rangeFrom_ > this.rangeTo_ ? this.rangeTo_
+          : this.rangeFrom_;
+      var to = this.rangeFrom_ > this.rangeTo_ ? this.rangeFrom_
+          : this.rangeTo_;
+      this.setDateRange(from, to);
+    }
+    this.rangeFrom_ = null;
+    this.rangeTo_ = null;
+    removeListenerEvts(document.body, 'mousemove');
+  };
+
+  Calendar.prototype.feCalendar_ = function () {
+    if (this.fold_.className == 's-c-fold') {
+      this.cont_.style.display = 'none';
+      this.tip_.style.display = 'none';
+      this.fold_.className = 's-c-expand';
+    } else {
+      this.cont_.style.display = '';
+      this.tip_.style.display = '';
+      this.fold_.className = 's-c-fold';
+    }
+    if (this.events_['sizechange']) {
+      for (var i = 0; i < this.events_['sizechange'].length; ++i) {
+        this.events_['sizechange'][i](this);
+      }
+    }
+  };
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  var map = new GMap2();
+  var geoXml = null;
+  var lastDate = null;
+  var i18n = {
+    month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    monthFull: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'],
+    week: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+    wholeMonth: 'Select All',
+    today: 'Today'
+  };
+  var calendar = new Calendar($('calendar'), i18n);
+  calendar.gotoMonth(2009, 9);
+  for (var i = 1; i < 9; ++i) {
+    calendar.mark(i);
+  }
+  function changeDate (cal) {
+    var range = cal.getDateRange();
+    var xmlUrl = null;
+    if (range[0] == 1) {
+      if (lastDate == 1) {
+        return;
+      }
+      xmlUrl = 'http://maps.google.com/maps/ms?ie=UTF&msa=0&msid=107330381466805313541.000474b3f9149bab64c1d&output=kml';
+      $('area0').style.display = 'none';
+      lastDate = 1;
+      var childs = $('tianan').childNodes;
+      for (var i = 0; i < childs.length; ++i) {
+        if (childs[i].className && childs[i].className == 'area_0') {
+          childs[i].style.display = 'none';
+        }
+      }
+      _IG_AdjustIFrameHeight();
+    } else if (range[0] > 1 && range[0] < 9) {
+      if (lastDate != 1) {
+        return;
+      }
+      xmlUrl = 'http://maps.google.com/maps/ms?ie=UTF&msa=0&msid=107330381466805313541.000474afad6baa714f3fe&output=kml';
+      $('area0').style.display = '';
+      lastDate = range[0];
+      var childs = $('tianan').childNodes;
+      for (var i = 0; i < childs.length; ++i) {
+        if (childs[i].className && childs[i].className == 'area_0') {
+          childs[i].style.display = '';
+        }
+      }
+      _IG_AdjustIFrameHeight();
+    }
+    if (xmlUrl) {
+      if (geoXml) {
+        map.removeOverlay(geoXml);
+      }
+      geoXml = new GGeoXml(xmlUrl);
+      map.addOverlay(geoXml);
+    }
+    map.setCenter(new GLatLng(40.145289,116.195526), 10);
+  };
+  calendar.addEvent('daterangechange', changeDate);
+  var date = new Date();
+  var ten1 = new Date(2009, 9, 1);
+  var ten8 = new Date(2009, 9, 8);
+  if (date < ten1) {
+    date = ten1;
+  }
+  if (date > ten8) {
+    date = ten8;
+  }
+  calendar.setRange(date, date);
+  var area = [
+    [new GLatLng(39.91441,116.39637), 14],
+    [new GLatLng(40.006317, 116.392078), 13],
+    [new GLatLng(39.9919994, 116.253548), 13],
+    [new GLatLng(40.294192, 116.030731), 11]
+  ];
+  function gotoAreaFn (index) {
+    return function () {
+      map.setCenter(area[index][0], area[index][1]);  
+    };
+  };
+
+  for (var i = 0; i < 4; ++i) {
+    addDomListener($('area' + i), 'click', gotoAreaFn(i));
+  }
+  _IG_AdjustIFrameHeight();
+})();
+
+</script>
+]]>
+</Content>
+</Module>
