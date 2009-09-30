@@ -173,12 +173,12 @@
 <div id="calendar">
 </div>
 <div style="margin:10px 10px 0;">
-  <span style="color:#ff0000">红色线路：</span>&nbsp;&nbsp;所有机动车禁行<br/>
-  <span style="color:#0000cc">蓝色线路：</span>&nbsp;&nbsp;载货汽车/载客汽车禁行<br/>
+  <span style="color:#ff0000">红色线路：</span>&nbsp;&nbsp;所有机动车限行<br/>
+  <span style="color:#0000cc">蓝色线路：</span>&nbsp;&nbsp;载货汽车/载客汽车限行<br/>
   <span style="color:green">绿色线路：</span>&nbsp;&nbsp;机动车可选绕行线路</br/>
 </div>
 <div id="links" style="margin-left:10px;">
-  <div style="margin-bottom:5px;"><b>禁行区域</b></div>
+  <div style="margin-bottom:5px;"><b>限行区域</b></div>
   <span id="area0">天安门</span>
   <span id="area1">奥林匹克公园</span>
   <span id="area2">香山，颐和园</span>
