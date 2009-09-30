@@ -1309,7 +1309,7 @@ function() {
       if (lastDate == 1) {
         return;
       }
-      xmlUrl = 'http://maps.google.com/maps/ms?ie=UTF&msa=0&msid=107330381466805313541.000474b3f9149bab64c1d&output=kml';
+      xmlUrl = 'http://ditu.google.cn/maps/ms?ie=UTF&msa=0&msid=107330381466805313541.000474b3f9149bab64c1d&output=kml';
       $('area0').style.display = 'none';
       lastDate = 1;
       var childs = $('tianan').childNodes;
@@ -1323,7 +1323,7 @@ function() {
       if (lastDate != 1) {
         return;
       }
-      xmlUrl = 'http://maps.google.com/maps/ms?ie=UTF&msa=0&msid=107330381466805313541.000474afad6baa714f3fe&output=kml';
+      xmlUrl = 'http://ditu.google.cn/maps/ms?ie=UTF&msa=0&msid=107330381466805313541.000474afad6baa714f3fe&output=kml';
       $('area0').style.display = '';
       lastDate = range[0];
       var childs = $('tianan').childNodes;
