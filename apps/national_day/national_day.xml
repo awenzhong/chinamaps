@@ -1428,6 +1428,7 @@ function() {
   if (date > ten8) {
     date = ten8;
   }
+  lastDate = 1;
   calendar.setRange(date, date);
   var area = [
     [new GLatLng(39.91441,116.39637), 14],
