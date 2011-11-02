@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+
+<!--
+  Google I/O 2011 HTML slides template
+
+  Created by Luke Mahé (lukem@google.com)
+         and Marcin Wichary (mwichary@google.com).
+
+  URL: http://go/io-html-slides
+-->
+
+<html>
+  <head>
+    <title>Google Developer Day 2011</title>
+
+    <meta charset='utf-8' />
+    <script
+      src='slides.js'></script>
+    <script type="text/javascript">
+      var autoPlay = false;
+      function addSlideNos() {
+        var total = slideEls.length;
+        for (var i = 0, slide; slide = slideEls[i]; i++) {
+        //if (!slide.classList.contains('no-slidenum')) {
+        //  addSlideNo(slide, i+1, total);
+        //}
+
+          if (!slide.classList.contains('start')) {
+            slide.classList.add('gdd-background');
+          }
+        }
+
+        startAutoPlay();
+      }
+
+      function addSlideNo(slide, n, total) {
+        var slideNo = document.createElement('div');
+        slideNo.classList.add('slidenum');
+        slideNo.innerHTML = n + ' / ' + total;
+        slide.appendChild(slideNo);
+      }
+      document.addEventListener('DOMContentLoaded', addSlideNos, false);
+
+      function showControl() {
+        document.getElementById('auto-play-control').style.display = '';
+      }
+
+      function hideControl() {
+        document.getElementById('auto-play-control').style.display = 'none';
+      }
+
+      document.addEventListener('mousemove', function(e) {
+        if (e.clientY < 40) {
+          showControl();
+        } else {
+          hideControl();
+        }
+      }, false);
+
+      function startAutoPlay() {
+        document.getElementById('auto-play-control').addEventListener('click',
+            function() {
+              autoPlay = !autoPlay;
+            });
+        hideControl();
+
+        setInterval(function() {
+          if (autoPlay) {
+            nextSlide();
+          }
+        }, 3000);
+      }
+    </script>
+  </head>
+
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+    what you want. */
+    .mobile-frame {
+      width: 336px;
+      height: 648px;
+      background: url(nexuss.png) no-repeat;
+      margin: -30px auto 0 auto;
+      position: relative;
+      padding: 120px 0 0 33px;
+    }
+
+    .mobile-frame iframe {
+      width: 272px !important;
+      height: 428px !important;
+      border: 0 !important;
+      position: inherit !important;
+      z-index: 1 !important;
+    }
+
+    .note {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #fff8cc;
+      border: 2px solid #ff9300;
+      font-size: 13px;
+      padding: 9px;
+      max-width: 300px;
+      max-height: 200px;
+      overflow: auto;
+      box-shadow: 2px 2px 8px #ccc;
+    }
+
+    .with-notes .note {
+      display: block;
+      height: 150px;
+    }
+
+    .middle {
+      margin-top: 25px;
+      display: block;
+      line-height: 72px;
+    }
+
+    .slidenum {
+      position: absolute;
+      bottom: 30px;
+      left: 40px;
+      z-index: -999;
+    }
+
+    article.biglogo .slidenum,
+    article.full .slidenum {
+      display: none;
+    }
+
+    #next-slide-area {
+      margin-left: 450px !important;
+      width: 60px !important;
+      display: none !important; 
+    }
+
+    #prev-slide-area {
+      width: 60px !important;
+      margin-left: -510px !important;
+      display: none !important;
+    }
+
+    ul ul {
+      margin-top: 0.5em !important;
+    }
+
+    article.biglogo {
+      background: url(gdd-bg-start.png) !important;
+      background-size: 1100px !important;
+    }
+
+    article.gdd-background:not(.biglogo) {
+      background: url(gdd-bg.png) !important;
+    }
+
+    .slides.gdd h1 {
+      font-size: 32pt;
+      letter-spacing: 0;
+    }
+
+    .image-grid {
+      float: left;
+      padding: 25px;
+      width: 260px;
+    }
+
+    .image-grid div img {
+      width: 185px;
+      height: 152px;
+    }
+
+    .image-grid div {
+      font-size: 14pt;
+    }
+
+    #auto-play-control {
+      z-index: 100000;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: 0;
+      left: 50%;
+      margin-left: -15px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 3px 5px 0 #999;
+    }
+    
+    .highlight {
+      color: green;
+    }
+
+  </style>
+
+  <body style='display: none' class="with-notes">
+
+    <div id="auto-play-control">
+      <img src="media_play_pause_resume.png" style="width:20px;margin:5px;">
+    </div>
+    <section class='slides layout-widescreen gdd'>
+
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+
+      <article class='biglogo'>
+        <h1>
+          Google地图API高级应用
+        </h1>
+        <h3>李双峰</h3>
+        <h3>2011-10-27</h3>
+      </article>
+
+      <article>
+        <h3>提纲</h3>
+
+        <ul>
+          <li class="highlight">Google地图API总览</li>
+          <li>地图Javascript API v3基础</li>
+          <li>可扩展的地图API</li>
+          <li>提高地图API的性能</li>
+          <li>创建LBS应用</li>
+          <li>地图应用Demos</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Google地图API总览</h3>
+
+          <ul>
+            <li>地图Javascript API v3</li>
+            <li>Earth API</li>
+            <li>地图图片API
+            　<ul>
+                <li>静态地图API</li>
+                <li>Street View图片API</li>
+              </ul>
+            </li>
+            <li>地图Flash API
+            </li>
+            <li>地图Web Services</li>
+            <li>Androind/iOS SDK</li>
+          </ul>
+      </article>
+      
+      <article>
+        <h3>Google地图API总览 - Demos</h3>
+        
+        <p><a href="http://www.gta4.net/map/" target="_blank">Liberty City Map</a> (Javascript API, 自定义地图和Street View)
+        <img src="images/libertycitymap.png" class="centered" width="80%" height="80%">
+        </p>
+      </article>
+      
+      <article>
+        <h3>Google地图API总览 - Demos</h3>
+        <p><a href="http://jktravelgame.com" target="_blank">3D旅行游戏</a> (Earth API)
+        <img src="images/travelgame.jpeg" class="centered" width="80%" height="80%">
+        </p>
+      </article>
+      
+      <article>
+        <h3>提纲</h3>
+
+        <ul>
+          <li>Google地图API总览</li>
+          <li class="highlight">地图Javascript API v3基础</li>
+          <li>可扩展的地图API</li>
+          <li>提高地图API的性能</li>
+          <li>创建LBS应用</li>
+          <li>地图应用Demos</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Google地图API v3</h3>
+
+        <ul>
+          <li>地图API v3正式发布（2010年5月）
+            <ul>
+              <li>v2 退休（继续维护3年）</li>
+            </ul>
+          </li>
+          <li>地图API v3
+            <ul>
+              <li>Mobile: 为Mobile而设计</li>
+              <li>性能:　多种手段提高性能</li>
+              <li>架构：MVC</li>
+              <li>技术：多种Graphics技术-Canvas, WebGL...</li>
+              <li>命名空间：google.maps.Map ... (vs. GMap)</li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Hello World</h3>
+
+        <p><pre>
+&lt;script type="text/javascript" src="http://ditu.google.cn/maps/api/js?sensor=false"&gt;
+&lt;/script&gt;
+&lt;div id="map-canvas" style="width: 500px; height: 400px"&gt;&lt;/div&gt;</pre></p>
+        <p><pre>
+var mapDiv = document.getElementById('map-canvas');
+var map = new google.maps.Map(mapDiv, {
+  center: new google.maps.LatLng(39.989139,116.402314),
+  zoom: 15,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+     </pre></p>
+     </article>
+     
+     <article>
+        <h3>Hello World - Demo</h3>
+        
+        <iframe style="height:70%; width:85%; top:10%;" src="hello-world.html"></iframe>
+     </article>
+
+    <article>
+        <h3>地图API组织层次</h3>
+        
+       <img src="images/maps-api-hierarchy.png" class="centered" width="80%" height="80%"></img>
+    </article>
+
+    <article>
+      <h3>地图加载</h3>
+        <pre>
+&lt;script type="text/javascript"
+src="http://ditu.google.cn/maps/api/js?sensor=false&language=zh-CN&libraries=geometry,places"&gt;
+&lt;/script&gt;</pre>
+      <ul>
+        <li>加载ditu.google.cn/...， (or maps.googleapis.com/...)
+        </li>
+        <li>本地化: language: zh-CN; region: CN
+        </li>        
+        <li>sensor=true/false: 是否使用GPS定位<li>
+        <li>libraries - 模块化设计，按需加载
+          <ul><li>geometry, adsense, panoramio, places</li></ul>
+        </li>
+      </ul>
+      
+    </article>
+
+    <article>
+        <h3>Controls</h3>
+        
+        <ul>
+          <li>通过MapOptions选择和定制地图Control</li>
+          <li>每个Control有对应的Options</li>
+        </ul>
+        
+<pre>
+var myOptions = {
+  mapTypeControl: true,
+  mapTypeControlOptions: {
+    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+    position: google.maps.ControlPosition.BOTTOM
+  },
+  navigationControl: true,
+  navigationControlOptions: {
+    style: google.maps.NavigationControlStyle.ZOOM_PAN,
+    position: google.maps.ControlPosition.TOP_RIGHT
+  }, ...
+}
+var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+</pre>        
+    </article>
+    
+        <article>
+        <h3>Controls - Demo</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="controls.html"></iframe>
+</article>
+
+ <article>
+        <h3>Events</h3>
+        
+        <ul>
+          <li>Events类型</li>
+            <ul>
+              <li>UI Events: 源于用户对地图的操作
+                <ul><li>如Marker的click, dblclick, mouseover</li></ul>
+              <li>MVC Events: 源于MVC对象变化
+                <ul><li>prop_changed, 如Map的zoom_changed</li></ul>
+            </ul>
+          <li>Events的添加和删除 - google.maps.events.*</li>
+            <ul>
+              <li>addListener, addListenerOnce, addDomListener, removeListener, clearListeners
+            </ul>
+        </ul>
+<pre>
+google.maps.event.addListener(map, 'click', function() {
+  alert('欢迎来到GDD 2011!');
+});
+</pre>
+    </article>
+    
+       <article>
+        <h3>Events - Demo</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="events.html"></iframe>
+</article>
+
+ <article>
+        <h3>Layers</h3>
+        
+        <ul>
+         <li>KmlLayer: 支持KML和GeoRss格式</li>
+         <li>FusionTablesLayer: 呈现来自FusionTables的数据</li>
+         <li>TrafficLayer: 实时交通数据</li>
+         <li>BicyclingLayer: 自行车道路</li>
+         <li>PanoramioLayer: Panoramio照片</li>
+        </ul>
+
+<pre>
+var panoramioLayer = new google.maps.panoramio.PanoramioLayer();
+panoramioLayer.setMap(map);
+anoramiLayer.setTag('鸟巢');
+</pre>
+    </article>
+
+       <article>
+        <h3>Layers - Demo</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="layers.html"></iframe>
+</article>
+
+ <article class="smaller">
+        <h3>Overalys</h3>
+        
+        <ul>
+          <li>Overlay类型
+            <ul><li>Marker, InfoWindow, Polyline, Polygon, Circle, Rectangle, GroundOverlay, ...</li>
+            </ul>
+          </li>
+          <li>在地图上显示或者隐藏: Overlay对象本身负责自己是否显示
+            <ul><li>marker.setMap(map):  在map上显示marker</li>
+                <li>marker.setMap(null): 隐藏marker</li>
+            </ul>
+          </li>
+        </ul>
+ 
+<pre>
+var shape = new google.maps.Polygon({
+  strokeColor: '#ff0000',
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: '#ff0000',
+  fillOpacity: 0.35
+});
+shape.setMap(map);
+</pre>
+ </article>
+    
+           <article>
+        <h3>Overlays - Demo</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="overlays.html"></iframe>
+</article>
+    
+          <article>
+        <h3>提纲</h3>
+
+        <ul>
+          <li>Google地图API总览</li>
+          <li>地图Javascript API v3基础</li>
+          <li class="highlight">可扩展的地图API</li>
+          <li>提高地图API的性能</li>
+          <li>创建LBS应用</li>
+          <li>地图应用Demos</li>
+        </ul>
+      </article>
+      
+     <article>
+        <h3>可扩展的地图API</h3>
+
+        <ul class="build">
+          <li>如果我不喜欢现有的界面呢？</li>
+          <li>自己创建！</li>
+        </ul>
+     </article>
+     
+      <article>
+        <h3>可扩展的地图API - 自定义按钮</h3>
+
+<pre>
+var control = document.createElement('DIV');
+control.style.padding = '5px';
+control.style.border = '1px solid #000';
+control.style.backgroundColor = 'white';
+control.style.cursor = 'pointer';
+control.innerHTML = '快速放大'; // Zoom
+control.index = 1;
+      
+google.maps.event.addDomListener(control, 'click', function() {
+  map.setZoom(map.getZoom() + 2);
+});
+map.controls[google.maps.ControlPosition.TOP_RIGHT].push(control);
+</pre>
+     </article>
+     
+      <article>
+        <h3>可扩展的地图API - 自定义按钮</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="custom-control.html"></iframe>
+      </article>
+    
+     <article>
+        <h3>可扩展的地图API - 自定义Marker</h3>
+
+              <ul>指定Marker的属性
+              <li>icon: Marker基本图像</li>
+               <li>shape: 定义Marker的可点击区域</li>
+               <li>shadow: 定义Marker的阴影</li>
+               <li>title: mouseover时自动呈现 </li>
+               <li>animation: 指定动画效果</li>
+            </ul>
+
+        <p><pre>
+var beachMarker = new google.maps.Marker({
+  icon: 'images/beachflag.png',
+  draggable:true,
+  animation: google.maps.Animation.DROP
+  ...
+});</pre>
+        </p>
+     </article>
+     
+     
+           <article>
+        <h3>可扩展的地图API - 自定义Marker</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="custom-marker.html"></iframe>
+      </article>
+     
+     
+<article>
+  <h3>更复杂的UI库-<a href="http://code.google.com/p/google-maps-utility-library-v3/wiki/Libraries"  target="_blank">Maps Utility library</a></h3>    
+
+  <p><a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/keydragzoom/2.0.5/examples/dragzoom.html"  target="_blank">KeyDragZoom</a></p>
+  <p><a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.9/examples/infobox-basic.html"  target="_blank">InfoBox</a></p>
+  <p><img src="images/infobox.png"></img>
+  </p>
+  <p><a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.5/examples/advanced_example.html"  target="_blank">MarkerClusterPlus</a></p>
+  <p><img src="images/markerclustererplus.png"></img>
+  </p>
+  </p>
+    
+  <p>
+  </p>
+</article>
+
+<article>
+        <h3>自定义Overlay</h3>
+
+         <ul>
+           <li>继承OverlayView
+           </li>
+           <li>实现onAdd()
+             <ul><li>Overlay首次加载到地图时调用</li>
+              <li>自定义：初始化DOM</li>
+              </ul>
+           </li>
+           <li>实现draw()
+             <ul><li>在地图上呈现时，重新绘制地图时</li>
+             <li>自定义：重新定位MyOverlay</li></ul>
+           </li>
+           <li>实现onRemove()
+             <ul><li>从地图上删除Overlay时调用</li>
+             <li>DOM清理工作</li></ul>
+           </li>
+        </ul>
+</article>    
+
+<article class="smaller">
+  <h3>自定义地图底图</h3>    
+<pre>
+  var moonTypeOptions = {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) { return null; }
+        var bound = Math.pow(2, zoom);
+        return "http://mw1.google.com/mw-planetary/lunar/lunarmaps_v1/clem_bw" +
+            "/" + zoom + "/" + normalizedCoord.x + "/" +
+            (bound - normalizedCoord.y - 1) + ".jpg";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    maxZoom: 9,
+    minZoom: 0,
+    radius: 1738000,
+    name: "Moon"
+  };
+  var moonMapType = new google.maps.ImageMapType(moonTypeOptions);
+  var myOptions = {
+      center: myLatlng,
+      zoom: 1,
+      streetViewControl: false,
+      mapTypeControlOptions: {
+        mapTypeIds: ["moon"]
+      }
+    };
+    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    map.mapTypes.set('moon', moonMapType);
+    map.setMapTypeId('moon');
+</pre>
+</article>
+
+           <article>
+        <h3>自定义地图底图 - Demo</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="custom-maptype-image.html"></iframe>
+      </article>
+
+<article>
+  <h3>自定义地图底图风格</h3>    
+  <ul>
+    <li>选择：地图对象(feature)
+      <ul>
+        <li>feature类型: road, road.high, road.local</li>
+        <li>feature项：all, geometry, label</li>
+      </ul>
+    <li>
+    <li>定制：styler
+      <ul>
+        <li>visibility: 显示或者隐藏
+        <li>huge：RGB
+        <li>light：亮度
+        <li>stauration：对比度
+        <li>gammar
+        <li>inverse_lightness
+      </ul>
+    <li>
+  </ul>  
+</article>
+
+<article class="smaller">
+  <h3>自定义地图底图风格</h3>
+<p>使用MapOptions，传入style数组; 或者创建新的地图类型 StyledMapType
+<pre>
+var styleArray = [
+  {
+    featureType: "all",
+    stylers: [
+      { saturation: -80 }
+    ]
+  },{
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      { hue: "#00ffee" },
+      { saturation: 50 }
+    ]
+  },{
+    featureType: "poi.business",
+    elementType: "labels",
+    stylers: [
+      { visibility: "off" }
+    ]
+  }
+];
+var mapOptions = {
+  styles: styleArray,
+  ...
+}
+</pre>
+</p>
+</article>
+
+           <article>
+        <h3>自定义地图底图 - Demo</h3>
+        <iframe style="height:75%; width:85%; top:10%;" src="styled-map.html"></iframe>
+      </article>
+
+<article>
+  <h3>自定义KML</h3>
+<pre>
+var nyLayer = new google.maps.KmlLayer(
+  'http://www.searcharoo.net/SearchKml/newyork.kml',
+  {suppressInfoWindows: true});
+nyLayer.setMap(map);
+google.maps.event.addListener(nyLayer, 'click', function(kmlEvent) {
+  var text = kmlEvent.featureData.description;
+  showInDiv(text);
+});
+  
+function showInDiv(text) {
+  var sidediv = document.getElementById('contentWindow');
+  sidediv.innerHTML = text;
+}  
+</pre>
+<a href="http://code.google.com/apis/maps/documentation/javascript/examples/layer-kml-features.html" target="_blank">demo</a>
+</article>
+
+<article>
+  <h3>自定义Street View</h3>
+
+  <iframe style="height:75%; width:85%; top:10%;" src="custom-streetview.html"></iframe>
+</article>
+
+   <article>
+        <h3>提纲</h3>
+
+        <ul>
+          <li>Google地图API总览</li>
+          <li>地图Javascript API v3基础</li>
+          <li>可扩展的地图API</li>
+          <li class="highlight">提高地图API的性能</li>
+          <li>创建LBS应用</li>
+          <li>地图应用Demos</li>
+        </ul>
+      </article>
+
+  <article>
+        <h3>减少数据</h3>
+　　　　　
+<ul>
+<li>使用压缩的Polyline & Polygon
+<ul>
+  <li>google.maps.geometry.encoding.decodePath</li>
+  <li>google.maps.geometry.encoding.encodePath
+  </li>
+  <li><a href="http://facstaff.unca.edu/mcmcclur/GoogleMaps/EncodePolyline/example2.html"  target="_blank">Demo</a>
+  </li>
+</ul>
+</li>
+
+<li>简化数据
+<ul>
+<li><a href="http://www.mapshaper.org/"  target="_blank">MapShaper</a></li>
+<li><a href="http://www.cartoweb.org/downloads/vertexsimplification/documentation.html"  target="_blank">MapSimplification</a></li>
+</ul>
+</li>
+</ul>
+</article>
+
+
+<article>
+  <h3>客户端优化</h3>　　　　
+<p><a href="http://code.google.com/apis/maps/articles/toomanymarkers.html"  target="_blank">管理大量Marker</a></p>
+<ul>
+  <li>分层管理: <a href="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markermanager/"  target="_blank">MarkerManager</a></li>
+  <li>聚类: <a href="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/"  target="_blank">MarkerClusterer</a></li>
+  <li>自定义的简化的Marker</li>
+</ul>
+</ul>
+</article>
+
+<article>
+  <h3>MarkerClusterPlus Demo</h3>
+
+  <p><a href="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.5/examples/advanced_example.html"  target="_blank">MarkerClusterPlus</a></p>
+  <p><img src="images/markerclustererplus.png"></img>
+  </p>
+</article>
+
+<article>
+  <h3>服务器端优化</h3>　　　　
+<ul>
+  <li>KmlLayer: Google服务器端绘制</li>
+  <li>Fusiontables: 存储，管理，查询和呈现地理数据</li>
+  <li>自定义的Overlay</li>
+</ul>
+</article>
+
+<article>
+  <h3>Fusiontables Demo</h3>
+
+  <iframe src="fusiontables.html" style="height:450px;border:0"></iframe>
+</article>
+
+<article>
+  <h3>使用静态地图API</h3>
+<pre>
+http://ditu.google.cn/maps/api/staticmap?
+   center=北京&zoom=10&size=300x300&&maptype=roadmap&
+　　markers=color:blue|label:S|故宫&
+　　markers=size:tiny|color:green|label:G|颐和园&
+　　markers=size:mid|color:red|label:C|39.989139,116.402314&
+   sensor=false&language=zh-CN
+</pre>
+<image src="http://ditu.google.cn/maps/api/staticmap?center=%E5%8C%97%E4%BA%AC&zoom=10&size=300x300&maptype=roadmap&markers=color:blue|label:S|%E6%95%85%E5%AE%AB&markers=size:tiny|color:green|label:G|%E9%A2%90%E5%92%8C%E5%9B%AD&markers=size:mid|color:red|label:C|39.989139,116.402314&sensor=false&language=zh-CN"></img>
+</article>
+
+<article>
+  <h3>使用静态地图API-定制地图风格</h3>
+<pre>
+http://ditu.google.cn/maps/api/staticmap?sensor=false&size=300x300&
+center=鸟巢&zoom=12&&language=zh-CN
+style=feature:road.local|element:geometry|hue:0x00ff00|saturation:100&
+style=feature:landscape|element:geometry|lightness:-100
+</pre>
+<image src="http://ditu.google.cn/maps/api/staticmap?sensor=false&size=300x300&center=%E9%B8%9F%E5%B7%A2&zoom=12&style=feature:road.local|element:geometry|hue:0x00ff00|saturation:100&style=feature:landscape|element:geometry|lightness:-100&language=zh-CN"></img>
+</article>
+
+          <article>
+        <h3>提纲</h3>
+
+        <ul>
+          <li>Google地图API总览</li>
+          <li>地图Javascript API v3基础</li>
+          <li>可扩展的地图API</li>
+          <li>提高地图API的性能</li>
+          <li class="highlight">创建LBS应用</li>
+          <li>地图应用Demos</li>
+        </ul>
+      </article>
+
+<article>
+  <h3>我在哪里？</h3>
+
+<ul>
+<li>Android & iPhone GPS</li>
+<li>HTML5 Geolocation</li>
+<li>Google Gears Geolocation API</li>
+<li>浏览器本身的API</li>
+</ul>
+
+<pre>
+navigator.geolocation.getCurrentPosition(function(position) {
+      initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+      map.setCenter(initialLocation);
+    }, function() {
+      // handle no Geolocation;
+    });
+</pre>
+
+</article>
+
+<article>
+  <h3>某地在哪里? - Geocoding服务</h3>
+<ul>
+<li>输入：地址，或者坐标</li>
+<li>输出：完整的地址，地理位置，类型</li>
+<li>Web Service: <a href="http://ditu.google.cn/maps/api/geocode/json?address=五道口&sensor=false&language=zh-CN" target="_blank">五道口</a>
+<pre>
+http://ditu.google.cn/maps/api/geocode/json?address=五道口&sensor=false&language=zh-CN
+</pre>
+</li>
+<li>Javascript api: google.maps.Geocoder.geocode</li>
+</article>
+
+<article>
+  <h3>周围有什么？Places API</h3>
+<ul>
+<li>Js
+  <ul>
+    <li>加载单独的库: "&libraries=places"</li>
+    <li>google.maps.places.PlacesService()</li>
+  </ul>
+</li>
+<li>Web Services
+  <ul>
+    <li>Https</li>
+    <li>Json/Xml输出</li>
+    <li>需要注册key：code.google.com/apis/console, 每个request上都需要加上key参数</li>
+  </ul>
+</li>
+</article>
+
+   <article>
+        <h3>Places API - Places搜索: JS PlacesService</h3>
+<pre>
+var request = {
+  location: new google.maps.LatLng(39.989139,116.402314),
+  radius: 2000
+};
+var places = new google.maps.places.PlacesService(map);
+places.search(request, function(results, status) {
+  for (i = 0; i < results.length; ++i) {
+    var place = results[i];
+    var marker = new google.maps.Marker({
+      position: place.geometry.location,
+      title: place.name,
+      icon: place.icon,
+      map: map,
+    });
+  }
+});
+</pre>
+      </article>
+      
+    <article>
+        <h3>Places API - Places搜索</h3>
+        <iframe style="height:60%; width:85%; top:10%; position:absolute;" src="mega_demo.html">
+      </iframe>
+      </article>
+
+      
+      <article>
+        <h3>Places搜索: Web Service</h3>
+<pre>
+maps/api/place/search/json?location=39.989139,116.402314&radius=1000&...
+</pre>
+<a href="https://maps.googleapis.com/maps/api/place/search/json?location=39.989139,116.402314&radius=1000&language=zh-CN&&sensor=false&key=AIzaSyBWjDS6D_dN0K9hmlDk88y0t_yvbGMYPfc" target="_blank" >周围有什么？</a>
+
+<pre>
+maps/api/place/search/json?location=39.989139,116.402314&radius=1000&types=lodging&...
+</pre>
+<a href="https://maps.googleapis.com/maps/api/place/search/json?location=39.989139,116.402314&radius=1000&language=zh-CN&types=lodging&sensor=false&key=AIzaSyBWjDS6D_dN0K9hmlDk88y0t_yvbGMYPfc" target="_blank" >周围有什么酒店？</a>
+
+<pre>
+maps/api/place/search/json?location=39.989139,116.402314&radius=1000&types=lodging&
+   name=假日酒店&...
+</pre>
+<a href="https://maps.googleapis.com/maps/api/place/search/json?location=39.989139,116.402314&radius=1000&language=zh-CN&types=lodging&name=%E5%81%87%E6%97%A5%E9%85%92%E5%BA%97&sensor=false&key=AIzaSyBWjDS6D_dN0K9hmlDk88y0t_yvbGMYPfc" target="_blank" >周围有什么假日酒店？</a>
+</article>
+
+    <article>
+          <h3>
+            地点类型　-　types参数
+          </h3>
+        <div align="center" style="position:absolute; width:100%;">
+          <div style="position:absolute; background-image: url(images/types.png);
+                      width:800px; height:600px; top: -25px; left: 12%;">
+          </div>
+        </div>
+      </article>
+
+     <article>
+        <h3>Places API - Places详细</h3>
+        <iframe style="height:60%; width:85%; top:10%; position:absolute;" src="place_details.html">
+      </iframe>
+      </article>
+
+<article>
+  <h3>Places API -　更多</h3>
+  
+  <ul>
+    <li>Check-in
+      <ul><li>POST maps/api/place/check-in/json</li>
+          <li>实时影响排序：check-in越多的地点排在前面，但只影响自己的应用</li>
+      </ul>
+    </li>
+    
+    <li>添加地点：立刻生效，只限制于当前应用</li>
+    <li>删除地点：可删除自己添加的地点</li>
+    
+    <li>搜索建议：google.maps.places.Autocomplete</li>
+  </ul>
+  
+</article>
+
+<article>
+  <h3>该去哪一个地方呢？距离，时间? Distance Matrix API</h3>  
+  <iframe src="distance-matrix.html" style="height:450px;border:0"></iframe>
+</article>
+
+<article>
+  <h3>如何去？Directions API</h3>
+  <img src="images/directions-service.png" class="centered" width="80%" height="80%">
+</article>
+  
+<article>
+  <h3>Directions API Demo</h3>
+  <iframe src="draggable-directions.html" style="height:450px;border:0"></iframe>
+</article>
+
+<article>
+  <h3>创建移动应用</h3>
+  
+<ul>
+  <li>Android/iOS SDK</li>
+  <li>使用javascript API v3 - 为移动而设计
+    <ul><li>在浏览器中使用</li>
+        <li>Android中使用WebView</li>
+    </ul>
+  </li>
+　<li>静态地图API</li>
+</ul>
+  
+</article>
+
+      <article>
+        <h3>提纲</h3>
+
+        <ul>
+          <li>Google地图API总览</li>
+          <li>地图Javascript API v3基础</li>
+          <li>可扩展的地图API</li>
+          <li>提高地图API的性能</li>
+          <li>创建LBS应用</li>
+          <li class="highlight">地图应用Demos</li>
+        </ul>
+      </article>
+      
+      <article>
+        <h3>
+          大众点评网 - 桌面和移动应用
+        </h3>
+        <div style="float:right;padding-right:150px">
+          <img src="images/dianpingmobile.png" style="height:450px">
+          <div style="text-align:center"><a target="_blank"
+              href="http://www.dianping.com/events/m/android.htm">Android</a></div>
+        </div>
+        <div>
+          <img src="images/dianpingdesktop.png" style="height:300px;margin:75px 0">
+          <div style="text-align:center"><a target="_blank"
+              href="http://www.dianping.com/shop/515381">桌面</a></div>
+        </div>
+      </article>
+
+      <article class="no-slidenum">
+        <h3>
+          tuan800 - 团购地图
+        </h3>
+        <img src="images/tuan800.png" class="centered" width="800px" height="480px" style="margin-top:15px">
+        <p style="text-align:center"><a
+          href="http://www.tuan800.com/tuangouditu" style="font-size:14pt"
+          target="_blank">http://www.tuan800.com/tuangouditu</a>
+        </p>
+      </article>
+
+      <article class="no-slidenum">
+        <h3>
+          谷歌春运地图 - 始于2008
+        </h3>
+        <img src="images/chunyun2011.png" class="centered" width="800px" height="480px" style="margin-top:15px">
+        <p style="text-align:center"><a
+          href="http://www.google.cn/chunyun2011" style="font-size:14pt"
+          target="_blank">http://www.google.cn/chunyun2011</a>
+        </p>
+      </article>
+
+      <article class="no-slidenum">
+        <h3>
+          2011日本地震救援
+        </h3>
+        <img src="images/japanearthquake.png" class="centered" width="800px" height="480px" style="margin-top:15px">
+        <p style="text-align:center"><a
+          href="http://www.google.com/crisisresponse/japanquake2011.html" style="font-size:14pt"
+          target="_blank">http://www.google.com/crisisresponse/japanquake2011.html</a>
+        (<a style="font-size:14pt"
+          href="http://crisislanding.appspot.com/?crisis=japan_earthquake_2011"
+          target="_blank">map</a>)
+        </p>
+      </article>
+
+      <article>
+        <h3>
+          Google地图API
+        </h3>
+        <div style="text-align:center">
+          <div class="image-grid big">
+            <div><img src="images/instaearth.png"></div>
+            <div>图片社交 - <a href="http://www.instaearth.me" target="_blank">instaearth.me</a></div>
+          </div>
+          <div class="image-grid big">
+            <div><img src="images/realtimeflight.png"></div>
+            <div>航班动态 - <a href="http://www.radar.zhaw.ch" target="_blank">radar.zhaw.ch</a></div>
+          </div>
+          <div class="image-grid big">
+            <div><img src="images/heathmap.png"></div>
+            <div>健康地图 -  <a href="http://www.healthmap.org" target="_blank">healthmap.org</a></div>
+          </div>
+          <div class="image-grid big">
+            <div><img src="images/redfin.png"></div>
+            <div>房产地图 - <a href="http://www.redfin.com" target="_blank">redfin.com<a/></div>
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <h3>更多地图开发资料
+        </h3>
+        
+         <ul>
+          <li>谷歌中国开发者网站地图产品网
+            <ul>
+              <li>地图网站主页：<a href="http://code.google.com/intl/zh-CN/apis/maps/"  target="_blank">http://code.google.com/intl/zh-CN/apis/maps/</a></li>
+              <li>地图产品文档：<a href="http://code.google.com/intl/zh-CN/apis/maps/documentation/index.html"  target="_blank">http://code.google.com/intl/zh-CN/apis/maps/documentation/index.html</a></li>
+              <li>地图网站文章：<a href="http://code.google.com/intl/zh-CN/apis/maps/articles/"  target="_blank">http://code.google.com/intl/zh-CN/apis/maps/articles/</a></li>
+            </ul>
+          </li>
+          <li>谷歌中国地图开发者社区论坛
+            <ul>
+              <li><a href="http://groups.google.com/group/Google-Maps-API-China"  target="_blank">http://groups.google.com/group/Google-Maps-API-China</a></li>
+            </ul>
+          </li>
+          <li>谷歌中国开发者网站博客
+            <ul>
+              <li><a href="http://www.developer.googlechinablog.com/"  target="_blank">http://www.developer.googlechinablog.com/</a></li>
+            </ul>
+          </li>
+        </ul>
+      </article>
+
+    </section>
+  </body>
+</html>

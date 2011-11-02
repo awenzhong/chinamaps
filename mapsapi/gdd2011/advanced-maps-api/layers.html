@@ -1,0 +1,96 @@
+<!--
+  Copyright (c) 2011 Google inc.
+
+  You are free to copy and use this sample.
+  License can be found here: http://www.apache.org/licenses/LICENSE-2.0.html
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Google Maps JavaScript API v3 Example: Layers</title>
+<style>
+  html {
+    height: auto;
+    font-family:'Helvetica', sans-serif
+  }
+
+  body {
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  #map_canvas {
+    height: auto;
+    position: absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    top:25px;
+  }
+
+  label {
+    margin-right: 6px;
+  }
+
+</style>
+<script type="text/javascript" src="http://ditu.google.cn/maps/api/js?sensor=false&libraries=panoramio&language=zh-CN"></script>
+<script type="text/javascript">
+function initialize() {
+  var beijing = new google.maps.LatLng(39.989139,116.402314);
+  var myOptions = {
+    zoom: 11,
+    center: beijing,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+  kmlLayer = new google.maps.KmlLayer('http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml');
+  geoRssLayer = new google.maps.KmlLayer('http://api.flickr.com/services/feeds/geo/?g=322338@N20&lang=en-us&format=feed-georss');
+  bikeLayer = new google.maps.BicyclingLayer();
+
+  trafficLayer = new google.maps.TrafficLayer();
+  panoramioLayer = new google.maps.panoramio.PanoramioLayer();
+}
+
+function toggleLayer(layer, testChinaMaps) {
+  if (testChinaMaps) {
+    map.setCenter(new google.maps.LatLng(39.989139,116.402314));
+    map.setZoom(15);
+  } else {
+    map.setCenter(new google.maps.LatLng(41.875696,-87.624207));
+    map.setZoom(11);
+  }
+
+
+  if(layer.getMap() == null) {
+    layer.setMap(map);
+  } else {
+    layer.setMap(null);
+  }
+}
+
+function setTag() {
+  var val = document.getElementById('tag').value;
+  if(val.trim() === '') {
+    val = null;
+  }
+  panoramioLayer.setTag(val);
+}
+
+</script>
+</head>
+<body onload="initialize()">
+  <label for="panoramio"><input type="checkbox" id="panoramio" onchange="toggleLayer(panoramioLayer, 1)">Panoramio</label>
+  <label for="traffic"><input type="checkbox" id="traffic" onchange="toggleLayer(trafficLayer, 1)">Traffic</label>
+  <label for="rss"><input type="checkbox" id="rss" onchange="toggleLayer(geoRssLayer, 0)">GeoRSS</label>
+  <label for="kml"><input type="checkbox" id="kml" onchange="toggleLayer(kmlLayer, 0)">KML</label>
+  <label for="bike"><input type="checkbox" id="bike" onchange="toggleLayer(bikeLayer, 0)">Bicycling</label>
+  <label for="tag"><input type="text" id="tag" onchange="setTag()">标签过滤</label>
+
+  <div id="map_canvas"></div>
+</body>
+</html>
