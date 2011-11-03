@@ -1,0 +1,152 @@
+<!--
+  Copyright (c) 2011 Google inc.
+
+  You are free to copy and use this sample.
+  License can be found here: http://www.apache.org/licenses/LICENSE-2.0.html
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+html, body {
+  height: 450px;
+  margin: 0;
+  font-family: sans-serif;
+  overflow:hidden;
+  /*width:750px;*/
+}
+#form {
+  /*width: 100%;*/
+}
+
+#map {
+  /*width: 100%;*/
+  height:425px;
+  width: 70%;
+  float:left;
+  /*display:inline-block;*/
+}
+input[name] {
+  width: 20%;
+}
+
+#text-directions{
+  float:right;
+  width: 30%;
+  font-size: 11px;
+  height:425px;
+  overflow-y:auto;
+}
+
+#elev {
+  font-size: 15px;
+  /*margin-top: 20px;*/
+}
+
+  </style>
+  <meta charset="utf-8">
+  <title>Draggable elevation</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script src="http://ditu.google.cn/maps/api/js?sensor=true&language=zh-CN"></script>
+  <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    for (o in google.maps.DirectionsTravelMode) {
+      $("#mode").append(new Option(o));
+    }
+
+    var map = new google.maps.Map($('#map')[0], {
+      center: new google.maps.LatLng(31.223243,121.445523),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      zoom: 13,
+      zoomControlOptions: {
+        style: google.maps.ZoomControlStyle.SMALL
+      }      
+    });
+
+    var dr = new google.maps.DirectionsRenderer({
+      map: map,
+      draggable: true,
+      preserveViewport: true,
+      panel: document.getElementById('text-directions')
+    });
+
+    var es = new google.maps.ElevationService();
+    var ds = new google.maps.DirectionsService();
+
+    google.maps.event.addListener(dr, 'directions_changed', function() {
+      /* hack */ setTimeout(function() {
+        var route = dr.getDirections().routes[dr.getRouteIndex()];
+        var path = route.overview_path;
+        es.getElevationAlongPath({
+          path: path,
+          samples: path.length * 2
+        }, function(result, status) {
+          if (status == google.maps.ElevationStatus.OK) {
+            writeStats(result);
+          }
+        });
+      }, 0);
+    });
+
+    $('#directions-form').submit(function(e) {
+      ds.route({
+        origin: $('#from').val(),
+        destination: $('#to').val(),
+        travelMode: $('#mode').val(),
+        unitSystem: google.maps.DirectionsUnitSystem.METRIC
+      }, function(result, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          dr.setDirections(result);
+          map.fitBounds(result.routes[0].bounds);
+        }
+        else {
+          //$('#error').text(status).show();
+        }
+      });
+      e.preventDefault();
+      return false;
+    });
+
+    var writeStats = function(r) {
+      var prevElevation = r[0].elevation;
+      var climb = 0;
+      var drop = 0;
+      var max = 0;
+      for (var i = 1; i < r.length; i++) {
+        var diff = r[i].elevation - prevElevation;
+        prevElevation = r[i].elevation;
+        if (diff > 0) {
+          climb += diff;
+        }
+        else {
+          drop -= diff;
+        }
+
+        if (r[i].elevation > max) {
+          max = r[i].elevation;
+        }
+      }
+      max = Math.ceil(max);
+      // $('#elev').text("Climb: " + Math.round(climb) + "m Drop: " + Math.round(drop) + "m");
+      return max;
+    };
+  });
+
+  </script>  
+</head>
+<body>
+  <div id="form">
+    <form action="#" method="get" accept-charset="utf-8" id="directions-form">
+      <input id="from" name="from" value="静安寺">
+      <input id="to" name="to" value="人民广场">
+      <select name="mode" id="mode">
+      </select>
+      <input type="submit" value="路线">
+      <span id='elev'></span>
+    </form>
+  </div>
+
+  <div id="map"></div>
+  <div id="text-directions"></div>
+</body>
+</html>
